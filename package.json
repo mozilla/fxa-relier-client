@@ -1,0 +1,33 @@
+{
+  "name": "fxa-relier-client",
+  "version": "0.0.0",
+  "description": "fxa-relier-client =================",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mozilla/fxa-relier-client.git"
+  },
+  "author": "Mozilla",
+  "license": "MPL 2.0",
+  "bugs": {
+    "url": "https://github.com/mozilla/fxa-relier-client/issues"
+  },
+  "homepage": "https://github.com/mozilla/fxa-relier-client",
+  "devDependencies": {
+    "bower": "1.3.12",
+    "grunt": "0.4.5",
+    "grunt-build-control": "git://github.com/robwierzbowski/grunt-build-control#274952",
+    "grunt-bump": "0.0.16",
+    "grunt-bytesize": "0.1.1",
+    "grunt-cli": "0.1.13",
+    "grunt-contrib-clean": "0.6.0",
+    "grunt-contrib-jshint": "0.10.0",
+    "grunt-contrib-requirejs": "0.4.4",
+    "grunt-contrib-watch": "0.6.1",
+    "grunt-conventional-changelog": "1.1.0",
+    "grunt-copyright": "0.1.0",
+    "grunt-jscs": "0.8.1",
+    "intern": "2.1.1",
+    "load-grunt-tasks": "1.0.0"
+  }
+}
