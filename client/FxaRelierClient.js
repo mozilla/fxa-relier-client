@@ -4,11 +4,14 @@
 
 define([
   'p-promise',
-  'client/auth/lightbox/api'
-], function (p, LightboxAPI) {
+  'client/auth/lightbox/api',
+  'client/lib/options'
+], function (p, LightboxAPI, Options) {
   'use strict';
 
   function FxaRelierClient(options) {
+    Options.checkRequired(['clientId'], options);
+
     this.auth = {
       lightbox: new LightboxAPI(options)
     };

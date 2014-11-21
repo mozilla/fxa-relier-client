@@ -6,10 +6,11 @@
 
 define([
   'p-promise',
-  '../constants',
+  'client/lib/constants',
+  'client/lib/options',
   './lightbox',
   './iframe_channel'
-], function (p, Constants, Lightbox, IFrameChannel) {
+], function (p, Constants, Options, Lightbox, IFrameChannel) {
   'use strict';
 
   function createQueryParam(key, value) {
@@ -33,33 +34,40 @@ define([
     options = options || {};
 
     /*jshint validthis: true*/
-    if (this._lightbox) {
-      return p.reject(new Error('lightbox already open'));
-    }
-
-    this._lightbox = new Lightbox({
-      src: getLightboxSrc(
-        this._fxaHost, page, this._clientId,
-          options.state, options.scope, options.redirect_uri, options.redirectTo),
-      window: this._window
-    });
-    this._lightbox.load();
-
-    this._iframeChannel = new IFrameChannel({
-      iframeHost: this._fxaHost,
-      contentWindow: this._lightbox.getContentWindow(),
-      window: this._window
-    });
-
     var self = this;
-    return this._iframeChannel.attach()
-      .then(function (result) {
-        self.unload();
-        return result;
-      }, function (err) {
-        self.unload();
-        throw err;
+    return p().then(function() {
+      if (self._lightbox) {
+        throw new Error('lightbox already open');
+      }
+
+      var requiredOptions = ['scope', 'state', 'redirect_uri'];
+      Options.checkRequired(requiredOptions, options);
+
+      var src = getLightboxSrc(self._fxaHost, page, self._clientId,
+            options.state, options.scope, options.redirect_uri,
+            options.redirectTo);
+
+      self._lightbox = new Lightbox({
+        src: src,
+        window: self._window
       });
+      self._lightbox.load();
+
+      self._iframeChannel = new IFrameChannel({
+        iframeHost: self._fxaHost,
+        contentWindow: self._lightbox.getContentWindow(),
+        window: self._window
+      });
+
+      return self._iframeChannel.attach();
+    })
+    .then(function (result) {
+      self.unload();
+      return result;
+    }, function (err) {
+      self.unload();
+      throw err;
+    });
   }
 
   function LightboxAPI(options) {
@@ -80,15 +88,18 @@ define([
     },
 
     unload: function () {
-      if (! this._lightbox) {
-        throw new Error('lightbox not open');
-      }
+      var self = this;
+      return p().then(function () {
+        if (! self._lightbox) {
+          throw new Error('lightbox not open');
+        }
 
-      this._lightbox.unload();
-      delete this._lightbox;
+        self._lightbox.unload();
+        delete self._lightbox;
 
-      this._iframeChannel.detach();
-      delete this._iframeChannel;
+        self._iframeChannel.detach();
+        delete self._iframeChannel;
+      });
     }
   };
 
