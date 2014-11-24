@@ -14,10 +14,10 @@ define([
 
   bdd.describe('FxaRelierClient', function () {
     bdd.describe('constructor', function () {
-      bdd.it('throws if `client_id` is missing', function () {
+      bdd.it('throws if `clientId` is missing', function () {
         return p()
           .then(function () {
-            return new FxaRelierClient({
+            return new FxaRelierClient(null, {
               window: new WindowMock()
             });
           })
@@ -27,8 +27,7 @@ define([
       });
 
       bdd.it('creates a client if all options are available', function () {
-        var client = new FxaRelierClient({
-          clientId: 'client_id',
+        var client = new FxaRelierClient('client_id', {
           window: new WindowMock()
         });
 

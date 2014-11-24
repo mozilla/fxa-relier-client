@@ -70,23 +70,60 @@ define([
     });
   }
 
-  function LightboxAPI(options) {
-    options = options || {};
+  /**
+   * Authenticate users with a lightbox
+   *
+   * @class LightboxAPI
+   */
+  function LightboxAPI(clientId, options) {
+    if (! clientId) {
+      throw new Error('clientId is required');
+    }
+    this._clientId = clientId;
 
+    options = options || {};
     this._fxaHost = options.fxaHost || Constants.DEFAULT_FXA_HOST;
     this._window = options.window || window;
-    this._clientId = options.clientId;
   }
 
   LightboxAPI.prototype = {
-    signIn: function (options) {
-      return openLightbox.call(this, Constants.SIGNIN_ENDPOINT, options);
+    /**
+     * Sign in an existing user
+     *
+     * @method signIn
+     * @param {Object} config - configuration
+     *   @param {String} config.state
+     *   CSRF/State token
+     *   @param {String} config.redirect_uri
+     *   URI to redirect to when complete
+     *   @param {String} config.scope
+     *   OAuth scope
+     */
+    signIn: function (config) {
+      return openLightbox.call(this, Constants.SIGNIN_ENDPOINT, config);
     },
 
-    signUp: function (options) {
-      return openLightbox.call(this, Constants.SIGNUP_ENDPOINT, options);
+    /**
+     * Sign up a new user
+     *
+     * @method signUp
+     * @param {Object} config - configuration
+     *   @param {String} config.state
+     *   CSRF/State token
+     *   @param {String} config.redirect_uri
+     *   URI to redirect to when complete
+     *   @param {String} config.scope
+     *   OAuth scope
+     */
+    signUp: function (config) {
+      return openLightbox.call(this, Constants.SIGNUP_ENDPOINT, config);
     },
 
+    /**
+     * Unload the lightbox
+     *
+     * @method unload
+     */
     unload: function () {
       var self = this;
       return p().then(function () {

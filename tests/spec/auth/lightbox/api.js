@@ -18,9 +18,8 @@ define([
 
     bdd.beforeEach(function () {
       windowMock = new WindowMock();
-      lightbox = new LightboxAPI({
-        window: windowMock,
-        clientId: 'client_id'
+      lightbox = new LightboxAPI('client_id', {
+        window: windowMock
       });
     });
 

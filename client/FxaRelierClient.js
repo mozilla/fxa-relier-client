@@ -4,20 +4,43 @@
 
 define([
   'p-promise',
-  'client/auth/lightbox/api',
-  'client/lib/options'
+  'client/auth/lightbox/api'
 ], function (p, LightboxAPI, Options) {
   'use strict';
 
-  function FxaRelierClient(options) {
-    Options.checkRequired(['clientId'], options);
+  /**
+   * @class FxaRelierClient
+   * @constructor
+   * @param {string} clientId - the OAuth client ID for the relier
+   * @param {Object} [options={}] - configuration
+   *   @param {String} [options.fxaHost]
+   *   Firefox Accounts Content Server host
+   *   @param {Object} [options.window]
+   *   window override, used for unit tests
+   */
+  function FxaRelierClient(clientId, options) {
+    if (! clientId) {
+      throw new Error('clientId is required');
+    }
 
+    /**
+     * Authenticate users using the lightbox
+     *
+     * @property auth.lightbox
+     * @type {LightboxAPI}
+     */
     this.auth = {
-      lightbox: new LightboxAPI(options)
+      lightbox: new LightboxAPI(clientId, options)
     };
   }
 
   FxaRelierClient.prototype = {
+    /**
+     * FxaRelierClient version
+     *
+     * @property version
+     * @type {String}
+     */
     version: '0.0.0'
   };
 
