@@ -23,10 +23,9 @@ define([
 
   intern.environments = [
     { browserName: 'firefox', version: '18' },
-    /*
     { browserName: 'internet explorer', version: ['9', '10'], platform: [ 'Windows 7' ] },
     { browserName: 'chrome' },
-    { browserName: 'safari' }*/
+    { browserName: 'safari' }
   ];
 
   console.log("SAUCE", intern.proxyUrl);
