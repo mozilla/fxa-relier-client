@@ -1,4 +1,6 @@
-
-components/
-node_modules/
-build/
+/node_modules
+/build
+/components
+/docs
+sauce_connect.log*
+.DS_Store

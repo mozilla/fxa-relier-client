@@ -9,6 +9,13 @@
   },
   "author": "Mozilla",
   "license": "MPL 2.0",
+  "scripts": {
+    "start": "grunt",
+    "test": "grunt test",
+    "test-local": "intern-client config=tests/intern",
+    "setup": "npm install && bower install",
+    "contributors": "git shortlog -s | cut -c8- | sort -f > CONTRIBUTORS.md"
+  },
   "bugs": {
     "url": "https://github.com/mozilla/fxa-relier-client/issues"
   },
@@ -24,10 +31,12 @@
     "grunt-contrib-jshint": "0.10.0",
     "grunt-contrib-requirejs": "0.4.4",
     "grunt-contrib-watch": "0.6.1",
+    "grunt-contrib-yuidoc": "0.5.2",
     "grunt-conventional-changelog": "1.1.0",
     "grunt-copyright": "0.1.0",
     "grunt-jscs": "0.8.1",
-    "intern": "2.1.1",
+    "grunt-open": "0.2.3",
+    "intern-geezer": "1.7.0",
     "load-grunt-tasks": "1.0.0"
   }
 }

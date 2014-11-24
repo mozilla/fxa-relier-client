@@ -4,8 +4,9 @@
 
 module.exports = function (grunt) {
   // load all grunt tasks matching the `grunt-*` pattern
-  grunt.loadNpmTasks('intern');
   require('load-grunt-tasks')(grunt);
+  // load the Intern tasks
+  grunt.loadNpmTasks('intern-geezer');
 
   var pkg = grunt.file.readJSON('package.json');
 
@@ -41,11 +42,9 @@ module.exports = function (grunt) {
   grunt.registerTask('debug',
     ['watch:debug']);
 
-  /*
   grunt.registerTask('doc',
     'Create client documentation using YUIDoc',
     ['yuidoc', 'open']);
-  */
 
   grunt.registerTask('travis',
     'Test runner task for Travis CI',

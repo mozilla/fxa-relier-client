@@ -24,9 +24,9 @@
     "p-promise": "https://github.com/rkatic/p.git#3c1fe61c9ba47aa3c09a55eb3025bd29a238d1ea"
   },
   "devDependencies": {
-    "mocha": "~2.0.1",
-    "requirejs": "~2.1.15",
-    "chai": "~1.10.0",
-    "almond": "~0.3.0"
+    "almond": "0.3.0",
+    "chai": "1.10.0",
+    "mocha": "2.0.1",
+    "requirejs": "2.1.15"
   }
 }
