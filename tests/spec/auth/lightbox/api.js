@@ -10,10 +10,11 @@ define([
   'client/auth/lightbox/lightbox',
   'client/auth/lightbox/iframe_channel',
   'tests/mocks/window',
-  'tests/addons/sinon'
+  'tests/addons/sinon',
+  'p-promise'
 ],
 function (bdd, assert, LightboxAPI, Lightbox, IframeChannel,
-      WindowMock, sinon) {
+      WindowMock, sinon, p) {
   'use strict';
 
   bdd.describe('auth/lightbox/api', function () {
@@ -25,8 +26,12 @@ function (bdd, assert, LightboxAPI, Lightbox, IframeChannel,
 
     bdd.beforeEach(function () {
       windowMock = new WindowMock();
-      channel = new IframeChannel();
-      lightbox = new Lightbox();
+      channel = new IframeChannel({
+        window: windowMock
+      });
+      lightbox = new Lightbox({
+        window: windowMock
+      });
       lightboxAPI = new LightboxAPI('client_id', {
         window: windowMock,
         channel: channel,
@@ -87,15 +92,73 @@ function (bdd, assert, LightboxAPI, Lightbox, IframeChannel,
         });
       });
 
-      bdd.it('should open the lightbox', function () {
+      bdd.it('should open the lightbox to the correct page with the expected query parameters', function () {
         sinon.spy(lightbox, 'load');
+        sinon.stub(channel, 'attach', function () {
+          return p();
+        });
+
         return lightboxAPI.signIn({
           state: 'state',
           scope: 'scope',
           redirect_uri: 'redirect_uri'
         })
         .then(function () {
-          assert.isTrue(lightbox.load.called);
+          assert.isTrue(/oauth\/signin/.test(lightbox.load.args[0]));
+          assert.isTrue(/state=state/.test(lightbox.load.args[0]));
+          assert.isTrue(/scope=scope/.test(lightbox.load.args[0]));
+          assert.isTrue(/redirect_uri=redirect_uri/.test(lightbox.load.args[0]));
+        });
+      });
+
+      bdd.it('should open the lightbox to the /force_auth page with the expected query parameters if the RP forces authentication as a user', function () {
+        sinon.spy(lightbox, 'load');
+        sinon.stub(channel, 'attach', function () {
+          return p();
+        });
+
+        return lightboxAPI.signIn({
+          state: 'state',
+          scope: 'scope',
+          redirect_uri: 'redirect_uri',
+          force_email: 'testuser@testuser.com'
+        })
+        .then(function () {
+          assert.isTrue(/force_auth/.test(lightbox.load.args[0]));
+          assert.isTrue(/state=state/.test(lightbox.load.args[0]));
+          assert.isTrue(/scope=scope/.test(lightbox.load.args[0]));
+          assert.isTrue(/redirect_uri=redirect_uri/.test(lightbox.load.args[0]));
+          assert.isTrue(/email=testuser%40testuser.com/.test(lightbox.load.args[0]));
+        });
+      });
+
+      bdd.it('should return the result returned by the channel', function () {
+        sinon.stub(channel, 'attach', function () {
+          return p('oauth_result');
+        });
+
+        return lightboxAPI.signIn({
+          state: 'state',
+          scope: 'scope',
+          redirect_uri: 'redirect_uri'
+        })
+        .then(function (result) {
+          assert.equal(result, 'oauth_result');
+        });
+      });
+
+      bdd.it('should return any errors returned by the channel', function () {
+        sinon.stub(channel, 'attach', function () {
+          return p.reject(new Error('oauth_error'));
+        });
+
+        return lightboxAPI.signIn({
+          state: 'state',
+          scope: 'scope',
+          redirect_uri: 'redirect_uri'
+        })
+        .then(assert.fail, function (err) {
+          assert.equal(err.message, 'oauth_error');
         });
       });
     });
@@ -127,6 +190,55 @@ function (bdd, assert, LightboxAPI, Lightbox, IframeChannel,
         })
         .then(assert.fail, function (err) {
           assert.equal(err.message, 'lightbox already open');
+        });
+      });
+
+      bdd.it('should open the lightbox to the correct page with the expected query parameters', function () {
+        sinon.spy(lightbox, 'load');
+        sinon.stub(channel, 'attach', function () {
+          return p();
+        });
+
+        return lightboxAPI.signUp({
+          state: 'state',
+          scope: 'scope',
+          redirect_uri: 'redirect_uri'
+        })
+        .then(function () {
+          assert.isTrue(/oauth\/signup/.test(lightbox.load.args[0]));
+          assert.isTrue(/state=state/.test(lightbox.load.args[0]));
+          assert.isTrue(/scope=scope/.test(lightbox.load.args[0]));
+          assert.isTrue(/redirect_uri=redirect_uri/.test(lightbox.load.args[0]));
+        });
+      });
+
+      bdd.it('should return the result returned by the channel', function () {
+        sinon.stub(channel, 'attach', function () {
+          return p('oauth_result');
+        });
+
+        return lightboxAPI.signUp({
+          state: 'state',
+          scope: 'scope',
+          redirect_uri: 'redirect_uri'
+        })
+        .then(function (result) {
+          assert.equal(result, 'oauth_result');
+        });
+      });
+
+      bdd.it('should return any errors returned by the channel', function () {
+        sinon.stub(channel, 'attach', function () {
+          return p.reject(new Error('oauth_error'));
+        });
+
+        return lightboxAPI.signUp({
+          state: 'state',
+          scope: 'scope',
+          redirect_uri: 'redirect_uri'
+        })
+        .then(assert.fail, function (err) {
+          assert.equal(err.message, 'oauth_error');
         });
       });
     });

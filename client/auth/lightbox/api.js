@@ -50,7 +50,7 @@ define([
     /*jshint validthis: true*/
     var self = this;
     return p().then(function() {
-      if (self._lightbox) {
+      if (self._lightbox && self._lightbox.isLoaded()) {
         throw new Error('lightbox already open');
       }
 
@@ -58,7 +58,7 @@ define([
 
       var src = getLightboxSrc(self._fxaHost, page, self._clientId,
             config.state, config.scope, config.redirect_uri,
-            config.email);
+            config.force_email);
       lightbox.load(src);
 
       return lightbox;
@@ -143,9 +143,15 @@ define([
      *   URI to redirect to when complete
      *   @param {String} config.scope
      *   OAuth scope
+     *   @param {String} [config.force_email]
+     *   Force the user to sign in with the given email
      */
     signIn: function (config) {
-      return authenticate.call(this, Constants.SIGNIN_ENDPOINT, config);
+      config = config || {};
+      var page = config.force_email ?
+                   Constants.FORCE_EMAIL_ENDPOINT :
+                   Constants.SIGNIN_ENDPOINT;
+      return authenticate.call(this, page, config);
     },
 
     /**
@@ -177,10 +183,7 @@ define([
         }
 
         self._lightbox.unload();
-        delete self._lightbox;
-
         self._channel.detach();
-        delete self._channel;
       });
     }
   };

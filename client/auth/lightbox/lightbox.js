@@ -82,9 +82,15 @@ define([
       return this._contentWindow;
     },
 
+    isLoaded: function () {
+      return !! this._backgroundEl;
+    },
+
     unload: function () {
       if (this._backgroundEl) {
         this._window.document.body.removeChild(this._backgroundEl);
+        delete this._backgroundEl;
+        delete this._iframe;
       }
     }
   };
