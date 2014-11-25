@@ -8,7 +8,8 @@ define([], function () {
   return {
     DEFAULT_FXA_HOST: 'https://accounts.firefox.com',
     SIGNIN_ENDPOINT: 'oauth/signin',
-    SIGNUP_ENDPOINT: 'oauth/signup'
+    SIGNUP_ENDPOINT: 'oauth/signup',
+    FORCE_AUTH_ENDPOINT: 'force_auth'
   };
 });
 

@@ -8,30 +8,44 @@ define([
   'p-promise',
   'client/lib/constants',
   'client/lib/options',
+  'client/lib/url',
   './lightbox',
   './iframe_channel'
-], function (p, Constants, Options, Lightbox, IFrameChannel) {
+], function (p, Constants, Options, Url, Lightbox, IFrameChannel) {
   'use strict';
 
-  function createQueryParam(key, value) {
-    return key + '=' + encodeURIComponent(value);
+  function getLightboxSrc(host, page, clientId, state, scope,
+      redirectUri, email) {
+    var queryParams = {
+      client_id: clientId,
+      state: state,
+      scope: scope,
+      redirect_uri: redirectUri
+    };
+
+    if (email) {
+      queryParams.email = email;
+    }
+
+    return host + '/' + page + Url.objectToQueryString(queryParams);
   }
 
-  function getLightboxSrc(host, page, clientId, state, scope, redirectUri, redirectTo) {
-    var src = host + '/' + page + '?';
-    var queryParams = [];
+  function getLightbox() {
+    //jshint validthis: true
+    var self = this;
+    if (self._lightbox) {
+      return self._lightbox;
+    }
 
-    queryParams.push(createQueryParam('client_id', clientId));
-    queryParams.push(createQueryParam('state', state));
-    queryParams.push(createQueryParam('scope', scope));
-    queryParams.push(createQueryParam('redirect_uri', redirectUri));
+    self._lightbox = new Lightbox({
+      window: self._window
+    });
 
-    src += queryParams.join('&');
-    return src;
+    return self._lightbox;
   }
 
-  function openLightbox(page, options) {
-    options = options || {};
+  function openLightbox(page, config) {
+    config = config || {};
 
     /*jshint validthis: true*/
     var self = this;
@@ -40,25 +54,54 @@ define([
         throw new Error('lightbox already open');
       }
 
-      var requiredOptions = ['scope', 'state', 'redirect_uri'];
-      Options.checkRequired(requiredOptions, options);
-
-      self._lightbox = new Lightbox({
-        window: self._window
-      });
+      var lightbox = getLightbox.call(self);
 
       var src = getLightboxSrc(self._fxaHost, page, self._clientId,
-            options.state, options.scope, options.redirect_uri,
-            options.redirectTo);
-      self._lightbox.load(src);
+            config.state, config.scope, config.redirect_uri,
+            config.email);
+      lightbox.load(src);
 
-      self._iframeChannel = new IFrameChannel({
-        iframeHost: self._fxaHost,
-        contentWindow: self._lightbox.getContentWindow(),
-        window: self._window
-      });
+      return lightbox;
+    });
+  }
 
-      return self._iframeChannel.attach();
+  function getChannel(lightbox) {
+    //jshint validthis: true
+    var self = this;
+    if (self._channel) {
+      return self._channel;
+    }
+
+    self._channel = new IFrameChannel({
+      iframeHost: self._fxaHost,
+      contentWindow: lightbox.getContentWindow(),
+      window: self._window
+    });
+
+    return self._channel;
+  }
+
+  function waitForAuthentication(lightbox) {
+    /*jshint validthis: true*/
+    var self = this;
+    return p().then(function () {
+      var channel = getChannel.call(self, lightbox);
+      return channel.attach();
+    });
+  }
+
+  function authenticate(page, config) {
+    /*jshint validthis: true*/
+    var self = this;
+
+    return p().then(function () {
+      var requiredOptions = ['scope', 'state', 'redirect_uri'];
+      Options.checkRequired(requiredOptions, config);
+
+      return openLightbox.call(self, page, config);
+    })
+    .then(function (lightbox) {
+      return waitForAuthentication.call(self, lightbox);
     })
     .then(function (result) {
       self.unload();
@@ -73,6 +116,7 @@ define([
    * Authenticate users with a lightbox
    *
    * @class LightboxAPI
+   * @constructor
    */
   function LightboxAPI(clientId, options) {
     if (! clientId) {
@@ -83,6 +127,8 @@ define([
     options = options || {};
     this._fxaHost = options.fxaHost || Constants.DEFAULT_FXA_HOST;
     this._window = options.window || window;
+    this._lightbox = options.lightbox;
+    this._channel = options.channel;
   }
 
   LightboxAPI.prototype = {
@@ -99,7 +145,7 @@ define([
      *   OAuth scope
      */
     signIn: function (config) {
-      return openLightbox.call(this, Constants.SIGNIN_ENDPOINT, config);
+      return authenticate.call(this, Constants.SIGNIN_ENDPOINT, config);
     },
 
     /**
@@ -115,7 +161,7 @@ define([
      *   OAuth scope
      */
     signUp: function (config) {
-      return openLightbox.call(this, Constants.SIGNUP_ENDPOINT, config);
+      return authenticate.call(this, Constants.SIGNUP_ENDPOINT, config);
     },
 
     /**
@@ -133,8 +179,8 @@ define([
         self._lightbox.unload();
         delete self._lightbox;
 
-        self._iframeChannel.detach();
-        delete self._iframeChannel;
+        self._channel.detach();
+        delete self._channel;
       });
     }
   };

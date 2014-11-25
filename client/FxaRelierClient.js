@@ -17,6 +17,10 @@ define([
    *   Firefox Accounts Content Server host
    *   @param {Object} [options.window]
    *   window override, used for unit tests
+   *   @param {Object} [options.lightbox]
+   *   lightbox override, used for unit tests
+   *   @param {Object} [options.channel]
+   *   channel override, used for unit tests
    */
   function FxaRelierClient(clientId, options) {
     if (! clientId) {

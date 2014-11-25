@@ -7,24 +7,35 @@ define([
   'intern!bdd',
   'intern/chai!assert',
   'client/auth/lightbox/api',
-  'tests/mocks/window'
-], function (bdd, assert, LightboxAPI, WindowMock) {
+  'client/auth/lightbox/lightbox',
+  'client/auth/lightbox/iframe_channel',
+  'tests/mocks/window',
+  'tests/addons/sinon'
+],
+function (bdd, assert, LightboxAPI, Lightbox, IframeChannel,
+      WindowMock, sinon) {
   'use strict';
 
   bdd.describe('auth/lightbox/api', function () {
 
     var windowMock;
     var lightbox;
+    var channel;
+    var lightboxAPI;
 
     bdd.beforeEach(function () {
       windowMock = new WindowMock();
-      lightbox = new LightboxAPI('client_id', {
-        window: windowMock
+      channel = new IframeChannel();
+      lightbox = new Lightbox();
+      lightboxAPI = new LightboxAPI('client_id', {
+        window: windowMock,
+        channel: channel,
+        lightbox: lightbox
       });
     });
 
     bdd.afterEach(function () {
-      return lightbox.unload().then(null, function (err) {
+      return lightboxAPI.unload().then(null, function (err) {
         if (err.message !== 'lightbox not open') {
           throw err;
         }
@@ -40,7 +51,7 @@ define([
 
       delete options[optionName];
 
-      return lightbox[endpoint](options)
+      return lightboxAPI[endpoint](options)
         .then(assert.fail, function (err) {
           assert.equal(err.message, optionName + ' is required');
         });
@@ -60,19 +71,31 @@ define([
       });
 
       bdd.it('should reject if a lightbox is already open', function () {
-        lightbox.signIn({
+        lightboxAPI.signIn({
           state: 'state',
           scope: 'scope',
           redirect_uri: 'redirect_uri'
         });
 
-        return lightbox.signIn({
+        return lightboxAPI.signIn({
           state: 'state',
           scope: 'scope',
           redirect_uri: 'redirect_uri'
         })
         .then(assert.fail, function (err) {
           assert.equal(err.message, 'lightbox already open');
+        });
+      });
+
+      bdd.it('should open the lightbox', function () {
+        sinon.spy(lightbox, 'load');
+        return lightboxAPI.signIn({
+          state: 'state',
+          scope: 'scope',
+          redirect_uri: 'redirect_uri'
+        })
+        .then(function () {
+          assert.isTrue(lightbox.load.called);
         });
       });
     });
@@ -91,13 +114,13 @@ define([
       });
 
       bdd.it('should reject if a lightbox is already open', function () {
-        lightbox.signUp({
+        lightboxAPI.signUp({
           state: 'state',
           scope: 'scope',
           redirect_uri: 'redirect_uri'
         });
 
-        return lightbox.signUp({
+        return lightboxAPI.signUp({
           state: 'state',
           scope: 'scope',
           redirect_uri: 'redirect_uri'
