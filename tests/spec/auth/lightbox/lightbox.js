@@ -20,8 +20,7 @@ define([
       windowMock = new WindowMock();
 
       lightbox = new Lightbox({
-        window: windowMock,
-        src: CONTENT_URL
+        window: windowMock
       });
     });
 
@@ -40,7 +39,7 @@ define([
           child = _child;
         };
 
-        lightbox.load();
+        lightbox.load(CONTENT_URL);
 
         assert.equal(child.type, 'div');
 

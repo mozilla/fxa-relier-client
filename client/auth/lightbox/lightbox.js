@@ -33,11 +33,10 @@ define([
     options = options || {};
 
     this._window = options.window;
-    this._src = options.src;
   }
 
   Lightbox.prototype = {
-    load: function () {
+    load: function (src) {
       var background = this._backgroundEl = createElement(this._window, 'div', {
         style: cssPropsToString({
           background: 'rgba(0,0,0,0.5)',
@@ -51,7 +50,7 @@ define([
 
       var iframe = createElement(this._window, 'iframe', {
         id: 'fxa',
-        src: this._src,
+        src: src,
         width: '600',
         height: '400',
         allowtransparency: 'true',

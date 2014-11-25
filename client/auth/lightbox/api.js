@@ -43,15 +43,14 @@ define([
       var requiredOptions = ['scope', 'state', 'redirect_uri'];
       Options.checkRequired(requiredOptions, options);
 
+      self._lightbox = new Lightbox({
+        window: self._window
+      });
+
       var src = getLightboxSrc(self._fxaHost, page, self._clientId,
             options.state, options.scope, options.redirect_uri,
             options.redirectTo);
-
-      self._lightbox = new Lightbox({
-        src: src,
-        window: self._window
-      });
-      self._lightbox.load();
+      self._lightbox.load(src);
 
       self._iframeChannel = new IFrameChannel({
         iframeHost: self._fxaHost,
