@@ -4,8 +4,9 @@
 
 define([
   'p-promise',
-  'client/auth/lightbox/api'
-], function (p, LightboxAPI, Options) {
+  'client/auth/lightbox/api',
+  'client/auth/redirect/api'
+], function (p, LightboxAPI, RedirectAPI, Options) {
   'use strict';
 
   /**
@@ -27,14 +28,22 @@ define([
       throw new Error('clientId is required');
     }
 
-    /**
-     * Authenticate users using the lightbox
-     *
-     * @property auth.lightbox
-     * @type {LightboxAPI}
-     */
     this.auth = {
-      lightbox: new LightboxAPI(clientId, options)
+      /**
+       * Authenticate a user using the lightbox
+       *
+       * @property auth.lightbox
+       * @type {LightboxAPI}
+       */
+      lightbox: new LightboxAPI(clientId, options),
+
+      /**
+       * Authenticate a user using the redirect flow
+       *
+       * @property auth.redirect
+       * @type {RedirectAPI}
+       */
+      redirect: new RedirectAPI(clientId, options)
     };
   }
 

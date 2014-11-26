@@ -32,6 +32,7 @@ define([
         });
 
         assert.ok(client.auth.lightbox);
+        assert.ok(client.auth.redirect);
       });
     });
   });

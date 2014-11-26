@@ -76,6 +76,10 @@ define([], function () {
   function WindowMock() {
     DOMElement.call(this, 'window');
     this.document = new Document();
+
+    this.location = {
+      href: null
+    };
   }
   WindowMock.prototype = new DOMElement();
   WindowMock.prototype.postMessage = function (message, targetOrigin, origin) {

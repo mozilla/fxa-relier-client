@@ -4,6 +4,7 @@
 
 define([
   './spec/FxaRelierClient',
+  './spec/auth/redirect/api',
   './spec/auth/lightbox/api',
   './spec/auth/lightbox/iframe_channel',
   './spec/auth/lightbox/lightbox'
