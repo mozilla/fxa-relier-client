@@ -14,6 +14,7 @@ define([
    * Authenticate a user with the redirect flow.
    *
    * @class RedirectAPI
+   * @extends AuthenticationAPI
    * @constructor
    */
   function RedirectAPI(clientId, options) {
@@ -22,19 +23,9 @@ define([
 
   RedirectAPI.prototype = Object.create(AuthenticationAPI.prototype);
   ObjectHelpers.extend(RedirectAPI.prototype, {
-    authenticate: function (page, config) {
-      var requiredOptions = ['scope', 'state', 'redirect_uri'];
-      Options.checkRequired(requiredOptions, config);
-
-      var self = this;
-      var fxaUrl = self.getFxaUrl(self._fxaHost, page, self._clientId,
-            config.state, config.scope, config.redirect_uri,
-            config.force_email);
-
-
+    openFxa: function (fxaUrl) {
       this._window.location.href = fxaUrl;
     }
-
   });
 
   return RedirectAPI;

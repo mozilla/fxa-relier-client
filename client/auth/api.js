@@ -5,9 +5,11 @@
 /*globals define*/
 
 define([
+  'p-promise',
   'client/lib/constants',
-  'client/lib/url',
-], function (Constants, Url) {
+  'client/lib/options',
+  'client/lib/url'
+], function (p, Constants, Options, Url) {
   'use strict';
 
   function AuthenticationAPI(clientId, options) {
@@ -20,27 +22,47 @@ define([
     this._window = options.window || window;
   }
 
+  function authenticate(page, config) {
+    //jshint validthis: true
+    var self = this;
+    return p().then(function () {
+      var requiredOptions = ['scope', 'state', 'redirect_uri'];
+      Options.checkRequired(requiredOptions, config);
+
+      var fxaUrl = getFxaUrl.call(self, page, config);
+      return self.openFxa(fxaUrl);
+    });
+  }
+
+  function getFxaUrl(page, config) {
+    //jshint validthis: true
+    var queryParams = {
+      client_id: this._clientId,
+      state: config.state,
+      scope: config.scope,
+      redirect_uri: config.redirect_uri
+    };
+
+    if (config.force_email) {
+      queryParams.email = config.force_email;
+    }
+
+    return this._fxaHost + '/' + page + Url.objectToQueryString(queryParams);
+  }
+
   AuthenticationAPI.prototype = {
-    authenticate: function (page, config) {
-      throw new Error('authenticate be overridden');
+    /**
+     * Open Firefox Accounts to authenticate the user.
+     * Must be overridden to provide API specific functionality.
+     *
+     * @method openFxa
+     * @param {String} fxaUrl - URL to open for authentication
+     *
+     * @virtual
+     */
+    openFxa: function (fxaUrl) {
+      throw new Error('openFxa must be overridden');
     },
-
-    getFxaUrl: function (host, page, clientId, state, scope,
-        redirectUri, email) {
-      var queryParams = {
-        client_id: clientId,
-        state: state,
-        scope: scope,
-        redirect_uri: redirectUri
-      };
-
-      if (email) {
-        queryParams.email = email;
-      }
-
-      return host + '/' + page + Url.objectToQueryString(queryParams);
-    },
-
 
     /**
      * Sign in an existing user
@@ -61,7 +83,7 @@ define([
       var page = config.force_email ?
                    Constants.FORCE_EMAIL_ENDPOINT :
                    Constants.SIGNIN_ENDPOINT;
-      return this.authenticate.call(this, page, config);
+      return authenticate.call(this, page, config);
     },
 
     /**
@@ -77,7 +99,7 @@ define([
      *   OAuth scope
      */
     signUp: function (config) {
-      return this.authenticate.call(this, Constants.SIGNUP_ENDPOINT, config);
+      return authenticate.call(this, Constants.SIGNUP_ENDPOINT, config);
     },
   };
 

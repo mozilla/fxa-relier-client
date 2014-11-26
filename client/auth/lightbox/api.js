@@ -28,9 +28,7 @@ define([
     return self._lightbox;
   }
 
-  function openLightbox(page, config) {
-    config = config || {};
-
+  function openLightbox(fxaUrl) {
     /*jshint validthis: true*/
     var self = this;
     return p().then(function() {
@@ -40,10 +38,7 @@ define([
 
       var lightbox = getLightbox.call(self);
 
-      var src = self.getFxaUrl(self._fxaHost, page, self._clientId,
-            config.state, config.scope, config.redirect_uri,
-            config.force_email);
-      lightbox.load(src);
+      lightbox.load(fxaUrl);
 
       return lightbox;
     });
@@ -78,6 +73,7 @@ define([
    * Authenticate users with a lightbox
    *
    * @class LightboxAPI
+   * @extends AuthenticationAPI
    * @constructor
    */
   function LightboxAPI(clientId, options) {
@@ -90,26 +86,21 @@ define([
   LightboxAPI.prototype = Object.create(AuthenticationAPI.prototype);
 
   ObjectHelpers.extend(LightboxAPI.prototype, {
-    authenticate: function (page, config) {
+    openFxa: function (fxaUrl) {
       /*jshint validthis: true*/
       var self = this;
 
-      return p().then(function () {
-        var requiredOptions = ['scope', 'state', 'redirect_uri'];
-        Options.checkRequired(requiredOptions, config);
-
-        return openLightbox.call(self, page, config);
-      })
-      .then(function (lightbox) {
-        return waitForAuthentication.call(self, lightbox);
-      })
-      .then(function (result) {
-        self.unload();
-        return result;
-      }, function (err) {
-        self.unload();
-        throw err;
-      });
+      return openLightbox.call(self, fxaUrl)
+        .then(function (lightbox) {
+          return waitForAuthentication.call(self, lightbox);
+        })
+        .then(function (result) {
+          self.unload();
+          return result;
+        }, function (err) {
+          self.unload();
+          throw err;
+        });
     },
 
     /**
