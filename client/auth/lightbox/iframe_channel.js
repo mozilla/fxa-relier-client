@@ -4,10 +4,8 @@
 
 define([
   'p-promise',
-  'client/lib/function',
-  'client/lib/object',
-  'client/lib/events'
-], function (p, FunctionHelpers, ObjectHelpers, Events) {
+  'client/lib/object'
+], function (p, ObjectHelpers) {
   'use strict';
 
   function IFrameChannel(options) {
@@ -22,15 +20,15 @@ define([
     version: '0.0.0',
 
     attach: function () {
-      this._boundOnMessage = FunctionHelpers.bind(onMessage, this);
-      Events.addEventListener(this._window, 'message', this._boundOnMessage);
+      this._boundOnMessage = onMessage.bind(this);
+      this._window.addEventListener('message', this._boundOnMessage, false);
 
       this._deferred = p.defer();
       return this._deferred.promise;
     },
 
     detach: function () {
-      Events.removeEventListener(this._window, 'message', this._boundOnMessage);
+      this._window.removeEventListener('message', this._boundOnMessage, false);
     },
 
     send: function (command, data) {
