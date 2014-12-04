@@ -6,8 +6,37 @@ define([
   'p-promise',
   'client/auth/lightbox/api',
   'client/auth/redirect/api'
-], function (p, LightboxAPI, RedirectAPI, Options) {
+], function (p, LightboxUI, RedirectUI) {
   'use strict';
+
+  var UIs = {
+    'default': RedirectUI,
+    lightbox: LightboxUI,
+    redirect: RedirectUI
+  };
+
+  function getUI(context, ui, clientId, options) {
+    if (context._ui) {
+      throw new Error('Firefox Accounts is already open');
+    }
+
+    if (typeof ui === 'object') {
+      // allow a UI to be passed in for testing.
+      context._ui = ui;
+    } else {
+      ui = ui || 'default';
+      var UI = UIs[ui];
+
+      if (! UI) {
+        throw new Error('Invalid ui: ' + ui);
+      }
+
+      context._ui = new UI(clientId, options);
+    }
+
+    return context._ui;
+  }
+
 
   /**
    * @class FxaRelierClient
@@ -30,20 +59,60 @@ define([
 
     this.auth = {
       /**
-       * Authenticate a user using the lightbox
+       * Sign in an existing user
        *
-       * @property auth.lightbox
-       * @type {LightboxAPI}
+       * @method signIn
+       * @param {Object} config - configuration
+       *   @param {String} config.state
+       *   CSRF/State token
+       *   @param {String} config.redirect_uri
+       *   URI to redirect to when complete
+       *   @param {String} config.scope
+       *   OAuth scope
+       *   @param {String} [config.force_email]
+       *   Force the user to sign in with the given email
+       *   @param {String} [config.ui]
+       *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
        */
-      lightbox: new LightboxAPI(clientId, options),
+      signIn: function (config) {
+        var self = this;
+        return p().then(function () {
+          config = config || {};
+
+          var api = getUI(self, config.ui, clientId, options);
+          return api.signIn(config)
+            .fin(function () {
+              delete self._ui;
+            });
+        });
+      },
 
       /**
-       * Authenticate a user using the redirect flow
+       * Sign up a new user
        *
-       * @property auth.redirect
-       * @type {RedirectAPI}
+       * @method signUp
+       * @param {Object} config - configuration
+       *   @param {String} config.state
+       *   CSRF/State token
+       *   @param {String} config.redirect_uri
+       *   URI to redirect to when complete
+       *   @param {String} config.scope
+       *   OAuth scope
+       *   @param {String} [config.ui]
+       *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
        */
-      redirect: new RedirectAPI(clientId, options)
+      signUp: function (config) {
+        var self = this;
+        return p().then(function () {
+          config = config || {};
+
+          var api = getUI(self, config.ui, clientId, options);
+          return api.signUp(config)
+            .fin(function () {
+              delete self._ui;
+            });
+        });
+      }
     };
   }
 

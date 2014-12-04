@@ -6,10 +6,12 @@
 define([
   'intern!bdd',
   'intern/chai!assert',
+  'tests/addons/sinon',
   'client/FxaRelierClient',
+  'client/auth/lightbox/api',
   'tests/mocks/window',
   'p-promise'
-], function (bdd, assert, FxaRelierClient, WindowMock, p) {
+], function (bdd, assert, sinon, FxaRelierClient, LightboxUI, WindowMock, p) {
   'use strict';
 
   bdd.describe('FxaRelierClient', function () {
@@ -31,8 +33,134 @@ define([
           window: new WindowMock()
         });
 
-        assert.ok(client.auth.lightbox);
-        assert.ok(client.auth.redirect);
+        assert.isFunction(client.auth.signIn);
+        assert.isFunction(client.auth.signUp);
+      });
+    });
+
+    bdd.describe('signIn', function () {
+      var config;
+      var ui;
+      var windowMock;
+
+      bdd.beforeEach(function () {
+        windowMock = new WindowMock();
+        ui = new LightboxUI('client_id', {
+          window: windowMock
+        });
+        config = {
+          ui: ui,
+          state: 'state',
+          redirect_uri: 'http://redirect.to.me',
+          scope: 'profiles'
+        };
+      });
+
+      bdd.it('creates and loads a UI', function () {
+        var client = new FxaRelierClient('client_id', {
+          window: new WindowMock()
+        });
+
+        sinon.stub(ui, 'signIn', function () {
+          return p();
+        });
+
+        return client.auth.signIn(config);
+      });
+
+      bdd.it('throws when re-opening FxA if already open', function () {
+        var client = new FxaRelierClient('client_id', {
+          window: new WindowMock()
+        });
+
+        sinon.stub(ui, 'signIn', function () {
+          // prevent the first window from completing
+          return p.defer().promise;
+        });
+
+        client.auth.signIn(config);
+        return client.auth.signIn(config)
+          .then(assert.fail, function (err) {
+            assert.equal(err.message, 'Firefox Accounts is already open');
+          });
+      });
+
+      bdd.it('does not throw if re-opening FxA after first transaction completes', function () {
+        var client = new FxaRelierClient('client_id', {
+          window: new WindowMock()
+        });
+
+        sinon.stub(ui, 'signIn', function () {
+          return p();
+        });
+
+        return client.auth.signIn(config)
+          .then(function () {
+            return client.auth.signIn(config);
+          });
+      });
+    });
+
+    bdd.describe('signUp', function () {
+      var config;
+      var ui;
+      var windowMock;
+
+      bdd.beforeEach(function () {
+        windowMock = new WindowMock();
+        ui = new LightboxUI('client_id', {
+          window: windowMock
+        });
+        config = {
+          ui: ui,
+          state: 'state',
+          redirect_uri: 'http://redirect.to.me',
+          scope: 'profiles'
+        };
+      });
+
+      bdd.it('creates and loads a UI', function () {
+        var client = new FxaRelierClient('client_id', {
+          window: new WindowMock()
+        });
+
+        sinon.stub(ui, 'signUp', function () {
+          return p();
+        });
+
+        return client.auth.signUp(config);
+      });
+
+      bdd.it('throws when re-opening FxA if already open', function () {
+        var client = new FxaRelierClient('client_id', {
+          window: new WindowMock()
+        });
+
+        sinon.stub(ui, 'signUp', function () {
+          // prevent the first window from completing
+          return p.defer().promise;
+        });
+
+        client.auth.signUp(config);
+        return client.auth.signUp(config)
+          .then(assert.fail, function (err) {
+            assert.equal(err.message, 'Firefox Accounts is already open');
+          });
+      });
+
+      bdd.it('does not throw if re-opening FxA after first transaction completes', function () {
+        var client = new FxaRelierClient('client_id', {
+          window: new WindowMock()
+        });
+
+        sinon.stub(ui, 'signUp', function () {
+          return p();
+        });
+
+        return client.auth.signUp(config)
+          .then(function () {
+            return client.auth.signUp(config);
+          });
       });
     });
   });
