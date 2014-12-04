@@ -1,0 +1,370 @@
+{
+    "project": {
+        "name": "fxa-relier-client",
+        "description": "fxa-relier-client =================",
+        "version": "0.0.1"
+    },
+    "files": {
+        "client/auth/lightbox/api.js": {
+            "name": "client/auth/lightbox/api.js",
+            "modules": {},
+            "classes": {
+                "LightboxAPI": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "client/auth/redirect/api.js": {
+            "name": "client/auth/redirect/api.js",
+            "modules": {},
+            "classes": {
+                "RedirectAPI": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "client/auth/api.js": {
+            "name": "client/auth/api.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "client/lib/object.js": {
+            "name": "client/lib/object.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "client/lib/options.js": {
+            "name": "client/lib/options.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "client/lib/url.js": {
+            "name": "client/lib/url.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "client/FxaRelierClient.js": {
+            "name": "client/FxaRelierClient.js",
+            "modules": {},
+            "classes": {
+                "FxaRelierClient": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {},
+    "classes": {
+        "LightboxAPI": {
+            "name": "LightboxAPI",
+            "shortname": "LightboxAPI",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "client/auth/lightbox/api.js",
+            "line": 72,
+            "description": "Authenticate users with a lightbox",
+            "extends": "AuthenticationAPI",
+            "is_constructor": 1
+        },
+        "RedirectAPI": {
+            "name": "RedirectAPI",
+            "shortname": "RedirectAPI",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "client/auth/redirect/api.js",
+            "line": 13,
+            "description": "Authenticate a user with the redirect flow.",
+            "extends": "AuthenticationAPI",
+            "is_constructor": 1
+        },
+        "FxaRelierClient": {
+            "name": "FxaRelierClient",
+            "shortname": "FxaRelierClient",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "client/FxaRelierClient.js",
+            "line": 41,
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "clientId",
+                    "description": "- the OAuth client ID for the relier",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "- configuration",
+                    "type": "Object",
+                    "optional": true,
+                    "optdefault": "{}",
+                    "props": [
+                        {
+                            "name": "fxaHost",
+                            "description": "Firefox Accounts Content Server host",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "window",
+                            "description": "window override, used for unit tests",
+                            "type": "Object",
+                            "optional": true
+                        },
+                        {
+                            "name": "lightbox",
+                            "description": "lightbox override, used for unit tests",
+                            "type": "Object",
+                            "optional": true
+                        },
+                        {
+                            "name": "channel",
+                            "description": "channel override, used for unit tests",
+                            "type": "Object",
+                            "optional": true
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "classitems": [
+        {
+            "file": "client/auth/lightbox/api.js",
+            "line": 106,
+            "description": "Unload the lightbox",
+            "itemtype": "method",
+            "name": "unload",
+            "class": "LightboxAPI"
+        },
+        {
+            "file": "client/auth/api.js",
+            "line": 54,
+            "description": "Open Firefox Accounts to authenticate the user.\nMust be overridden to provide API specific functionality.",
+            "itemtype": "method",
+            "name": "openFxa",
+            "params": [
+                {
+                    "name": "fxaUrl",
+                    "description": "- URL to open for authentication",
+                    "type": "String"
+                }
+            ],
+            "virtual": "",
+            "class": "FxaRelierClient"
+        },
+        {
+            "file": "client/auth/api.js",
+            "line": 67,
+            "description": "Sign in an existing user",
+            "itemtype": "method",
+            "name": "signIn",
+            "params": [
+                {
+                    "name": "config",
+                    "description": "- configuration",
+                    "type": "Object",
+                    "props": [
+                        {
+                            "name": "state",
+                            "description": "CSRF/State token",
+                            "type": "String"
+                        },
+                        {
+                            "name": "redirect_uri",
+                            "description": "URI to redirect to when complete",
+                            "type": "String"
+                        },
+                        {
+                            "name": "scope",
+                            "description": "OAuth scope",
+                            "type": "String"
+                        },
+                        {
+                            "name": "force_email",
+                            "description": "Force the user to sign in with the given email",
+                            "type": "String",
+                            "optional": true
+                        }
+                    ]
+                }
+            ],
+            "class": "FxaRelierClient"
+        },
+        {
+            "file": "client/auth/api.js",
+            "line": 89,
+            "description": "Sign up a new user",
+            "itemtype": "method",
+            "name": "signUp",
+            "params": [
+                {
+                    "name": "config",
+                    "description": "- configuration",
+                    "type": "Object",
+                    "props": [
+                        {
+                            "name": "state",
+                            "description": "CSRF/State token",
+                            "type": "String"
+                        },
+                        {
+                            "name": "redirect_uri",
+                            "description": "URI to redirect to when complete",
+                            "type": "String"
+                        },
+                        {
+                            "name": "scope",
+                            "description": "OAuth scope",
+                            "type": "String"
+                        }
+                    ]
+                }
+            ],
+            "class": "FxaRelierClient"
+        },
+        {
+            "file": "client/lib/object.js",
+            "line": 5,
+            "description": "Helper functions for working with Objects",
+            "class": "FxaRelierClient"
+        },
+        {
+            "file": "client/lib/options.js",
+            "line": 5,
+            "description": "Helper functions for working with options",
+            "class": "FxaRelierClient"
+        },
+        {
+            "file": "client/lib/url.js",
+            "line": 5,
+            "description": "helpers to work with URLs",
+            "class": "FxaRelierClient"
+        },
+        {
+            "file": "client/FxaRelierClient.js",
+            "line": 61,
+            "description": "Sign in an existing user",
+            "itemtype": "method",
+            "name": "signIn",
+            "params": [
+                {
+                    "name": "config",
+                    "description": "- configuration",
+                    "type": "Object",
+                    "props": [
+                        {
+                            "name": "state",
+                            "description": "CSRF/State token",
+                            "type": "String"
+                        },
+                        {
+                            "name": "redirect_uri",
+                            "description": "URI to redirect to when complete",
+                            "type": "String"
+                        },
+                        {
+                            "name": "scope",
+                            "description": "OAuth scope",
+                            "type": "String"
+                        },
+                        {
+                            "name": "force_email",
+                            "description": "Force the user to sign in with the given email",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "ui",
+                            "description": "UI to present - `lightbox` or `redirect` - defaults to `redirect`",
+                            "type": "String",
+                            "optional": true
+                        }
+                    ]
+                }
+            ],
+            "class": "FxaRelierClient"
+        },
+        {
+            "file": "client/FxaRelierClient.js",
+            "line": 90,
+            "description": "Sign up a new user",
+            "itemtype": "method",
+            "name": "signUp",
+            "params": [
+                {
+                    "name": "config",
+                    "description": "- configuration",
+                    "type": "Object",
+                    "props": [
+                        {
+                            "name": "state",
+                            "description": "CSRF/State token",
+                            "type": "String"
+                        },
+                        {
+                            "name": "redirect_uri",
+                            "description": "URI to redirect to when complete",
+                            "type": "String"
+                        },
+                        {
+                            "name": "scope",
+                            "description": "OAuth scope",
+                            "type": "String"
+                        },
+                        {
+                            "name": "ui",
+                            "description": "UI to present - `lightbox` or `redirect` - defaults to `redirect`",
+                            "type": "String",
+                            "optional": true
+                        }
+                    ]
+                }
+            ],
+            "class": "FxaRelierClient"
+        },
+        {
+            "file": "client/FxaRelierClient.js",
+            "line": 120,
+            "description": "FxaRelierClient version",
+            "itemtype": "property",
+            "name": "version",
+            "type": "{String}",
+            "class": "FxaRelierClient"
+        }
+    ],
+    "warnings": [
+        {
+            "message": "unknown tag: virtual",
+            "line": " client/auth/api.js:54"
+        },
+        {
+            "message": "Missing item type\nHelper functions for working with Objects",
+            "line": " client/lib/object.js:5"
+        },
+        {
+            "message": "Missing item type\nHelper functions for working with options",
+            "line": " client/lib/options.js:5"
+        },
+        {
+            "message": "Missing item type\nhelpers to work with URLs",
+            "line": " client/lib/url.js:5"
+        }
+    ]
+}
