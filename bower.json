@@ -1,0 +1,31 @@
+{
+  "name": "fxa-relier-client",
+  "version": "0.0.0",
+  "homepage": "https://github.com/mozilla/fxa-relier-client",
+  "authors": [
+    "Mozilla"
+  ],
+  "description": "RP Client for Firefox Accounts",
+  "moduleType": [
+    "amd",
+    "es6",
+    "globals"
+  ],
+  "license": "MPL 2.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "p-promise": "https://github.com/rkatic/p.git#3c1fe61c9ba47aa3c09a55eb3025bd29a238d1ea"
+  },
+  "devDependencies": {
+    "almond": "0.3.0",
+    "chai": "1.10.0",
+    "requirejs": "2.1.15"
+  }
+}
