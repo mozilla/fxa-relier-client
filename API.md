@@ -5,7 +5,7 @@
 2. Download/copy/install a copy of the fxa-relier-client in a location accessible by your site. See [installation](./README.md#installation).
 3. In your HTML, include a script tag pointing to fxa-relier-client.js
 ```html
-  <script src="/vendor/fxa-relier-client.min.js"></script>
+  <script src="/<location_of_relier_library>/fxa-relier-client.min.js"></script>
 ```
 
 ## Initialization
