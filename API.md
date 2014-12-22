@@ -26,7 +26,7 @@ var promise = fxapi.auth.signIn({
 });
 ```
 
-The promise will not resolve if the user is redirected to Firefox Accounts. The promise will be rejected if a required parameter is missing.
+The promise will not resolve if the user is redirected to Firefox Accounts. This is the expected behavior in the redirect flow since the user is redirected before the promise can resolve. The promise will be rejected if a required parameter is missing.
 
 ## Sign up a new user
 
@@ -38,5 +38,5 @@ var promise = fxapi.auth.signUp({
 });
 ```
 
-The promise will not resolve if the user is redirected to Firefox Accounts. The promise will be rejected if a required parameter is missing.
+The promise will not resolve if the user is redirected to Firefox Accounts. This is the expected behavior in the redirect flow since the user is redirected before the promise can resolve. The promise will be rejected if a required parameter is missing.
 
