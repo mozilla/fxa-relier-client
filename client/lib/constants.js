@@ -9,7 +9,7 @@ define([], function () {
     DEFAULT_FXA_HOST: 'https://accounts.firefox.com',
     SIGNIN_ENDPOINT: 'oauth/signin',
     SIGNUP_ENDPOINT: 'oauth/signup',
-    FORCE_EMAIL_ENDPOINT: 'force_auth'
+    FORCE_AUTH_ENDPOINT: 'oauth/force_auth'
   };
 });
 

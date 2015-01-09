@@ -12,6 +12,20 @@ define([
 ], function (p, Constants, Options, Url) {
   'use strict';
 
+  /**
+   * @class AuthenticationAPI
+   * @constructor
+   * @param {string} clientId - the OAuth client ID for the relier
+   * @param {Object} [options={}] - configuration
+   *   @param {String} [options.fxaHost]
+   *   Firefox Accounts Content Server host
+   *   @param {Object} [options.window]
+   *   window override, used for unit tests
+   *   @param {Object} [options.lightbox]
+   *   lightbox override, used for unit tests
+   *   @param {Object} [options.channel]
+   *   channel override, used for unit tests
+   */
   function AuthenticationAPI(clientId, options) {
     if (! clientId) {
       throw new Error('clientId is required');
@@ -47,10 +61,6 @@ define([
       queryParams.email = config.email;
     }
 
-    if (config.force_email) {
-      queryParams.email = config.force_email;
-    }
-
     return this._fxaHost + '/' + page + Url.objectToQueryString(queryParams);
   }
 
@@ -62,7 +72,7 @@ define([
      * @method openFxa
      * @param {String} fxaUrl - URL to open for authentication
      *
-     * @virtual
+     * @protected
      */
     openFxa: function (fxaUrl) {
       throw new Error('openFxa must be overridden');
@@ -84,15 +94,39 @@ define([
      *   but the user is free to change it. Set to the string literal
      *   `blank` to ignore any previously signed in email. Default is
      *   the last email address used to sign in.
-     *   @param {String} [config.force_email]
-     *   Force the user to sign in with the given email
      */
     signIn: function (config) {
       config = config || {};
-      var page = config.force_email ?
-                   Constants.FORCE_EMAIL_ENDPOINT :
-                   Constants.SIGNIN_ENDPOINT;
-      return authenticate.call(this, page, config);
+      return authenticate.call(this, Constants.SIGNIN_ENDPOINT, config);
+    },
+
+    /**
+     * Force a user to sign in as an existing user.
+     *
+     * @method forceAuth
+     * @param {Object} config - configuration
+     *   @param {String} config.state
+     *   CSRF/State token
+     *   @param {String} config.redirect_uri
+     *   URI to redirect to when complete
+     *   @param {String} config.scope
+     *   OAuth scope
+     *   @param {String} config.email
+     *   Email address the user must sign in with. The user
+     *   is unable to modify the email address and is unable
+     *   to sign up if the address is not registered.
+     *   @param {String} [config.ui]
+     *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
+     */
+    forceAuth: function (config) {
+      var self = this;
+      return p().then(function () {
+        config = config || {};
+        var requiredOptions = ['email'];
+        Options.checkRequired(requiredOptions, config);
+
+        return authenticate.call(self, Constants.FORCE_AUTH_ENDPOINT, config);
+      });
     },
 
     /**
