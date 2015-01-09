@@ -2,66 +2,24 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+/*globals define*/
+
 define([
   'p-promise',
+  'client/lib/constants',
+  'client/lib/options',
   'client/lib/function',
-  'client/auth/lightbox/api',
-  'client/auth/redirect/api'
-], function (p, FunctionHelpers, LightboxUI, RedirectUI) {
+  'client/lib/url'
+], function (p, Constants, Options, FunctionHelpers, Url) {
   'use strict';
 
   var partial = FunctionHelpers.partial;
 
-  var UIs = {
-    'default': RedirectUI,
-    lightbox: LightboxUI,
-    redirect: RedirectUI
-  };
-
-  function getUI(context, ui, clientId, options) {
-    if (context._ui) {
-      throw new Error('Firefox Accounts is already open');
-    }
-
-    if (typeof ui === 'object') {
-      // allow a UI to be passed in for testing.
-      context._ui = ui;
-    } else {
-      ui = ui || 'default';
-      var UI = UIs[ui];
-
-      if (! UI) {
-        throw new Error('Invalid ui: ' + ui);
-      }
-
-      context._ui = new UI(clientId, options);
-    }
-
-    return context._ui;
-  }
-
-  function authenticate(authType, config) {
-    //jshint validthis: true
-    var self = this;
-    return p().then(function () {
-      config = config || {};
-
-      var api = getUI(self, config.ui, self._clientId, self._options);
-      return api[authType](config)
-        .fin(function () {
-          delete self._ui;
-        });
-    });
-  }
-
-
   /**
-   * @class FxaAuthAPI
+   * @class AuthenticationAPI
    * @constructor
    * @param {string} clientId - the OAuth client ID for the relier
    * @param {Object} [options={}] - configuration
-   *   @param {String} [options.contentHost]
-   *   Firefox Accounts Content Server host
    *   @param {String} [options.oauthHost]
    *   Firefox Accounts OAuth Server host
    *   @param {Object} [options.window]
@@ -71,18 +29,62 @@ define([
    *   @param {Object} [options.channel]
    *   channel override, used for unit tests
    */
-  function FxaAuthAPI(clientId, options) {
+  function AuthenticationAPI(clientId, options) {
     if (! clientId) {
       throw new Error('clientId is required');
     }
 
     this._clientId = clientId;
-    this._options = options;
+    this._oauthHost = options.oauthHost || Constants.DEFAULT_OAUTH_HOST;
+    this._window = options.window || window;
   }
 
-  FxaAuthAPI.prototype = {
+  function authenticate(action, config) {
+    //jshint validthis: true
+    var self = this;
+    config = config || {};
+    return p().then(function () {
+      var requiredOptions = ['scope', 'state', 'redirect_uri'];
+      Options.checkRequired(requiredOptions, config);
+
+      var fxaUrl = getOAuthUrl.call(self, action, config);
+      return self.openFxa(fxaUrl);
+    });
+  }
+
+  function getOAuthUrl(action, config) {
+    //jshint validthis: true
+    var queryParams = {
+      action: action,
+      client_id: this._clientId,
+      state: config.state,
+      scope: config.scope,
+      redirect_uri: config.redirect_uri
+    };
+
+    if (config.email) {
+      queryParams.email = config.email;
+    }
+
+    return this._oauthHost + '/authorization' + Url.objectToQueryString(queryParams);
+  }
+
+  AuthenticationAPI.prototype = {
     /**
-     * Sign in an existing user.
+     * Open Firefox Accounts to authenticate the user.
+     * Must be overridden to provide API specific functionality.
+     *
+     * @method openFxa
+     * @param {String} fxaUrl - URL to open for authentication
+     *
+     * @protected
+     */
+    openFxa: function (fxaUrl) {
+      throw new Error('openFxa must be overridden');
+    },
+
+    /**
+     * Sign in an existing user
      *
      * @method signIn
      * @param {Object} config - configuration
@@ -97,10 +99,8 @@ define([
      *   but the user is free to change it. Set to the string literal
      *   `blank` to ignore any previously signed in email. Default is
      *   the last email address used to sign in.
-     *   @param {String} [config.ui]
-     *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
      */
-    signIn: partial(authenticate, 'signIn'),
+    signIn: partial(authenticate, Constants.SIGNIN_ACTION),
 
     /**
      * Force a user to sign in as an existing user.
@@ -120,7 +120,16 @@ define([
      *   @param {String} [config.ui]
      *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
      */
-    forceAuth: partial(authenticate, 'forceAuth'),
+    forceAuth: function (config) {
+      var self = this;
+      return p().then(function () {
+        config = config || {};
+        var requiredOptions = ['email'];
+        Options.checkRequired(requiredOptions, config);
+
+        return authenticate.call(self, Constants.FORCE_AUTH_ACTION, config);
+      });
+    },
 
     /**
      * Sign up a new user
@@ -136,13 +145,11 @@ define([
      *   @param {String} [config.email]
      *   Email address used to pre-fill into the account form,
      *   but the user is free to change it.
-     *   @param {String} [config.ui]
-     *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
      */
-    signUp: partial(authenticate, 'signUp')
+    signUp: partial(authenticate, Constants.SIGNUP_ACTION)
   };
 
-  return FxaAuthAPI;
+  return AuthenticationAPI;
 });
 
 
