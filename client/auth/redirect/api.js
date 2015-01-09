@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 define([
-  '../api',
+  '../base/api',
   'client/lib/constants',
   'client/lib/options',
   'client/lib/object'

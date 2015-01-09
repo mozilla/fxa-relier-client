@@ -38,5 +38,8 @@
     "grunt-open": "0.2.3",
     "intern-geezer": "1.7.0",
     "load-grunt-tasks": "1.0.0"
+  },
+  "dependencies": {
+    "xhr2": "0.1.0"
   }
 }
