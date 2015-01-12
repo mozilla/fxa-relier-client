@@ -69,6 +69,11 @@ define([
        *   URI to redirect to when complete
        *   @param {String} config.scope
        *   OAuth scope
+       *   @param {String} [config.email]
+       *   Email address used to pre-fill into the account form,
+       *   but the user is free to change it. Set to the string literal
+       *   `blank` to ignore any previously signed in email. Default is
+       *   the last email address used to sign in.
        *   @param {String} [config.force_email]
        *   Force the user to sign in with the given email
        *   @param {String} [config.ui]
@@ -98,6 +103,9 @@ define([
        *   URI to redirect to when complete
        *   @param {String} config.scope
        *   OAuth scope
+       *   @param {String} [config.email]
+       *   Email address used to pre-fill into the account form,
+       *   but the user is free to change it.
        *   @param {String} [config.ui]
        *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
        */

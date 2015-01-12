@@ -61,7 +61,8 @@ function (bdd, assert, RedirectAPI, WindowMock, sinon, p) {
         return redirectAPI.signIn({
           state: 'state',
           scope: 'scope',
-          redirect_uri: 'redirect_uri'
+          redirect_uri: 'redirect_uri',
+          email: 'blank'
         })
         .then(function () {
           var redirectedTo = windowMock.location.href;
@@ -69,6 +70,7 @@ function (bdd, assert, RedirectAPI, WindowMock, sinon, p) {
           assert.include(redirectedTo, 'state=state');
           assert.include(redirectedTo, 'scope=scope');
           assert.include(redirectedTo, 'redirect_uri=redirect_uri');
+          assert.include(redirectedTo, 'email=blank');
         });
       });
 

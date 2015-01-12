@@ -101,13 +101,16 @@ function (bdd, assert, LightboxAPI, Lightbox, IframeChannel,
         return lightboxAPI.signIn({
           state: 'state',
           scope: 'scope',
-          redirect_uri: 'redirect_uri'
+          redirect_uri: 'redirect_uri',
+          email: 'blank'
         })
         .then(function () {
-          assert.isTrue(/oauth\/signin/.test(lightbox.load.args[0]));
-          assert.isTrue(/state=state/.test(lightbox.load.args[0]));
-          assert.isTrue(/scope=scope/.test(lightbox.load.args[0]));
-          assert.isTrue(/redirect_uri=redirect_uri/.test(lightbox.load.args[0]));
+          var loadUrl = lightbox.load.args[0][0];
+          assert.include(loadUrl, 'oauth/signin');
+          assert.include(loadUrl, 'state=state');
+          assert.include(loadUrl, 'scope=scope');
+          assert.include(loadUrl, 'redirect_uri=redirect_uri');
+          assert.include(loadUrl, 'email=blank');
         });
       });
 
@@ -124,11 +127,12 @@ function (bdd, assert, LightboxAPI, Lightbox, IframeChannel,
           force_email: 'testuser@testuser.com'
         })
         .then(function () {
-          assert.isTrue(/force_auth/.test(lightbox.load.args[0]));
-          assert.isTrue(/state=state/.test(lightbox.load.args[0]));
-          assert.isTrue(/scope=scope/.test(lightbox.load.args[0]));
-          assert.isTrue(/redirect_uri=redirect_uri/.test(lightbox.load.args[0]));
-          assert.isTrue(/email=testuser%40testuser.com/.test(lightbox.load.args[0]));
+          var loadUrl = lightbox.load.args[0][0];
+          assert.include(loadUrl, 'force_auth');
+          assert.include(loadUrl, 'state=state');
+          assert.include(loadUrl, 'scope=scope');
+          assert.include(loadUrl, 'redirect_uri=redirect_uri');
+          assert.include(loadUrl, 'email=testuser%40testuser.com');
         });
       });
 
