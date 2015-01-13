@@ -154,7 +154,7 @@ function (bdd, assert, LightboxAPI, Lightbox, IframeChannel,
       testCommonMissingOptions('forceAuth');
 
       bdd.it('should reject if `email` is not specified', function () {
-        return testMissingOption('forceAuth', 'state');
+        return testMissingOption('forceAuth', 'email');
       });
 
       bdd.it('should open the lightbox to /oauth/force_auth with the expected query parameters', function () {

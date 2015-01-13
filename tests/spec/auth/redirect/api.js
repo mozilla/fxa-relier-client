@@ -91,7 +91,7 @@ function (bdd, assert, RedirectAPI, WindowMock, sinon, p) {
       });
 
       bdd.it('should reject if `email` is not specified', function () {
-        return testMissingOption('forceAuth', 'state');
+        return testMissingOption('forceAuth', 'email');
       });
 
       bdd.it('should redirect to /oauth/force_auth with the expected query parameters', function () {
