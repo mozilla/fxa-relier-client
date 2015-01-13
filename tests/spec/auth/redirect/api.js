@@ -33,7 +33,8 @@ function (bdd, assert, RedirectAPI, WindowMock, sinon, p) {
       var options = {
         state: 'state',
         scope: 'scope',
-        redirect_uri: 'redirect_uri'
+        redirect_uri: 'redirect_uri',
+        email: 'testuser@testuser.com'
       };
 
       delete options[optionName];
@@ -74,16 +75,35 @@ function (bdd, assert, RedirectAPI, WindowMock, sinon, p) {
         });
       });
 
-      bdd.it('should redirect to the /force_auth page with the expected query parameters if the RP forces authentication as a user', function () {
-        return redirectAPI.signIn({
+    });
+
+    bdd.describe('forceAuth', function () {
+      bdd.it('should reject if `scope` is not specified', function () {
+        return testMissingOption('forceAuth', 'scope');
+      });
+
+      bdd.it('should reject if `redirect_uri` is not specified', function () {
+        return testMissingOption('forceAuth', 'redirect_uri');
+      });
+
+      bdd.it('should reject if `state` is not specified', function () {
+        return testMissingOption('forceAuth', 'state');
+      });
+
+      bdd.it('should reject if `email` is not specified', function () {
+        return testMissingOption('forceAuth', 'email');
+      });
+
+      bdd.it('should redirect to /oauth/force_auth with the expected query parameters', function () {
+        return redirectAPI.forceAuth({
           state: 'state',
           scope: 'scope',
           redirect_uri: 'redirect_uri',
-          force_email: 'testuser@testuser.com'
+          email: 'testuser@testuser.com'
         })
         .then(function () {
           var redirectedTo = windowMock.location.href;
-          assert.include(redirectedTo, '/force_auth');
+          assert.include(redirectedTo, '/oauth/force_auth');
           assert.include(redirectedTo, 'state=state');
           assert.include(redirectedTo, 'scope=scope');
           assert.include(redirectedTo, 'redirect_uri=redirect_uri');

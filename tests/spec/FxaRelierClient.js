@@ -101,6 +101,77 @@ define([
       });
     });
 
+    bdd.describe('forceAuth', function () {
+      var configWithoutEmail;
+      var configWithEmail;
+      var ui;
+      var windowMock;
+
+      bdd.beforeEach(function () {
+        windowMock = new WindowMock();
+        ui = new LightboxUI('client_id', {
+          window: windowMock
+        });
+        configWithoutEmail = {
+          ui: ui,
+          state: 'state',
+          redirect_uri: 'http://redirect.to.me',
+          scope: 'profiles'
+        };
+        configWithEmail = {
+          ui: ui,
+          state: 'state',
+          redirect_uri: 'http://redirect.to.me',
+          scope: 'profiles',
+          email: 'testuser@testuser.com'
+        };
+      });
+
+      bdd.it('creates and loads a UI', function () {
+        var client = new FxaRelierClient('client_id', {
+          window: new WindowMock()
+        });
+
+        sinon.stub(ui, 'forceAuth', function () {
+          return p();
+        });
+
+        return client.auth.forceAuth(configWithEmail);
+      });
+
+      bdd.it('throws when re-opening FxA if already open', function () {
+        var client = new FxaRelierClient('client_id', {
+          window: new WindowMock()
+        });
+
+        sinon.stub(ui, 'forceAuth', function () {
+          // prevent the first window from completing
+          return p.defer().promise;
+        });
+
+        client.auth.forceAuth(configWithEmail);
+        return client.auth.forceAuth(configWithEmail)
+          .then(assert.fail, function (err) {
+            assert.equal(err.message, 'Firefox Accounts is already open');
+          });
+      });
+
+      bdd.it('does not throw if re-opening FxA after first transaction completes', function () {
+        var client = new FxaRelierClient('client_id', {
+          window: new WindowMock()
+        });
+
+        sinon.stub(ui, 'forceAuth', function () {
+          return p();
+        });
+
+        return client.auth.forceAuth(configWithEmail)
+          .then(function () {
+            return client.auth.forceAuth(configWithEmail);
+          });
+      });
+    });
+
     bdd.describe('signUp', function () {
       var config;
       var ui;

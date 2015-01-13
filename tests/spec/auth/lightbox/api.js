@@ -51,7 +51,8 @@ function (bdd, assert, LightboxAPI, Lightbox, IframeChannel,
       var options = {
         state: 'state',
         scope: 'scope',
-        redirect_uri: 'redirect_uri'
+        redirect_uri: 'redirect_uri',
+        email: 'testuser@testuser.com'
       };
 
       delete options[optionName];
@@ -62,18 +63,22 @@ function (bdd, assert, LightboxAPI, Lightbox, IframeChannel,
         });
     }
 
-    bdd.describe('signIn', function () {
+    function testCommonMissingOptions(endpoint) {
       bdd.it('should reject if `scope` is not specified', function () {
-        return testMissingOption('signIn', 'scope');
+        return testMissingOption(endpoint, 'scope');
       });
 
       bdd.it('should reject if `redirect_uri` is not specified', function () {
-        return testMissingOption('signIn', 'redirect_uri');
+        return testMissingOption(endpoint, 'redirect_uri');
       });
 
       bdd.it('should reject if `state` is not specified', function () {
-        return testMissingOption('signIn', 'state');
+        return testMissingOption(endpoint, 'state');
       });
+    }
+
+    bdd.describe('signIn', function () {
+      testCommonMissingOptions('signIn');
 
       bdd.it('should reject if a lightbox is already open', function () {
         lightboxAPI.signIn({
@@ -114,28 +119,6 @@ function (bdd, assert, LightboxAPI, Lightbox, IframeChannel,
         });
       });
 
-      bdd.it('should open the lightbox to the /force_auth page with the expected query parameters if the RP forces authentication as a user', function () {
-        sinon.spy(lightbox, 'load');
-        sinon.stub(channel, 'attach', function () {
-          return p();
-        });
-
-        return lightboxAPI.signIn({
-          state: 'state',
-          scope: 'scope',
-          redirect_uri: 'redirect_uri',
-          force_email: 'testuser@testuser.com'
-        })
-        .then(function () {
-          var loadUrl = lightbox.load.args[0][0];
-          assert.include(loadUrl, 'force_auth');
-          assert.include(loadUrl, 'state=state');
-          assert.include(loadUrl, 'scope=scope');
-          assert.include(loadUrl, 'redirect_uri=redirect_uri');
-          assert.include(loadUrl, 'email=testuser%40testuser.com');
-        });
-      });
-
       bdd.it('should return the result returned by the channel', function () {
         sinon.stub(channel, 'attach', function () {
           return p('oauth_result');
@@ -167,18 +150,39 @@ function (bdd, assert, LightboxAPI, Lightbox, IframeChannel,
       });
     });
 
+    bdd.describe('forceAuth', function () {
+      testCommonMissingOptions('forceAuth');
+
+      bdd.it('should reject if `email` is not specified', function () {
+        return testMissingOption('forceAuth', 'email');
+      });
+
+      bdd.it('should open the lightbox to /oauth/force_auth with the expected query parameters', function () {
+        sinon.spy(lightbox, 'load');
+        sinon.stub(channel, 'attach', function () {
+          return p();
+        });
+
+        return lightboxAPI.forceAuth({
+          state: 'state',
+          scope: 'scope',
+          redirect_uri: 'redirect_uri',
+          email: 'testuser@testuser.com'
+        })
+        .then(function () {
+          var loadUrl = lightbox.load.args[0][0];
+          assert.include(loadUrl, 'oauth/force_auth');
+          assert.include(loadUrl, 'state=state');
+          assert.include(loadUrl, 'scope=scope');
+          assert.include(loadUrl, 'redirect_uri=redirect_uri');
+          assert.include(loadUrl, 'email=testuser%40testuser.com');
+        });
+      });
+    });
+
+
     bdd.describe('signUp', function () {
-      bdd.it('should reject if `scope` is not specified', function () {
-        return testMissingOption('signUp', 'scope');
-      });
-
-      bdd.it('should reject if `redirect_uri` is not specified', function () {
-        return testMissingOption('signUp', 'redirect_uri');
-      });
-
-      bdd.it('should reject if `state` is not specified', function () {
-        return testMissingOption('signUp', 'state');
-      });
+      testCommonMissingOptions('signUp');
 
       bdd.it('should reject if a lightbox is already open', function () {
         lightboxAPI.signUp({

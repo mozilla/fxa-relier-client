@@ -59,7 +59,7 @@ define([
 
     this.auth = {
       /**
-       * Sign in an existing user
+       * Sign in an existing user.
        *
        * @method signIn
        * @param {Object} config - configuration
@@ -86,6 +86,37 @@ define([
 
           var api = getUI(self, config.ui, clientId, options);
           return api.signIn(config)
+            .fin(function () {
+              delete self._ui;
+            });
+        });
+      },
+
+      /**
+       * Force a user to sign in as an existing user.
+       *
+       * @method forceAuth
+       * @param {Object} config - configuration
+       *   @param {String} config.state
+       *   CSRF/State token
+       *   @param {String} config.redirect_uri
+       *   URI to redirect to when complete
+       *   @param {String} config.scope
+       *   OAuth scope
+       *   @param {String} config.email
+       *   Email address the user must sign in with. The user
+       *   is unable to modify the email address and is unable
+       *   to sign up if the address is not registered.
+       *   @param {String} [config.ui]
+       *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
+       */
+      forceAuth: function (config) {
+        var self = this;
+        return p().then(function () {
+          config = config || {};
+
+          var api = getUI(self, config.ui, clientId, options);
+          return api.forceAuth(config)
             .fin(function () {
               delete self._ui;
             });
