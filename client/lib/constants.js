@@ -6,7 +6,8 @@ define([], function () {
   'use strict';
 
   return {
-    DEFAULT_FXA_HOST: 'https://oauth.accounts.firefox.com/v1/authorization',
+    DEFAULT_CONTENT_HOST: 'https://accounts.firefox.com',
+    DEFAULT_OAUTH_HOST: 'https://oauth.accounts.firefox.com/v1/authorization',
     SIGNIN_ACTION: 'signin',
     SIGNUP_ACTION: 'signup',
     FORCE_AUTH_ACTION: 'force_auth'

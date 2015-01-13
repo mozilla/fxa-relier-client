@@ -52,7 +52,7 @@ define([
     }
 
     self._channel = new IFrameChannel({
-      iframeHost: self._fxaHost,
+      iframeHost: self._contentHost,
       contentWindow: lightbox.getContentWindow(),
       window: self._window
     });

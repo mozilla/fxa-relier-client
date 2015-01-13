@@ -43,8 +43,10 @@ define([
    * @constructor
    * @param {string} clientId - the OAuth client ID for the relier
    * @param {Object} [options={}] - configuration
-   *   @param {String} [options.fxaHost]
+   *   @param {String} [options.contentHost]
    *   Firefox Accounts Content Server host
+   *   @param {String} [options.oauthHost]
+   *   Firefox Accounts OAuth Server host
    *   @param {Object} [options.window]
    *   window override, used for unit tests
    *   @param {Object} [options.lightbox]

@@ -17,8 +17,10 @@ define([
    * @constructor
    * @param {string} clientId - the OAuth client ID for the relier
    * @param {Object} [options={}] - configuration
-   *   @param {String} [options.fxaHost]
+   *   @param {String} [options.contentHost]
    *   Firefox Accounts Content Server host
+   *   @param {String} [options.oauthHost]
+   *   Firefox Accounts OAuth Server host
    *   @param {Object} [options.window]
    *   window override, used for unit tests
    *   @param {Object} [options.lightbox]
@@ -32,7 +34,8 @@ define([
     }
 
     this._clientId = clientId;
-    this._fxaHost = options.fxaHost || Constants.DEFAULT_FXA_HOST;
+    this._contentHost = options.contentHost || Constants.DEFAULT_CONTENT_HOST;
+    this._oauthHost = options.oauthHost || Constants.DEFAULT_OAUTH_HOST;
     this._window = options.window || window;
   }
 
@@ -62,7 +65,7 @@ define([
       queryParams.email = config.email;
     }
 
-    return this._fxaHost + Url.objectToQueryString(queryParams);
+    return this._oauthHost + Url.objectToQueryString(queryParams);
   }
 
   AuthenticationAPI.prototype = {
