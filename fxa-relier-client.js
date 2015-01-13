@@ -1374,10 +1374,11 @@ define('client/lib/constants',[], function () {
   
 
   return {
-    DEFAULT_FXA_HOST: 'https://accounts.firefox.com',
-    SIGNIN_ENDPOINT: 'oauth/signin',
-    SIGNUP_ENDPOINT: 'oauth/signup',
-    FORCE_EMAIL_ENDPOINT: 'force_auth'
+    DEFAULT_CONTENT_HOST: 'https://accounts.firefox.com',
+    DEFAULT_OAUTH_HOST: 'https://oauth.accounts.firefox.com/v1/authorization',
+    SIGNIN_ACTION: 'signin',
+    SIGNUP_ACTION: 'signup',
+    FORCE_AUTH_ACTION: 'force_auth'
   };
 });
 
@@ -1429,42 +1430,60 @@ define('client/auth/api',[
 ], function (p, Constants, Options, Url) {
   
 
+  /**
+   * @class AuthenticationAPI
+   * @constructor
+   * @param {string} clientId - the OAuth client ID for the relier
+   * @param {Object} [options={}] - configuration
+   *   @param {String} [options.contentHost]
+   *   Firefox Accounts Content Server host
+   *   @param {String} [options.oauthHost]
+   *   Firefox Accounts OAuth Server host
+   *   @param {Object} [options.window]
+   *   window override, used for unit tests
+   *   @param {Object} [options.lightbox]
+   *   lightbox override, used for unit tests
+   *   @param {Object} [options.channel]
+   *   channel override, used for unit tests
+   */
   function AuthenticationAPI(clientId, options) {
     if (! clientId) {
       throw new Error('clientId is required');
     }
 
     this._clientId = clientId;
-    this._fxaHost = options.fxaHost || Constants.DEFAULT_FXA_HOST;
+    this._contentHost = options.contentHost || Constants.DEFAULT_CONTENT_HOST;
+    this._oauthHost = options.oauthHost || Constants.DEFAULT_OAUTH_HOST;
     this._window = options.window || window;
   }
 
-  function authenticate(page, config) {
+  function authenticate(action, config) {
     //jshint validthis: true
     var self = this;
     return p().then(function () {
       var requiredOptions = ['scope', 'state', 'redirect_uri'];
       Options.checkRequired(requiredOptions, config);
 
-      var fxaUrl = getFxaUrl.call(self, page, config);
+      var fxaUrl = getFxaUrl.call(self, action, config);
       return self.openFxa(fxaUrl);
     });
   }
 
-  function getFxaUrl(page, config) {
+  function getFxaUrl(action, config) {
     //jshint validthis: true
     var queryParams = {
+      action: action,
       client_id: this._clientId,
       state: config.state,
       scope: config.scope,
       redirect_uri: config.redirect_uri
     };
 
-    if (config.force_email) {
-      queryParams.email = config.force_email;
+    if (config.email) {
+      queryParams.email = config.email;
     }
 
-    return this._fxaHost + '/' + page + Url.objectToQueryString(queryParams);
+    return this._oauthHost + Url.objectToQueryString(queryParams);
   }
 
   AuthenticationAPI.prototype = {
@@ -1475,7 +1494,7 @@ define('client/auth/api',[
      * @method openFxa
      * @param {String} fxaUrl - URL to open for authentication
      *
-     * @virtual
+     * @protected
      */
     openFxa: function (fxaUrl) {
       throw new Error('openFxa must be overridden');
@@ -1492,15 +1511,44 @@ define('client/auth/api',[
      *   URI to redirect to when complete
      *   @param {String} config.scope
      *   OAuth scope
-     *   @param {String} [config.force_email]
-     *   Force the user to sign in with the given email
+     *   @param {String} [config.email]
+     *   Email address used to pre-fill into the account form,
+     *   but the user is free to change it. Set to the string literal
+     *   `blank` to ignore any previously signed in email. Default is
+     *   the last email address used to sign in.
      */
     signIn: function (config) {
       config = config || {};
-      var page = config.force_email ?
-                   Constants.FORCE_EMAIL_ENDPOINT :
-                   Constants.SIGNIN_ENDPOINT;
-      return authenticate.call(this, page, config);
+      return authenticate.call(this, Constants.SIGNIN_ACTION, config);
+    },
+
+    /**
+     * Force a user to sign in as an existing user.
+     *
+     * @method forceAuth
+     * @param {Object} config - configuration
+     *   @param {String} config.state
+     *   CSRF/State token
+     *   @param {String} config.redirect_uri
+     *   URI to redirect to when complete
+     *   @param {String} config.scope
+     *   OAuth scope
+     *   @param {String} config.email
+     *   Email address the user must sign in with. The user
+     *   is unable to modify the email address and is unable
+     *   to sign up if the address is not registered.
+     *   @param {String} [config.ui]
+     *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
+     */
+    forceAuth: function (config) {
+      var self = this;
+      return p().then(function () {
+        config = config || {};
+        var requiredOptions = ['email'];
+        Options.checkRequired(requiredOptions, config);
+
+        return authenticate.call(self, Constants.FORCE_AUTH_ACTION, config);
+      });
     },
 
     /**
@@ -1514,9 +1562,12 @@ define('client/auth/api',[
      *   URI to redirect to when complete
      *   @param {String} config.scope
      *   OAuth scope
+     *   @param {String} [config.email]
+     *   Email address used to pre-fill into the account form,
+     *   but the user is free to change it.
      */
     signUp: function (config) {
-      return authenticate.call(this, Constants.SIGNUP_ENDPOINT, config);
+      return authenticate.call(this, Constants.SIGNUP_ACTION, config);
     },
   };
 
@@ -1781,7 +1832,7 @@ define('client/auth/lightbox/api',[
     }
 
     self._channel = new IFrameChannel({
-      iframeHost: self._fxaHost,
+      iframeHost: self._contentHost,
       contentWindow: lightbox.getContentWindow(),
       window: self._window
     });
@@ -1933,8 +1984,10 @@ define('client/FxaRelierClient',[
    * @constructor
    * @param {string} clientId - the OAuth client ID for the relier
    * @param {Object} [options={}] - configuration
-   *   @param {String} [options.fxaHost]
+   *   @param {String} [options.contentHost]
    *   Firefox Accounts Content Server host
+   *   @param {String} [options.oauthHost]
+   *   Firefox Accounts OAuth Server host
    *   @param {Object} [options.window]
    *   window override, used for unit tests
    *   @param {Object} [options.lightbox]
@@ -1949,7 +2002,7 @@ define('client/FxaRelierClient',[
 
     this.auth = {
       /**
-       * Sign in an existing user
+       * Sign in an existing user.
        *
        * @method signIn
        * @param {Object} config - configuration
@@ -1959,6 +2012,11 @@ define('client/FxaRelierClient',[
        *   URI to redirect to when complete
        *   @param {String} config.scope
        *   OAuth scope
+       *   @param {String} [config.email]
+       *   Email address used to pre-fill into the account form,
+       *   but the user is free to change it. Set to the string literal
+       *   `blank` to ignore any previously signed in email. Default is
+       *   the last email address used to sign in.
        *   @param {String} [config.force_email]
        *   Force the user to sign in with the given email
        *   @param {String} [config.ui]
@@ -1978,6 +2036,37 @@ define('client/FxaRelierClient',[
       },
 
       /**
+       * Force a user to sign in as an existing user.
+       *
+       * @method forceAuth
+       * @param {Object} config - configuration
+       *   @param {String} config.state
+       *   CSRF/State token
+       *   @param {String} config.redirect_uri
+       *   URI to redirect to when complete
+       *   @param {String} config.scope
+       *   OAuth scope
+       *   @param {String} config.email
+       *   Email address the user must sign in with. The user
+       *   is unable to modify the email address and is unable
+       *   to sign up if the address is not registered.
+       *   @param {String} [config.ui]
+       *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
+       */
+      forceAuth: function (config) {
+        var self = this;
+        return p().then(function () {
+          config = config || {};
+
+          var api = getUI(self, config.ui, clientId, options);
+          return api.forceAuth(config)
+            .fin(function () {
+              delete self._ui;
+            });
+        });
+      },
+
+      /**
        * Sign up a new user
        *
        * @method signUp
@@ -1988,6 +2077,9 @@ define('client/FxaRelierClient',[
        *   URI to redirect to when complete
        *   @param {String} config.scope
        *   OAuth scope
+       *   @param {String} [config.email]
+       *   Email address used to pre-fill into the account form,
+       *   but the user is free to change it.
        *   @param {String} [config.ui]
        *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
        */
