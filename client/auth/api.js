@@ -17,8 +17,10 @@ define([
    * @constructor
    * @param {string} clientId - the OAuth client ID for the relier
    * @param {Object} [options={}] - configuration
-   *   @param {String} [options.fxaHost]
+   *   @param {String} [options.contentHost]
    *   Firefox Accounts Content Server host
+   *   @param {String} [options.oauthHost]
+   *   Firefox Accounts OAuth Server host
    *   @param {Object} [options.window]
    *   window override, used for unit tests
    *   @param {Object} [options.lightbox]
@@ -32,25 +34,27 @@ define([
     }
 
     this._clientId = clientId;
-    this._fxaHost = options.fxaHost || Constants.DEFAULT_FXA_HOST;
+    this._contentHost = options.contentHost || Constants.DEFAULT_CONTENT_HOST;
+    this._oauthHost = options.oauthHost || Constants.DEFAULT_OAUTH_HOST;
     this._window = options.window || window;
   }
 
-  function authenticate(page, config) {
+  function authenticate(action, config) {
     //jshint validthis: true
     var self = this;
     return p().then(function () {
       var requiredOptions = ['scope', 'state', 'redirect_uri'];
       Options.checkRequired(requiredOptions, config);
 
-      var fxaUrl = getFxaUrl.call(self, page, config);
+      var fxaUrl = getFxaUrl.call(self, action, config);
       return self.openFxa(fxaUrl);
     });
   }
 
-  function getFxaUrl(page, config) {
+  function getFxaUrl(action, config) {
     //jshint validthis: true
     var queryParams = {
+      action: action,
       client_id: this._clientId,
       state: config.state,
       scope: config.scope,
@@ -61,7 +65,7 @@ define([
       queryParams.email = config.email;
     }
 
-    return this._fxaHost + '/' + page + Url.objectToQueryString(queryParams);
+    return this._oauthHost + Url.objectToQueryString(queryParams);
   }
 
   AuthenticationAPI.prototype = {
@@ -97,7 +101,7 @@ define([
      */
     signIn: function (config) {
       config = config || {};
-      return authenticate.call(this, Constants.SIGNIN_ENDPOINT, config);
+      return authenticate.call(this, Constants.SIGNIN_ACTION, config);
     },
 
     /**
@@ -125,7 +129,7 @@ define([
         var requiredOptions = ['email'];
         Options.checkRequired(requiredOptions, config);
 
-        return authenticate.call(self, Constants.FORCE_AUTH_ENDPOINT, config);
+        return authenticate.call(self, Constants.FORCE_AUTH_ACTION, config);
       });
     },
 
@@ -145,7 +149,7 @@ define([
      *   but the user is free to change it.
      */
     signUp: function (config) {
-      return authenticate.call(this, Constants.SIGNUP_ENDPOINT, config);
+      return authenticate.call(this, Constants.SIGNUP_ACTION, config);
     },
   };
 

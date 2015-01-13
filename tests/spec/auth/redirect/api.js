@@ -58,7 +58,7 @@ function (bdd, assert, RedirectAPI, WindowMock, sinon, p) {
         return testMissingOption('signIn', 'state');
       });
 
-      bdd.it('should redirect to the /signin page with the expected query parameters', function () {
+      bdd.it('should redirect with action=signin page and other expected query parameters', function () {
         return redirectAPI.signIn({
           state: 'state',
           scope: 'scope',
@@ -67,7 +67,7 @@ function (bdd, assert, RedirectAPI, WindowMock, sinon, p) {
         })
         .then(function () {
           var redirectedTo = windowMock.location.href;
-          assert.include(redirectedTo, '/signin');
+          assert.include(redirectedTo, 'action=signin');
           assert.include(redirectedTo, 'state=state');
           assert.include(redirectedTo, 'scope=scope');
           assert.include(redirectedTo, 'redirect_uri=redirect_uri');
@@ -94,7 +94,7 @@ function (bdd, assert, RedirectAPI, WindowMock, sinon, p) {
         return testMissingOption('forceAuth', 'email');
       });
 
-      bdd.it('should redirect to /oauth/force_auth with the expected query parameters', function () {
+      bdd.it('should redirect with action=force_auth and other expected query parameters', function () {
         return redirectAPI.forceAuth({
           state: 'state',
           scope: 'scope',
@@ -103,7 +103,7 @@ function (bdd, assert, RedirectAPI, WindowMock, sinon, p) {
         })
         .then(function () {
           var redirectedTo = windowMock.location.href;
-          assert.include(redirectedTo, '/oauth/force_auth');
+          assert.include(redirectedTo, 'action=force_auth');
           assert.include(redirectedTo, 'state=state');
           assert.include(redirectedTo, 'scope=scope');
           assert.include(redirectedTo, 'redirect_uri=redirect_uri');
@@ -125,7 +125,7 @@ function (bdd, assert, RedirectAPI, WindowMock, sinon, p) {
         return testMissingOption('signUp', 'state');
       });
 
-      bdd.it('should redirect to the /signup page with the expected query parameters', function () {
+      bdd.it('should redirect with action=signup and other expected query parameters', function () {
         return redirectAPI.signUp({
           state: 'state',
           scope: 'scope',
@@ -133,7 +133,7 @@ function (bdd, assert, RedirectAPI, WindowMock, sinon, p) {
         })
         .then(function () {
           var redirectedTo = windowMock.location.href;
-          assert.include(redirectedTo, '/signup');
+          assert.include(redirectedTo, 'action=signup');
           assert.include(redirectedTo, 'state=state');
           assert.include(redirectedTo, 'scope=scope');
           assert.include(redirectedTo, 'redirect_uri=redirect_uri');

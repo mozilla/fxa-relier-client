@@ -111,7 +111,7 @@ function (bdd, assert, LightboxAPI, Lightbox, IframeChannel,
         })
         .then(function () {
           var loadUrl = lightbox.load.args[0][0];
-          assert.include(loadUrl, 'oauth/signin');
+          assert.include(loadUrl, 'action=signin');
           assert.include(loadUrl, 'state=state');
           assert.include(loadUrl, 'scope=scope');
           assert.include(loadUrl, 'redirect_uri=redirect_uri');
@@ -157,7 +157,7 @@ function (bdd, assert, LightboxAPI, Lightbox, IframeChannel,
         return testMissingOption('forceAuth', 'email');
       });
 
-      bdd.it('should open the lightbox to /oauth/force_auth with the expected query parameters', function () {
+      bdd.it('should open the lightbox to with action=force_auth with the expected query parameters', function () {
         sinon.spy(lightbox, 'load');
         sinon.stub(channel, 'attach', function () {
           return p();
@@ -171,7 +171,7 @@ function (bdd, assert, LightboxAPI, Lightbox, IframeChannel,
         })
         .then(function () {
           var loadUrl = lightbox.load.args[0][0];
-          assert.include(loadUrl, 'oauth/force_auth');
+          assert.include(loadUrl, 'action=force_auth');
           assert.include(loadUrl, 'state=state');
           assert.include(loadUrl, 'scope=scope');
           assert.include(loadUrl, 'redirect_uri=redirect_uri');
@@ -213,7 +213,7 @@ function (bdd, assert, LightboxAPI, Lightbox, IframeChannel,
           redirect_uri: 'redirect_uri'
         })
         .then(function () {
-          assert.isTrue(/oauth\/signup/.test(lightbox.load.args[0]));
+          assert.isTrue(/action=signup/.test(lightbox.load.args[0]));
           assert.isTrue(/state=state/.test(lightbox.load.args[0]));
           assert.isTrue(/scope=scope/.test(lightbox.load.args[0]));
           assert.isTrue(/redirect_uri=redirect_uri/.test(lightbox.load.args[0]));
