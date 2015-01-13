@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>LightboxAPI - fxa-relier-client</title>
+    <title>AuthenticationAPI - fxa-relier-client</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -88,19 +88,15 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>LightboxAPI Class</h1>
+                        <h1>AuthenticationAPI Class</h1>
 <div class="box meta">
     
 
     
-        <div class="extends">
-            Extends <a href="../classes/AuthenticationAPI.html" class="crosslink">AuthenticationAPI</a>
-        </div>
-    
 
     
         <div class="foundat">
-            Defined in: <a href="../files/client_auth_lightbox_api.js.html#l72"><code>client&#x2F;auth&#x2F;lightbox&#x2F;api.js:72</code></a>
+            Defined in: <a href="../files/client_auth_api.js.html#l15"><code>client&#x2F;auth&#x2F;api.js:15</code></a>
         </div>
     
 
@@ -112,18 +108,33 @@
 
 
 <div class="box intro">
-    <p>Authenticate users with a lightbox</p>
-
+    
 </div>
 
 
     <div class="constructor">
         <h2>Constructor</h2>
-        <div id="method_LightboxAPI" class="method item">
-    <h3 class="name"><code>LightboxAPI</code></h3>
+        <div id="method_AuthenticationAPI" class="method item">
+    <h3 class="name"><code>AuthenticationAPI</code></h3>
 
     
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>clientId</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code class="optional">[options={}]</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
     
 
     
@@ -151,7 +162,7 @@
             
         
         
-        <a href="../files/client_auth_lightbox_api.js.html#l72"><code>client&#x2F;auth&#x2F;lightbox&#x2F;api.js:72</code></a>
+        <a href="../files/client_auth_api.js.html#l15"><code>client&#x2F;auth&#x2F;api.js:15</code></a>
         
         </p>
 
@@ -165,6 +176,130 @@
         
     </div>
 
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">clientId</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <ul>
+<li>the OAuth client ID for the relier</li>
+</ul>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name optional">[options={}]</code>
+                        <span class="type">Object</span>
+                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <ul>
+<li>configuration</li>
+</ul>
+
+                    </div>
+
+                    
+                        <ul class="params-list">
+                            
+                            <li class="param">
+                                
+                                    <code class="param-name optional">[contentHost]</code>
+                                    <span class="type">String</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+
+                                <div class="param-description">
+                                    <p>Firefox Accounts Content Server host</p>
+
+                                </div>
+
+                                
+                            </li>
+                            
+                            <li class="param">
+                                
+                                    <code class="param-name optional">[oauthHost]</code>
+                                    <span class="type">String</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+
+                                <div class="param-description">
+                                    <p>Firefox Accounts OAuth Server host</p>
+
+                                </div>
+
+                                
+                            </li>
+                            
+                            <li class="param">
+                                
+                                    <code class="param-name optional">[window]</code>
+                                    <span class="type">Object</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+
+                                <div class="param-description">
+                                    <p>window override, used for unit tests</p>
+
+                                </div>
+
+                                
+                            </li>
+                            
+                            <li class="param">
+                                
+                                    <code class="param-name optional">[lightbox]</code>
+                                    <span class="type">Object</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+
+                                <div class="param-description">
+                                    <p>lightbox override, used for unit tests</p>
+
+                                </div>
+
+                                
+                            </li>
+                            
+                            <li class="param">
+                                
+                                    <code class="param-name optional">[channel]</code>
+                                    <span class="type">Object</span>
+                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+
+                                <div class="param-description">
+                                    <p>channel override, used for unit tests</p>
+
+                                </div>
+
+                                
+                            </li>
+                            
+                        </ul>
+                    
+                </li>
+            
+            </ul>
+        </div>
     
 
     
@@ -195,38 +330,31 @@
                 <div class="index-section methods">
                     <h3>Methods</h3>
 
-                    <ul class="index-list methods extends">
+                    <ul class="index-list methods">
                         
-                            <li class="index-item method inherited">
+                            <li class="index-item method">
                                 <a href="#method_forceAuth">forceAuth</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method protected inherited">
+                            <li class="index-item method protected">
                                 <a href="#method_openFxa">openFxa</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method inherited">
+                            <li class="index-item method">
                                 <a href="#method_signIn">signIn</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method inherited">
-                                <a href="#method_signUp">signUp</a>
-
-                                
-                                
-                            </li>
-                        
                             <li class="index-item method">
-                                <a href="#method_unload">unload</a>
+                                <a href="#method_signUp">signUp</a>
 
                                 
                                 
@@ -248,7 +376,7 @@
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_forceAuth" class="method item inherited">
+                    <div id="method_forceAuth" class="method item">
     <h3 class="name"><code>forceAuth</code></h3>
 
     
@@ -282,8 +410,11 @@
     <div class="meta">
         
             
-                <p>Inherited from
-                <a href="../classes/AuthenticationAPI.html#method_forceAuth">AuthenticationAPI</a>:
+                
+                <p>
+                
+                Defined in
+                
             
         
         
@@ -413,7 +544,7 @@
 </div>
 
                 
-                    <div id="method_openFxa" class="method item protected inherited">
+                    <div id="method_openFxa" class="method item protected">
     <h3 class="name"><code>openFxa</code></h3>
 
     
@@ -449,8 +580,11 @@
     <div class="meta">
         
             
-                <p>Inherited from
-                <a href="../classes/AuthenticationAPI.html#method_openFxa">AuthenticationAPI</a>:
+                
+                <p>
+                
+                Defined in
+                
             
         
         
@@ -504,7 +638,7 @@ Must be overridden to provide API specific functionality.</p>
 </div>
 
                 
-                    <div id="method_signIn" class="method item inherited">
+                    <div id="method_signIn" class="method item">
     <h3 class="name"><code>signIn</code></h3>
 
     
@@ -538,8 +672,11 @@ Must be overridden to provide API specific functionality.</p>
     <div class="meta">
         
             
-                <p>Inherited from
-                <a href="../classes/AuthenticationAPI.html#method_signIn">AuthenticationAPI</a>:
+                
+                <p>
+                
+                Defined in
+                
             
         
         
@@ -656,7 +793,7 @@ Must be overridden to provide API specific functionality.</p>
 </div>
 
                 
-                    <div id="method_signUp" class="method item inherited">
+                    <div id="method_signUp" class="method item">
     <h3 class="name"><code>signUp</code></h3>
 
     
@@ -690,8 +827,11 @@ Must be overridden to provide API specific functionality.</p>
     <div class="meta">
         
             
-                <p>Inherited from
-                <a href="../classes/AuthenticationAPI.html#method_signUp">AuthenticationAPI</a>:
+                
+                <p>
+                
+                Defined in
+                
             
         
         
@@ -798,61 +938,6 @@ Must be overridden to provide API specific functionality.</p>
             
             </ul>
         </div>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_unload" class="method item">
-    <h3 class="name"><code>unload</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/client_auth_lightbox_api.js.html#l106"><code>client&#x2F;auth&#x2F;lightbox&#x2F;api.js:106</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Unload the lightbox</p>
-
-    </div>
-
     
 
     

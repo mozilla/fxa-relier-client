@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.1</em>
+            <em>API Docs for: 0.0.2</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -40,6 +40,8 @@
 
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/AuthenticationAPI.html">AuthenticationAPI</a></li>
             
                 <li><a href="../classes/FxaRelierClient.html">FxaRelierClient</a></li>
             
@@ -135,8 +137,10 @@ define([
    * @constructor
    * @param {string} clientId - the OAuth client ID for the relier
    * @param {Object} [options={}] - configuration
-   *   @param {String} [options.fxaHost]
+   *   @param {String} [options.contentHost]
    *   Firefox Accounts Content Server host
+   *   @param {String} [options.oauthHost]
+   *   Firefox Accounts OAuth Server host
    *   @param {Object} [options.window]
    *   window override, used for unit tests
    *   @param {Object} [options.lightbox]
@@ -151,7 +155,7 @@ define([
 
     this.auth = {
       /**
-       * Sign in an existing user
+       * Sign in an existing user.
        *
        * @method signIn
        * @param {Object} config - configuration
@@ -161,6 +165,11 @@ define([
        *   URI to redirect to when complete
        *   @param {String} config.scope
        *   OAuth scope
+       *   @param {String} [config.email]
+       *   Email address used to pre-fill into the account form,
+       *   but the user is free to change it. Set to the string literal
+       *   &#x60;blank&#x60; to ignore any previously signed in email. Default is
+       *   the last email address used to sign in.
        *   @param {String} [config.force_email]
        *   Force the user to sign in with the given email
        *   @param {String} [config.ui]
@@ -180,6 +189,37 @@ define([
       },
 
       /**
+       * Force a user to sign in as an existing user.
+       *
+       * @method forceAuth
+       * @param {Object} config - configuration
+       *   @param {String} config.state
+       *   CSRF/State token
+       *   @param {String} config.redirect_uri
+       *   URI to redirect to when complete
+       *   @param {String} config.scope
+       *   OAuth scope
+       *   @param {String} config.email
+       *   Email address the user must sign in with. The user
+       *   is unable to modify the email address and is unable
+       *   to sign up if the address is not registered.
+       *   @param {String} [config.ui]
+       *   UI to present - &#x60;lightbox&#x60; or &#x60;redirect&#x60; - defaults to &#x60;redirect&#x60;
+       */
+      forceAuth: function (config) {
+        var self = this;
+        return p().then(function () {
+          config = config || {};
+
+          var api = getUI(self, config.ui, clientId, options);
+          return api.forceAuth(config)
+            .fin(function () {
+              delete self._ui;
+            });
+        });
+      },
+
+      /**
        * Sign up a new user
        *
        * @method signUp
@@ -190,6 +230,9 @@ define([
        *   URI to redirect to when complete
        *   @param {String} config.scope
        *   OAuth scope
+       *   @param {String} [config.email]
+       *   Email address used to pre-fill into the account form,
+       *   but the user is free to change it.
        *   @param {String} [config.ui]
        *   UI to present - &#x60;lightbox&#x60; or &#x60;redirect&#x60; - defaults to &#x60;redirect&#x60;
        */
