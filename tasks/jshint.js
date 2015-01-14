@@ -12,7 +12,7 @@ module.exports = function (grunt) {
     },
     app: {
       options: {jshintrc: 'client/.jshintrc'},
-      src: ['client/*.js', 'client/lib/**/*']
+      src: ['client/**/*.js']
     }
   });
 };

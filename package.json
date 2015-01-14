@@ -2,7 +2,7 @@
   "name": "fxa-relier-client",
   "version": "0.0.2",
   "description": "fxa-relier-client =================",
-  "main": "index.js",
+  "main": "node/index.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/mozilla/fxa-relier-client.git"
@@ -16,6 +16,12 @@
     "setup": "npm install && bower install",
     "contributors": "git shortlog -s | cut -c8- | sort -f > CONTRIBUTORS.md"
   },
+  "files": [
+    "node/",
+    "client/",
+    "LICENSE"
+  ],
+  "readmeFilename": "README.md",
   "bugs": {
     "url": "https://github.com/mozilla/fxa-relier-client/issues"
   },
@@ -38,5 +44,9 @@
     "grunt-open": "0.2.3",
     "intern-geezer": "1.7.0",
     "load-grunt-tasks": "1.0.0"
+  },
+  "dependencies": {
+    "p-promise": "0.5.0",
+    "xhr2": "0.1.1"
   }
 }
