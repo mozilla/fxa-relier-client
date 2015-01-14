@@ -20,7 +20,7 @@ module.exports = function (grunt) {
     },
     prod: {
       options: {
-        out: 'build/fxa-relier.client.min.js',
+        out: 'build/fxa-relier-client.min.js',
         optimize: 'uglify2',
         generateSourceMaps: true,
         preserveLicenseComments: false
