@@ -10,16 +10,18 @@
   "author": "Mozilla",
   "license": "MPL 2.0",
   "scripts": {
+    "postinstall": "bower install",
     "start": "grunt",
     "test": "grunt test",
     "test-local": "intern-client config=tests/intern",
-    "setup": "npm install && bower install",
     "contributors": "git shortlog -s | cut -c8- | sort -f > CONTRIBUTORS.md"
   },
   "files": [
     "node/",
     "client/",
-    "LICENSE"
+    "LICENSE",
+    "bower.json",
+    ".bowerrc"
   ],
   "readmeFilename": "README.md",
   "bugs": {
@@ -27,7 +29,6 @@
   },
   "homepage": "https://github.com/mozilla/fxa-relier-client",
   "devDependencies": {
-    "bower": "1.3.12",
     "grunt": "0.4.5",
     "grunt-build-control": "git://github.com/robwierzbowski/grunt-build-control#274952",
     "grunt-bump": "0.0.16",
@@ -46,6 +47,7 @@
     "load-grunt-tasks": "1.0.0"
   },
   "dependencies": {
+    "bower": "1.3.12",
     "p-promise": "0.5.0",
     "xhr2": "0.1.1"
   }
