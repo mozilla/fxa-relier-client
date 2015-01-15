@@ -3,15 +3,35 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 /**
- * helpers to work with URLs
+ * Helpers functions to work with URLs
+ *
+ * @class Url
+ * @static
  */
 define([], function () {
   'use strict';
 
+  /**
+   * Create a query parameter string from a key and value
+   *
+   * @method createQueryParam
+   * @param {String} key
+   * @param {Variant} value
+   * @returns {String}
+   * URL safe serialized query parameter
+   */
   function createQueryParam(key, value) {
-    return key + '=' + encodeURIComponent(value);
+    return encodeURIComponent(key) + '=' + encodeURIComponent(value);
   }
 
+  /**
+   * Create a query string out of an object.
+   * @method objectToQueryString
+   * @param {Object} obj
+   * Object to create query string from
+   * @returns {String}
+   * URL safe query string
+   */
   function objectToQueryString(obj) {
     var queryParams = [];
 

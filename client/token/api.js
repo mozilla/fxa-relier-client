@@ -91,7 +91,7 @@ define([
 
     /**
      * After a client is done using a token, the responsible thing to do is to
-     * destroy the token afterwards. A client can use this route to do so.
+     * destroy the token afterwards.
      * See https://github.com/mozilla/fxa-oauth-server/blob/master/docs/api.md#post-v1destroy
      *
      * @method destroyToken

@@ -4,11 +4,20 @@
 
 /**
  * Helper functions for working with Objects
+ *
+ * @class Object
+ * @static
  */
 define([], function () {
   'use strict';
 
-  function extend(target) {
+  /**
+   * Extend an object with properties of one or more objects.
+   * @method extend
+   * @param {Object} target
+   * Target object
+   */
+  function extend(target/*, ...*/) {
     var sources = [].slice.call(arguments, 1);
 
     for (var index = 0, source; source = sources[index]; ++index) {

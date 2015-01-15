@@ -4,6 +4,11 @@
 
 /*globals define*/
 
+/**
+ * Create a lightbox.
+ *
+ * @class Lightbox
+ */
 define([
 ], function () {
   'use strict';
@@ -36,6 +41,12 @@ define([
   }
 
   Lightbox.prototype = {
+    /**
+     * Load content into the lightbox
+     * @method load
+     * @param {String} src
+     * URL to load.
+     */
     load: function (src) {
       var background = this._backgroundEl = createElement(this._window, 'div', {
         style: cssPropsToString({
@@ -74,18 +85,37 @@ define([
       this._contentWindow = iframe.contentWindow;
     },
 
+    /**
+     * Get the content iframe element.
+     * @method getContentElement
+     * @returns {DOM Element}
+     */
     getContentElement: function () {
       return this._iframe;
     },
 
+    /**
+     * Get the content window in the iframe.
+     * @method getContentWindow
+     * @returns {DOM Element}
+     */
     getContentWindow: function () {
       return this._contentWindow;
     },
 
+    /**
+     * Check if the lightbox is loaded
+     * @method isLoaded
+     * @returns {Boolean}
+     */
     isLoaded: function () {
       return !! this._backgroundEl;
     },
 
+    /**
+     * Unload the lightbox
+     * @method unload
+     */
     unload: function () {
       if (this._backgroundEl) {
         this._window.document.body.removeChild(this._backgroundEl);
