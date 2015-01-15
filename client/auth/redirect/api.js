@@ -7,27 +7,27 @@ define([
   'client/lib/constants',
   'client/lib/options',
   'client/lib/object'
-], function (AuthenticationAPI, Constants, Options, ObjectHelpers) {
+], function (BaseBroker, Constants, Options, ObjectHelpers) {
   'use strict';
 
   /**
    * Authenticate a user with the redirect flow.
    *
-   * @class RedirectAPI
-   * @extends AuthenticationAPI
+   * @class RedirectBroker
+   * @extends BaseBroker
    * @constructor
    */
-  function RedirectAPI(clientId, options) {
-    AuthenticationAPI.call(this, clientId, options);
+  function RedirectBroker(clientId, options) {
+    BaseBroker.call(this, clientId, options);
   }
 
-  RedirectAPI.prototype = Object.create(AuthenticationAPI.prototype);
-  ObjectHelpers.extend(RedirectAPI.prototype, {
+  RedirectBroker.prototype = Object.create(BaseBroker.prototype);
+  ObjectHelpers.extend(RedirectBroker.prototype, {
     openFxa: function (fxaUrl) {
       this._window.location.href = fxaUrl;
     }
   });
 
-  return RedirectAPI;
+  return RedirectBroker;
 });
 

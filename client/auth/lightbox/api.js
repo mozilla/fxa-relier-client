@@ -12,7 +12,7 @@ define([
   '../base/api',
   './lightbox',
   './iframe_channel'
-], function (p, ObjectHelpers, Options, Constants, AuthenticationAPI,
+], function (p, ObjectHelpers, Options, Constants, BaseBroker,
     Lightbox, IFrameChannel) {
   'use strict';
 
@@ -74,8 +74,8 @@ define([
   /**
    * Authenticate users with a lightbox
    *
-   * @class LightboxAPI
-   * @extends AuthenticationAPI
+   * @class LightboxBroker
+   * @extends BaseBroker
    * @constructor
    * @param {string} clientId - the OAuth client ID for the relier
    * @param {Object} [options={}] - configuration
@@ -90,18 +90,18 @@ define([
    *   @param {Object} [options.channel]
    *   channel override, used for unit tests
    */
-  function LightboxAPI(clientId, options) {
+  function LightboxBroker(clientId, options) {
     options = options || {};
 
-    AuthenticationAPI.call(this, clientId, options);
+    BaseBroker.call(this, clientId, options);
 
     this._lightbox = options.lightbox;
     this._channel = options.channel;
     this._contentHost = options.contentHost || Constants.DEFAULT_CONTENT_HOST;
   }
-  LightboxAPI.prototype = Object.create(AuthenticationAPI.prototype);
+  LightboxBroker.prototype = Object.create(BaseBroker.prototype);
 
-  ObjectHelpers.extend(LightboxAPI.prototype, {
+  ObjectHelpers.extend(LightboxBroker.prototype, {
     openFxa: function (fxaUrl) {
       /*jshint validthis: true*/
       var self = this;
@@ -137,6 +137,6 @@ define([
     }
   });
 
-  return LightboxAPI;
+  return LightboxBroker;
 });
 

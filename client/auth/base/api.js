@@ -16,7 +16,10 @@ define([
   var partial = FunctionHelpers.partial;
 
   /**
-   * @class AuthenticationAPI
+   * The base class for other brokers. Subclasses must override
+   * `openFxa`. Provides a strategy to authenticate a user.
+   *
+   * @class BaseBroker
    * @constructor
    * @param {string} clientId - the OAuth client ID for the relier
    * @param {Object} [options={}] - configuration
@@ -29,7 +32,7 @@ define([
    *   @param {Object} [options.channel]
    *   channel override, used for unit tests
    */
-  function AuthenticationAPI(clientId, options) {
+  function BaseBroker(clientId, options) {
     if (! clientId) {
       throw new Error('clientId is required');
     }
@@ -69,7 +72,7 @@ define([
     return this._oauthHost + '/authorization' + Url.objectToQueryString(queryParams);
   }
 
-  AuthenticationAPI.prototype = {
+  BaseBroker.prototype = {
     /**
      * Open Firefox Accounts to authenticate the user.
      * Must be overridden to provide API specific functionality.
@@ -149,7 +152,7 @@ define([
     signUp: partial(authenticate, Constants.SIGNUP_ACTION)
   };
 
-  return AuthenticationAPI;
+  return BaseBroker;
 });
 
 

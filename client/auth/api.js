@@ -7,37 +7,37 @@ define([
   'client/lib/function',
   'client/auth/lightbox/api',
   'client/auth/redirect/api'
-], function (p, FunctionHelpers, LightboxUI, RedirectUI) {
+], function (p, FunctionHelpers, LightboxBroker, RedirectBroker) {
   'use strict';
 
   var partial = FunctionHelpers.partial;
 
-  var UIs = {
-    'default': RedirectUI,
-    lightbox: LightboxUI,
-    redirect: RedirectUI
+  var Brokers = {
+    'default': RedirectBroker,
+    lightbox: LightboxBroker,
+    redirect: RedirectBroker
   };
 
-  function getUI(context, ui, clientId, options) {
-    if (context._ui) {
+  function getBroker(context, ui, clientId, options) {
+    if (context._broker) {
       throw new Error('Firefox Accounts is already open');
     }
 
     if (typeof ui === 'object') {
-      // allow a UI to be passed in for testing.
-      context._ui = ui;
+      // allow a Broker to be passed in for testing.
+      context._broker = ui;
     } else {
       ui = ui || 'default';
-      var UI = UIs[ui];
+      var Broker = Brokers[ui];
 
-      if (! UI) {
+      if (! Broker) {
         throw new Error('Invalid ui: ' + ui);
       }
 
-      context._ui = new UI(clientId, options);
+      context._broker = new Broker(clientId, options);
     }
 
-    return context._ui;
+    return context._broker;
   }
 
   function authenticate(authType, config) {
@@ -46,17 +46,17 @@ define([
     return p().then(function () {
       config = config || {};
 
-      var api = getUI(self, config.ui, self._clientId, self._options);
+      var api = getBroker(self, config.ui, self._clientId, self._options);
       return api[authType](config)
         .fin(function () {
-          delete self._ui;
+          delete self._broker;
         });
     });
   }
 
 
   /**
-   * @class FxaAuthAPI
+   * @class AuthAPI
    * @constructor
    * @param {string} clientId - the OAuth client ID for the relier
    * @param {Object} [options={}] - configuration
@@ -71,7 +71,7 @@ define([
    *   @param {Object} [options.channel]
    *   channel override, used for unit tests
    */
-  function FxaAuthAPI(clientId, options) {
+  function AuthAPI(clientId, options) {
     if (! clientId) {
       throw new Error('clientId is required');
     }
@@ -80,7 +80,7 @@ define([
     this._options = options;
   }
 
-  FxaAuthAPI.prototype = {
+  AuthAPI.prototype = {
     /**
      * Sign in an existing user.
      *
@@ -142,7 +142,7 @@ define([
     signUp: partial(authenticate, 'signUp')
   };
 
-  return FxaAuthAPI;
+  return AuthAPI;
 });
 
 

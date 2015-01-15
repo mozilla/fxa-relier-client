@@ -11,7 +11,7 @@ define([
   'tests/addons/sinon',
   'p-promise'
 ],
-function (bdd, assert, RedirectAPI, WindowMock, sinon, p) {
+function (bdd, assert, RedirectBroker, WindowMock, sinon, p) {
   'use strict';
 
   bdd.describe('auth/redirect/api', function () {
@@ -21,7 +21,7 @@ function (bdd, assert, RedirectAPI, WindowMock, sinon, p) {
 
     bdd.beforeEach(function () {
       windowMock = new WindowMock();
-      redirectAPI = new RedirectAPI('client_id', {
+      redirectAPI = new RedirectBroker('client_id', {
         window: windowMock
       });
     });

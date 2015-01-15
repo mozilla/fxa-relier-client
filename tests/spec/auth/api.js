@@ -12,7 +12,7 @@ define([
   'client/auth/lightbox/api',
   'tests/mocks/window',
   'p-promise'
-], function (bdd, assert, sinon, FxaRelierClient, LightboxUI, WindowMock, p) {
+], function (bdd, assert, sinon, FxaRelierClient, LightboxBroker, WindowMock, p) {
   'use strict';
 
   bdd.describe('AuthAPI', function () {
@@ -24,7 +24,7 @@ define([
 
       bdd.beforeEach(function () {
         windowMock = new WindowMock();
-        ui = new LightboxUI('client_id', {
+        ui = new LightboxBroker('client_id', {
           window: windowMock
         });
         config = {
@@ -84,7 +84,7 @@ define([
 
       bdd.beforeEach(function () {
         windowMock = new WindowMock();
-        ui = new LightboxUI('client_id', {
+        ui = new LightboxBroker('client_id', {
           window: windowMock
         });
         configWithoutEmail = {
@@ -146,7 +146,7 @@ define([
 
       bdd.beforeEach(function () {
         windowMock = new WindowMock();
-        ui = new LightboxUI('client_id', {
+        ui = new LightboxBroker('client_id', {
           window: windowMock
         });
         config = {
