@@ -72,6 +72,8 @@ define([
      * Options
      * @param {String} [options.contentType]
      * Content type of `data`. Defaults to `application/json`
+     * @param {Object} [options.headers]
+     * Headers to pass with request.
      * @param {Object} [options.xhr]
      * XMLHttpRequest compatible object to use for XHR requests
      * @return {Promise} A promise that will be fulfilled with JSON `xhr.responseText` of the request
@@ -89,9 +91,10 @@ define([
      * Options
      * @param {String} [options.contentType]
      * Content type of `data`. Defaults to `application/json`
+     * @param {Object} [options.headers]
+     * Headers to pass with request.
      * @param {Object} [options.xhr]
      * XMLHttpRequest compatible object to use for XHR requests
-     * @return {Promise} A promise that will be fulfilled with JSON `xhr.responseText` of the request
      * @return {Promise} A promise that will be fulfilled with JSON `xhr.responseText` of the request
      */
     post: partial(request, 'POST')

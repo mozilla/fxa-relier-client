@@ -14,6 +14,8 @@ define([
    * @constructor
    * @param {string} clientId - the OAuth client ID for the relier
    * @param {Object} [options={}] - configuration
+   *   @param {String} [options.clientSecret]
+   *   Client secret. Required to use the `token` API.
    *   @param {String} [options.contentHost]
    *   Firefox Accounts Content Server host
    *   @param {String} [options.oauthHost]

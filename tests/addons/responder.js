@@ -31,25 +31,14 @@ define([
   }
   Responder.prototype = {
     respondWith: function (method, url, response) {
-      var self = this;
-      if (! this._isInitialized) {
-        this._isInitialized = true;
-        this._requests = [];
-        this._responses = {};
-
-        var mockXMLHttpRequest = sinon.useFakeXMLHttpRequest();
-        mockXMLHttpRequest.onCreate = function (_request) {
-          self._requests.push(_request);
-        };
-
-        this._mockXMLHttpRequest = mockXMLHttpRequest;
-      }
+      this._initialize();
 
       var namespace = method + ': ' + url;
       this._responses[namespace] = response;
 
-      var mockXhrRequest = new this._mockXMLHttpRequest();
+      var mockXhrRequest = new this._MockXMLHttpRequest();
 
+      var self = this;
       var origOpen = mockXhrRequest.open;
       mockXhrRequest.open = function () {
         if (self._flushTimeout) {
@@ -67,6 +56,22 @@ define([
       };
 
       return mockXhrRequest;
+    },
+
+    _initialize: function () {
+      if (! this._isInitialized) {
+        this._isInitialized = true;
+        this._requests = [];
+        this._responses = {};
+
+        var MockXMLHttpRequest = sinon.useFakeXMLHttpRequest();
+        var self = this;
+        MockXMLHttpRequest.onCreate = function (_request) {
+          self._requests.push(_request);
+        };
+
+        this._MockXMLHttpRequest = MockXMLHttpRequest;
+      }
     },
 
     _flushResponses: function () {
@@ -91,7 +96,7 @@ define([
     restore: function () {
       if (this._isInitialized) {
         delete this._isInitialized;
-        this._mockXMLHttpRequest.restore();
+        this._MockXMLHttpRequest.restore();
       }
     }
   };

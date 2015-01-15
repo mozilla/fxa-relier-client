@@ -7,7 +7,7 @@ module.exports = function (grunt) {
 
   grunt.config('requirejs', {
     options: {
-      baseUrl: './',
+      baseUrl: '.',
       include: ['client/FxaRelierClient'],
       name: 'components/almond/almond',
       wrap: {
@@ -15,8 +15,7 @@ module.exports = function (grunt) {
         endFile: 'config/end.frag'
       },
       paths: {
-        'p-promise': 'components/p-promise/p',
-        'micrajax': 'components/micrajax/micrajax'
+        'p-promise': 'components/p-promise/p'
       }
     },
     prod: {

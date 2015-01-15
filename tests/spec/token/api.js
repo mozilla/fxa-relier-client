@@ -16,7 +16,9 @@ define([
     var responder;
 
     bdd.beforeEach(function () {
-      api = new TokenAPI('client_id', {});
+      api = new TokenAPI('client_id', {
+        clientSecret: 'secret'
+      });
       responder = new Responder();
     });
 
@@ -35,7 +37,7 @@ define([
           })
         });
 
-        return api.tradeCode('secret', 'code', {
+        return api.tradeCode('code', {
           xhr: mockXHR
         })
         .then(function (resp) {
@@ -85,7 +87,7 @@ define([
           body: JSON.stringify({})
         });
 
-        return api.destroyToken('secret', 'token', {
+        return api.destroyToken('token', {
           xhr: mockXHR
         })
         .then(function (resp) {
