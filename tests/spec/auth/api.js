@@ -30,7 +30,7 @@ define([
         config = {
           ui: ui,
           state: 'state',
-          redirect_uri: 'http://redirect.to.me',
+          redirectUri: 'http://redirect.to.me',
           scope: 'profiles'
         };
         client = new FxaRelierClient('client_id', {
@@ -90,13 +90,13 @@ define([
         configWithoutEmail = {
           ui: ui,
           state: 'state',
-          redirect_uri: 'http://redirect.to.me',
+          redirectUri: 'http://redirect.to.me',
           scope: 'profiles'
         };
         configWithEmail = {
           ui: ui,
           state: 'state',
-          redirect_uri: 'http://redirect.to.me',
+          redirectUri: 'http://redirect.to.me',
           scope: 'profiles',
           email: 'testuser@testuser.com'
         };
@@ -152,7 +152,7 @@ define([
         config = {
           ui: ui,
           state: 'state',
-          redirect_uri: 'http://redirect.to.me',
+          redirectUri: 'http://redirect.to.me',
           scope: 'profiles'
         };
 

@@ -88,7 +88,7 @@ define([
      * @param {Object} config - configuration
      *   @param {String} config.state
      *   CSRF/State token
-     *   @param {String} config.redirect_uri
+     *   @param {String} config.redirectUri
      *   URI to redirect to when complete
      *   @param {String} config.scope
      *   OAuth scope
@@ -109,7 +109,7 @@ define([
      * @param {Object} config - configuration
      *   @param {String} config.state
      *   CSRF/State token
-     *   @param {String} config.redirect_uri
+     *   @param {String} config.redirectUri
      *   URI to redirect to when complete
      *   @param {String} config.scope
      *   OAuth scope
@@ -129,7 +129,7 @@ define([
      * @param {Object} config - configuration
      *   @param {String} config.state
      *   CSRF/State token
-     *   @param {String} config.redirect_uri
+     *   @param {String} config.redirectUri
      *   URI to redirect to when complete
      *   @param {String} config.scope
      *   OAuth scope

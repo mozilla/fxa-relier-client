@@ -47,7 +47,7 @@ define([
     var self = this;
     config = config || {};
     return p().then(function () {
-      var requiredOptions = ['scope', 'state', 'redirect_uri'];
+      var requiredOptions = ['scope', 'state', 'redirectUri'];
       Options.checkRequired(requiredOptions, config);
 
       var fxaUrl = getOAuthUrl.call(self, action, config);
@@ -62,7 +62,7 @@ define([
       client_id: this._clientId,
       state: config.state,
       scope: config.scope,
-      redirect_uri: config.redirect_uri
+      redirect_uri: config.redirectUri
     };
 
     if (config.email) {
@@ -93,7 +93,7 @@ define([
      * @param {Object} config - configuration
      *   @param {String} config.state
      *   CSRF/State token
-     *   @param {String} config.redirect_uri
+     *   @param {String} config.redirectUri
      *   URI to redirect to when complete
      *   @param {String} config.scope
      *   OAuth scope
@@ -112,7 +112,7 @@ define([
      * @param {Object} config - configuration
      *   @param {String} config.state
      *   CSRF/State token
-     *   @param {String} config.redirect_uri
+     *   @param {String} config.redirectUri
      *   URI to redirect to when complete
      *   @param {String} config.scope
      *   OAuth scope
@@ -141,7 +141,7 @@ define([
      * @param {Object} config - configuration
      *   @param {String} config.state
      *   CSRF/State token
-     *   @param {String} config.redirect_uri
+     *   @param {String} config.redirectUri
      *   URI to redirect to when complete
      *   @param {String} config.scope
      *   OAuth scope
