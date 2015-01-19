@@ -8,10 +8,12 @@ define([
   'p-promise',
   'client/lib/object',
   'client/lib/options',
-  '../api',
+  'client/lib/constants',
+  '../base/api',
   './lightbox',
   './iframe_channel'
-], function (p, ObjectHelpers, Options, AuthenticationAPI, Lightbox, IFrameChannel) {
+], function (p, ObjectHelpers, Options, Constants, BaseBroker,
+    Lightbox, IFrameChannel) {
   'use strict';
 
   function getLightbox() {
@@ -72,20 +74,34 @@ define([
   /**
    * Authenticate users with a lightbox
    *
-   * @class LightboxAPI
-   * @extends AuthenticationAPI
+   * @class LightboxBroker
+   * @extends BaseBroker
    * @constructor
+   * @param {string} clientId - the OAuth client ID for the relier
+   * @param {Object} [options={}] - configuration
+   *   @param {String} [options.contentHost]
+   *   Firefox Accounts Content Server host
+   *   @param {String} [options.oauthHost]
+   *   Firefox Accounts OAuth Server host
+   *   @param {Object} [options.window]
+   *   window override, used for unit tests
+   *   @param {Object} [options.lightbox]
+   *   lightbox override, used for unit tests
+   *   @param {Object} [options.channel]
+   *   channel override, used for unit tests
    */
-  function LightboxAPI(clientId, options) {
-    AuthenticationAPI.call(this, clientId, options);
-
+  function LightboxBroker(clientId, options) {
     options = options || {};
+
+    BaseBroker.call(this, clientId, options);
+
     this._lightbox = options.lightbox;
     this._channel = options.channel;
+    this._contentHost = options.contentHost || Constants.DEFAULT_CONTENT_HOST;
   }
-  LightboxAPI.prototype = Object.create(AuthenticationAPI.prototype);
+  LightboxBroker.prototype = Object.create(BaseBroker.prototype);
 
-  ObjectHelpers.extend(LightboxAPI.prototype, {
+  ObjectHelpers.extend(LightboxBroker.prototype, {
     openFxa: function (fxaUrl) {
       /*jshint validthis: true*/
       var self = this;
@@ -121,6 +137,6 @@ define([
     }
   });
 
-  return LightboxAPI;
+  return LightboxBroker;
 });
 

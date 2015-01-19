@@ -4,8 +4,12 @@
 
 define([
   './spec/FxaRelierClient',
+  './spec/auth/api',
   './spec/auth/redirect/api',
   './spec/auth/lightbox/api',
   './spec/auth/lightbox/iframe_channel',
-  './spec/auth/lightbox/lightbox'
+  './spec/auth/lightbox/lightbox',
+  './spec/token/api',
+  './spec/profile/api',
+  './spec/lib/xhr'
 ], function () {});

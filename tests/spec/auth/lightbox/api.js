@@ -13,7 +13,7 @@ define([
   'tests/addons/sinon',
   'p-promise'
 ],
-function (bdd, assert, LightboxAPI, Lightbox, IframeChannel,
+function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
       WindowMock, sinon, p) {
   'use strict';
 
@@ -32,7 +32,7 @@ function (bdd, assert, LightboxAPI, Lightbox, IframeChannel,
       lightbox = new Lightbox({
         window: windowMock
       });
-      lightboxAPI = new LightboxAPI('client_id', {
+      lightboxAPI = new LightboxBroker('client_id', {
         window: windowMock,
         channel: channel,
         lightbox: lightbox
