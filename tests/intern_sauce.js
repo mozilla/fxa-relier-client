@@ -8,11 +8,11 @@ define([
   intern.proxyPort = 9090;
   intern.proxyUrl = 'http://localhost:9090/';
 
-  intern.useSauceConnect = true;
+  intern.tunnel = 'SauceLabsTunnel';
   intern.maxConcurrency = 3;
 
-  intern.webdriver =  {
-    host: 'localhost',
+  intern.tunnelOptions = {
+    hostname: 'localhost',
     port: 4445
   };
 

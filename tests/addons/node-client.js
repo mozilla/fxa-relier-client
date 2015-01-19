@@ -5,7 +5,7 @@
 // Loads the Node FxaRelierClient for intern tests.
 
 define([
-  'intern/node_modules/dojo/node!../../node/index.js'
+  'intern/node_modules/dojo/node!../../../node/index.js'
 ], function (FxaRelierClient) {
   return FxaRelierClient;
 });
