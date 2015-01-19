@@ -33,7 +33,7 @@ function (bdd, assert, RedirectBroker, WindowMock, sinon, p) {
       var options = {
         state: 'state',
         scope: 'scope',
-        redirect_uri: 'redirect_uri',
+        redirectUri: 'redirectUri',
         email: 'testuser@testuser.com'
       };
 
@@ -50,8 +50,8 @@ function (bdd, assert, RedirectBroker, WindowMock, sinon, p) {
         return testMissingOption('signIn', 'scope');
       });
 
-      bdd.it('should reject if `redirect_uri` is not specified', function () {
-        return testMissingOption('signIn', 'redirect_uri');
+      bdd.it('should reject if `redirectUri` is not specified', function () {
+        return testMissingOption('signIn', 'redirectUri');
       });
 
       bdd.it('should reject if `state` is not specified', function () {
@@ -62,7 +62,7 @@ function (bdd, assert, RedirectBroker, WindowMock, sinon, p) {
         return redirectAPI.signIn({
           state: 'state',
           scope: 'scope',
-          redirect_uri: 'redirect_uri',
+          redirectUri: 'redirectUri',
           email: 'blank'
         })
         .then(function () {
@@ -70,7 +70,7 @@ function (bdd, assert, RedirectBroker, WindowMock, sinon, p) {
           assert.include(redirectedTo, 'action=signin');
           assert.include(redirectedTo, 'state=state');
           assert.include(redirectedTo, 'scope=scope');
-          assert.include(redirectedTo, 'redirect_uri=redirect_uri');
+          assert.include(redirectedTo, 'redirect_uri=redirectUri');
           assert.include(redirectedTo, 'email=blank');
         });
       });
@@ -82,8 +82,8 @@ function (bdd, assert, RedirectBroker, WindowMock, sinon, p) {
         return testMissingOption('forceAuth', 'scope');
       });
 
-      bdd.it('should reject if `redirect_uri` is not specified', function () {
-        return testMissingOption('forceAuth', 'redirect_uri');
+      bdd.it('should reject if `redirectUri` is not specified', function () {
+        return testMissingOption('forceAuth', 'redirectUri');
       });
 
       bdd.it('should reject if `state` is not specified', function () {
@@ -98,7 +98,7 @@ function (bdd, assert, RedirectBroker, WindowMock, sinon, p) {
         return redirectAPI.forceAuth({
           state: 'state',
           scope: 'scope',
-          redirect_uri: 'redirect_uri',
+          redirectUri: 'redirectUri',
           email: 'testuser@testuser.com'
         })
         .then(function () {
@@ -106,7 +106,7 @@ function (bdd, assert, RedirectBroker, WindowMock, sinon, p) {
           assert.include(redirectedTo, 'action=force_auth');
           assert.include(redirectedTo, 'state=state');
           assert.include(redirectedTo, 'scope=scope');
-          assert.include(redirectedTo, 'redirect_uri=redirect_uri');
+          assert.include(redirectedTo, 'redirect_uri=redirectUri');
           assert.include(redirectedTo, 'email=testuser%40testuser.com');
         });
       });
@@ -117,8 +117,8 @@ function (bdd, assert, RedirectBroker, WindowMock, sinon, p) {
         return testMissingOption('signUp', 'scope');
       });
 
-      bdd.it('should reject if `redirect_uri` is not specified', function () {
-        return testMissingOption('signUp', 'redirect_uri');
+      bdd.it('should reject if `redirectUri` is not specified', function () {
+        return testMissingOption('signUp', 'redirectUri');
       });
 
       bdd.it('should reject if `state` is not specified', function () {
@@ -129,14 +129,14 @@ function (bdd, assert, RedirectBroker, WindowMock, sinon, p) {
         return redirectAPI.signUp({
           state: 'state',
           scope: 'scope',
-          redirect_uri: 'redirect_uri'
+          redirectUri: 'redirectUri'
         })
         .then(function () {
           var redirectedTo = windowMock.location.href;
           assert.include(redirectedTo, 'action=signup');
           assert.include(redirectedTo, 'state=state');
           assert.include(redirectedTo, 'scope=scope');
-          assert.include(redirectedTo, 'redirect_uri=redirect_uri');
+          assert.include(redirectedTo, 'redirect_uri=redirectUri');
         });
       });
     });

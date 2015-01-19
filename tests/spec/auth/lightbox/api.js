@@ -51,7 +51,7 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
       var options = {
         state: 'state',
         scope: 'scope',
-        redirect_uri: 'redirect_uri',
+        redirectUri: 'redirectUri',
         email: 'testuser@testuser.com'
       };
 
@@ -68,8 +68,8 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
         return testMissingOption(endpoint, 'scope');
       });
 
-      bdd.it('should reject if `redirect_uri` is not specified', function () {
-        return testMissingOption(endpoint, 'redirect_uri');
+      bdd.it('should reject if `redirectUri` is not specified', function () {
+        return testMissingOption(endpoint, 'redirectUri');
       });
 
       bdd.it('should reject if `state` is not specified', function () {
@@ -84,13 +84,13 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
         lightboxAPI.signIn({
           state: 'state',
           scope: 'scope',
-          redirect_uri: 'redirect_uri'
+          redirectUri: 'redirectUri'
         });
 
         return lightboxAPI.signIn({
           state: 'state',
           scope: 'scope',
-          redirect_uri: 'redirect_uri'
+          redirectUri: 'redirectUri'
         })
         .then(assert.fail, function (err) {
           assert.equal(err.message, 'lightbox already open');
@@ -106,7 +106,7 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
         return lightboxAPI.signIn({
           state: 'state',
           scope: 'scope',
-          redirect_uri: 'redirect_uri',
+          redirectUri: 'redirectUri',
           email: 'blank'
         })
         .then(function () {
@@ -114,7 +114,7 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
           assert.include(loadUrl, 'action=signin');
           assert.include(loadUrl, 'state=state');
           assert.include(loadUrl, 'scope=scope');
-          assert.include(loadUrl, 'redirect_uri=redirect_uri');
+          assert.include(loadUrl, 'redirect_uri=redirectUri');
           assert.include(loadUrl, 'email=blank');
         });
       });
@@ -127,7 +127,7 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
         return lightboxAPI.signIn({
           state: 'state',
           scope: 'scope',
-          redirect_uri: 'redirect_uri'
+          redirectUri: 'redirectUri'
         })
         .then(function (result) {
           assert.equal(result, 'oauth_result');
@@ -142,7 +142,7 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
         return lightboxAPI.signIn({
           state: 'state',
           scope: 'scope',
-          redirect_uri: 'redirect_uri'
+          redirectUri: 'redirectUri'
         })
         .then(assert.fail, function (err) {
           assert.equal(err.message, 'oauth_error');
@@ -166,7 +166,7 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
         return lightboxAPI.forceAuth({
           state: 'state',
           scope: 'scope',
-          redirect_uri: 'redirect_uri',
+          redirectUri: 'redirectUri',
           email: 'testuser@testuser.com'
         })
         .then(function () {
@@ -174,7 +174,7 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
           assert.include(loadUrl, 'action=force_auth');
           assert.include(loadUrl, 'state=state');
           assert.include(loadUrl, 'scope=scope');
-          assert.include(loadUrl, 'redirect_uri=redirect_uri');
+          assert.include(loadUrl, 'redirect_uri=redirectUri');
           assert.include(loadUrl, 'email=testuser%40testuser.com');
         });
       });
@@ -188,13 +188,13 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
         lightboxAPI.signUp({
           state: 'state',
           scope: 'scope',
-          redirect_uri: 'redirect_uri'
+          redirectUri: 'redirectUri'
         });
 
         return lightboxAPI.signUp({
           state: 'state',
           scope: 'scope',
-          redirect_uri: 'redirect_uri'
+          redirectUri: 'redirectUri'
         })
         .then(assert.fail, function (err) {
           assert.equal(err.message, 'lightbox already open');
@@ -210,13 +210,13 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
         return lightboxAPI.signUp({
           state: 'state',
           scope: 'scope',
-          redirect_uri: 'redirect_uri'
+          redirectUri: 'redirectUri'
         })
         .then(function () {
           assert.isTrue(/action=signup/.test(lightbox.load.args[0]));
           assert.isTrue(/state=state/.test(lightbox.load.args[0]));
           assert.isTrue(/scope=scope/.test(lightbox.load.args[0]));
-          assert.isTrue(/redirect_uri=redirect_uri/.test(lightbox.load.args[0]));
+          assert.isTrue(/redirect_uri=redirectUri/.test(lightbox.load.args[0]));
         });
       });
 
@@ -228,7 +228,7 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
         return lightboxAPI.signUp({
           state: 'state',
           scope: 'scope',
-          redirect_uri: 'redirect_uri'
+          redirectUri: 'redirectUri'
         })
         .then(function (result) {
           assert.equal(result, 'oauth_result');
@@ -243,7 +243,7 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
         return lightboxAPI.signUp({
           state: 'state',
           scope: 'scope',
-          redirect_uri: 'redirect_uri'
+          redirectUri: 'redirectUri'
         })
         .then(assert.fail, function (err) {
           assert.equal(err.message, 'oauth_error');
