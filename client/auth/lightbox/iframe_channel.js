@@ -2,6 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+/**
+ * Communicate with an iframed content server.
+ *
+ * @class IFrameChannel
+ */
 define([
   'p-promise',
   'client/lib/object'
@@ -17,8 +22,18 @@ define([
   }
 
   IFrameChannel.prototype = {
+    /**
+     * Protocol version number. When the protocol to communicate with the
+     * content server changes, this should be bumped.
+     * @property version
+     * @type {String}
+     */
     version: '0.0.0',
 
+    /**
+     * Start listening for messages from the iframe.
+     * @method attach
+     */
     attach: function () {
       this._boundOnMessage = onMessage.bind(this);
       this._window.addEventListener('message', this._boundOnMessage, false);
@@ -27,10 +42,23 @@ define([
       return this._deferred.promise;
     },
 
+    /**
+     * Stop listening for messages from the iframe.
+     * @method detach
+     */
     detach: function () {
       this._window.removeEventListener('message', this._boundOnMessage, false);
     },
 
+    /**
+     * Send a message to the iframe.
+     *
+     * @method send
+     * @param {String} command
+     * Message to send.
+     * @param {Object} [data]
+     * Data to send.
+     */
     send: function (command, data) {
       var dataToSend = ObjectHelpers.extend({ version: this.version }, data);
       var msg = stringifyFxAEvent(command, dataToSend);

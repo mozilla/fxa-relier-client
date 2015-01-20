@@ -31,11 +31,8 @@ In your HTML, include a script tag pointing to fxa-relier-client.js
   <script src="<location_of_relier_library>/fxa-relier-client.min.js"></script>
 ```
 
-## Relier API docs
-See [API.md](./API.md).
-
-## fxa-relier-client developer API docs
-Prebuilt relier-client developer API docs are in the [gh-pages](https://github.com/mozilla/fxa-relier-client/tree/gh-pages) branch. Docs can also be generated with the `grunt doc` command.
+## API docs
+API docs for the current released version of the library are available at http://mozilla.github.io/fxa-relier-client/. Docs for the development version can be generated with the `grunt doc` command.
 
 ## Development Prerequisites
 

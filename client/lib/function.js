@@ -6,7 +6,8 @@
 /**
  * Simple function helpers.
  *
- * @module Function
+ * @class Function
+ * @static
  */
 define(function () {
   'use strict';
@@ -23,20 +24,20 @@ define(function () {
     /**
      * Partially apply a function by filling in any number of its arguments,
      * without changing its dynamic this value. A close cousin of
-     * Function.prototype.bind.
+     * [Function.prototype.bind](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function/bind).
      *
-     * example:
-     * function add(a, b) {
-     *   return a + b;
-     * }
+     * @example
+     *     function add(a, b) {
+     *       return a + b;
+     *     }
      *
-     * var add1 = partial(add, 1);
-     * var result = add1(9);
-     * // result is 10
+     *     var add10To = partial(add, 10);
+     *     var result = add10To(9);
+     *     // result is 19
      *
      * @method partial
-     * @param {Function} method
-     * method to pass arguments to.
+     * @param method {Function}
+     * Method to call with the arguments on final evaluation.
      * @returns {Function}
      */
     partial: partial

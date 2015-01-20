@@ -34,7 +34,8 @@ define([
    * Provides XHR functionality for use in either a browser or node
    * environment.
    *
-   * @module xhr
+   * @class Xhr
+   * @static
    */
 
   function request(method, path, data, options) {
