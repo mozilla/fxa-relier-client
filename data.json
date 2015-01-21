@@ -2,7 +2,7 @@
     "project": {
         "name": "fxa-relier-client",
         "description": "fxa-relier-client =================",
-        "version": "0.0.2"
+        "version": "0.0.3"
     },
     "files": {
         "client/auth/base/api.js": {
