@@ -46,7 +46,7 @@ define([
     }
 
     /**
-     * Authenticate users in the browser. Implements {{#crossLink "FxaAuthAPI"}}{{/crossLink}}.
+     * Authenticate users in the browser. Implements {{#crossLink "AuthAPI"}}{{/crossLink}}.
      * @property auth
      * @type {Object}
      *
