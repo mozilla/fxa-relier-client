@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>client/FxaRelierClient.js - fxa-relier-client</title>
+    <title>client/auth/lightbox/iframe_channel.js - fxa-relier-client</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -90,7 +90,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: client/FxaRelierClient.js</h1>
+                        <h1 class="file-heading">File: client/auth/lightbox/iframe_channel.js</h1>
                         
                         <div class="file">
                             <pre class="code prettyprint linenums">
@@ -99,114 +99,128 @@
                          * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
                         
                         /**
-                         * The Firefox Accounts Relier Client.
+                         * Communicate with an iframed content server.
                          *
-                         * @module FxaRelierClient
+                         * @class IFrameChannel
                          */
-                        
-                        
                         define([
-                          &#x27;client/auth/api&#x27;,
-                          &#x27;client/token/api&#x27;,
-                          &#x27;client/profile/api&#x27;
-                        ], function (AuthAPI, TokenAPI, ProfileAPI) {
+                          &#x27;p-promise&#x27;,
+                          &#x27;client/lib/object&#x27;
+                        ], function (p, ObjectHelpers) {
                           &#x27;use strict&#x27;;
                         
-                          /**
-                           * The entry point. Create and use an instance of the FxaRelierClient.
-                           *
-                           * @class FxaRelierClient (start here)
-                           * @constructor
-                           * @param {string} clientId - the OAuth client ID for the relier
-                           * @param {Object} [options={}] - configuration
-                           *   @param {String} [options.clientSecret]
-                           *   Client secret. Required to use the {{#crossLink &quot;TokenAPI&quot;}}Token{{/crossLink}} API.
-                           *   @param {String} [options.contentHost]
-                           *   Firefox Accounts Content Server host
-                           *   @param {String} [options.oauthHost]
-                           *   Firefox Accounts OAuth Server host
-                           *   @param {String} [options.profileHost]
-                           *   Firefox Accounts Profile Server host
-                           *   @param {Object} [options.window]
-                           *   window override, used for unit tests
-                           *   @param {Object} [options.lightbox]
-                           *   lightbox override, used for unit tests
-                           *   @param {Object} [options.channel]
-                           *   channel override, used for unit tests
-                           * @example
-                           *     var fxaRelierClient = new FxaRelierClient(&lt;client_id&gt;);
-                           */
-                          function FxaRelierClient(clientId, options) {
-                            if (! clientId) {
-                              throw new Error(&#x27;clientId is required&#x27;);
-                            }
+                          function IFrameChannel(options) {
+                            options = options || {};
                         
-                            /**
-                             * Authenticate users in the browser. Implements {{#crossLink &quot;AuthAPI&quot;}}{{/crossLink}}.
-                             * @property auth
-                             * @type {Object}
-                             *
-                             * @example
-                             *     var fxaRelierClient = new FxaRelierClient(&#x27;&lt;client_id&gt;&#x27;);
-                             *     fxaRelierClient.auth.signIn({
-                             *       state: &lt;state&gt;,
-                             *       redirectUri: &lt;redirect_uri&gt;,
-                             *       scope: &#x27;profile&#x27;
-                             *     });
-                             */
-                            this.auth = new AuthAPI(clientId, options);
-                        
-                            /**
-                             * Manage tokens on the server. Implements {{#crossLink &quot;TokenAPI&quot;}}{{/crossLink}}.
-                             * @property token
-                             * @type {Object}
-                             *
-                             * @example
-                             *     var fxaRelierClient = new FxaRelierClient(&#x27;&lt;client_id&gt;&#x27;, {
-                             *       clientSecret: &lt;client_secret&gt;
-                             *     });
-                             *     fxaRelierClient.token.tradeCode(&lt;code&gt;)
-                             *       .then(function (token) {
-                             *         // do something awesome with the token like get
-                             *         // profile information. See profile.
-                             *       });
-                             */
-                            this.token = new TokenAPI(clientId, options);
-                        
-                            /**
-                             * Fetch profile information on the server. Implements {{#crossLink &quot;ProfileAPI&quot;}}{{/crossLink}}.
-                             * @property profile
-                             * @type {Object}
-                             *
-                             * @example
-                             *     var fxaRelierClient = new FxaRelierClient(&#x27;&lt;client_id&gt;&#x27;, {
-                             *       clientSecret: &lt;client_secret&gt;
-                             *     });
-                             *     fxaRelierClient.token.tradeCode(&lt;code&gt;)
-                             *       .then(function (token) {
-                             *         return fxaRelierClient.fetch(token);
-                             *       })
-                             *       .then(function (profile) {
-                             *         // display some profile info.
-                             *       });
-                             */
-                            this.profile = new ProfileAPI(clientId, options);
+                            this._window = options.window;
+                            this._contentWindow = options.contentWindow;
+                            this._iframeHost = options.iframeHost;
                           }
                         
-                          FxaRelierClient.prototype = {
+                          IFrameChannel.prototype = {
                             /**
-                             * FxaRelierClient version
-                             *
+                             * Protocol version number. When the protocol to communicate with the
+                             * content server changes, this should be bumped.
                              * @property version
                              * @type {String}
                              */
                             version: &#x27;0.0.0&#x27;,
                         
-                            auth: null
+                            /**
+                             * Start listening for messages from the iframe.
+                             * @method attach
+                             */
+                            attach: function () {
+                              this._boundOnMessage = onMessage.bind(this);
+                              this._window.addEventListener(&#x27;message&#x27;, this._boundOnMessage, false);
+                        
+                              this._deferred = p.defer();
+                              return this._deferred.promise;
+                            },
+                        
+                            /**
+                             * Stop listening for messages from the iframe.
+                             * @method detach
+                             */
+                            detach: function () {
+                              this._window.removeEventListener(&#x27;message&#x27;, this._boundOnMessage, false);
+                            },
+                        
+                            /**
+                             * Send a message to the iframe.
+                             *
+                             * @method send
+                             * @param {String} command
+                             * Message to send.
+                             * @param {Object} [data]
+                             * Data to send.
+                             */
+                            send: function (command, data) {
+                              var dataToSend = ObjectHelpers.extend({ version: this.version }, data);
+                              var msg = stringifyFxAEvent(command, dataToSend);
+                        
+                              this._contentWindow.postMessage(msg, this._iframeHost);
+                            }
                           };
                         
-                          return FxaRelierClient;
+                          // commands that come from the iframe. They are called
+                          // in the Lightbox object context.
+                          var COMMANDS = {
+                            error: function (command, data) {
+                              this.detach();
+                              this._deferred.reject(data);
+                            },
+                            /*jshint camelcase:false*/
+                            ping: function (command, data) {
+                              // ping is used to get the RP&#x27;s origin. If the RP&#x27;s origin is not
+                              // whitelisted, it cannot be iframed.
+                              this.send(command, data);
+                            },
+                            ignore: function (command, data) {
+                              console.log(&#x27;ignoring command: %s&#x27;, command);
+                            },
+                            oauth_cancel: function (command, data) {
+                              this.detach();
+                              return this._deferred.reject({ reason: &#x27;cancel&#x27; });
+                            },
+                            oauth_complete: function (command, data) {
+                              this.detach();
+                              this._deferred.resolve(data);
+                            }
+                          };
+                        
+                          function onMessage(event) {
+                            /*jshint validthis: true*/
+                            if (event.origin !== this._iframeHost) {
+                              return;
+                            }
+                        
+                            var parsed = parseFxAEvent(event.data);
+                            var command = parsed.command;
+                            var data = parsed.data;
+                        
+                            var handler = COMMANDS[command] || COMMANDS.ignore;
+                            handler.call(this, command, data);
+                          }
+                        
+                          function parseFxAEvent(msg) {
+                            var components = msg.split(&#x27;!!!&#x27;);
+                            return {
+                              command: components[0],
+                              data: JSON.parse(components[1] || &#x27;{}&#x27;)
+                            };
+                          }
+                        
+                          function stringifyFxAEvent(command, data) {
+                            return command + &#x27;!!!&#x27; + JSON.stringify(data || &#x27;&#x27;);
+                          }
+                        
+                          IFrameChannel.stringifyFxAEvent = stringifyFxAEvent;
+                          IFrameChannel.parseFxAEvent = parseFxAEvent;
+                        
+                          return IFrameChannel;
                         });
+                        
                         
                         
                             </pre>

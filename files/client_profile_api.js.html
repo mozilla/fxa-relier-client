@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>client/lib/url.js - fxa-relier-client</title>
+    <title>client/profile/api.js - fxa-relier-client</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -90,7 +90,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: client/lib/url.js</h1>
+                        <h1 class="file-heading">File: client/profile/api.js</h1>
                         
                         <div class="file">
                             <pre class="code prettyprint linenums">
@@ -98,50 +98,77 @@
                          * License, v. 2.0. If a copy of the MPL was not distributed with this
                          * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
                         
-                        /**
-                         * Helpers functions to work with URLs
-                         *
-                         * @class Url
-                         * @static
-                         */
-                        define([], function () {
+                        define([
+                          &#x27;p-promise&#x27;,
+                          &#x27;client/lib/constants&#x27;,
+                          &#x27;client/lib/xhr&#x27;,
+                          &#x27;client/lib/object&#x27;
+                        ], function (p, Constants, Xhr, ObjectHelpers) {
                           &#x27;use strict&#x27;;
                         
                           /**
-                           * Create a query parameter string from a key and value
-                           *
-                           * @method createQueryParam
-                           * @param {String} key
-                           * @param {Variant} value
-                           * @returns {String}
-                           * URL safe serialized query parameter
+                           * @class ProfileAPI
+                           * @constructor
+                           * @param {string} clientId - the OAuth client ID for the relier
+                           * @param {Object} [options={}] - configuration
+                           *   @param {String} [options.profileHost]
+                           *   Firefox Accounts Profile Server host
                            */
-                          function createQueryParam(key, value) {
-                            return encodeURIComponent(key) + &#x27;=&#x27; + encodeURIComponent(value);
-                          }
-                        
-                          /**
-                           * Create a query string out of an object.
-                           * @method objectToQueryString
-                           * @param {Object} obj
-                           * Object to create query string from
-                           * @returns {String}
-                           * URL safe query string
-                           */
-                          function objectToQueryString(obj) {
-                            var queryParams = [];
-                        
-                            for (var key in obj) {
-                              queryParams.push(createQueryParam(key, obj[key]));
+                          function ProfileAPI(clientId, options) {
+                            if (! clientId) {
+                              throw new Error(&#x27;clientId is required&#x27;);
                             }
+                            this._clientId = clientId;
                         
-                            return &#x27;?&#x27; + queryParams.join(&#x27;&amp;&#x27;);
+                            options = options || {};
+                            this._profileHost = options.profileHost || Constants.DEFAULT_PROFILE_HOST;
                           }
                         
-                          return {
-                            createQueryParam: createQueryParam,
-                            objectToQueryString: objectToQueryString
+                          ProfileAPI.prototype = {
+                            /**
+                             * Fetch a user&#x27;s profile data.
+                             *
+                             * @method fetch
+                             * @param {String} token
+                             * Scoped OAuth token that can be used to access the profile data
+                             * @param {Object} [options={}] - configuration
+                             *   @param {String} [options.xhr]
+                             *   XMLHttpRequest compatible object to use to make the request.
+                             * @returns {Promise}
+                             * Response resolves to the user&#x27;s profile data on success.
+                             */
+                            fetch: function (token, options) {
+                              if (! token) {
+                                throw new Error(&#x27;token is required&#x27;);
+                              }
+                        
+                              var xhrOptions = ObjectHelpers.extend({
+                                headers: {
+                                  Authorization: &#x27;Bearer &#x27; + token
+                                }
+                              }, options);
+                        
+                              var self = this;
+                              return Xhr.get(self._profileHost + &#x27;/profile&#x27;, {}, xhrOptions)
+                                .then(function (profileData) {
+                                  self._profileData = profileData;
+                                  return profileData;
+                                });
+                            },
+                        
+                            /**
+                             * Get all the user&#x27;s profile data. Must be called after &#x60;fetch&#x60;
+                             *
+                             * @method all
+                             * @returns {Object}
+                             * User&#x27;s profile data that was fetched using &#x60;fetch&#x60;.
+                             */
+                            all: function () {
+                              return this._profileData;
+                            }
                           };
+                        
+                          return ProfileAPI;
                         });
                         
                         

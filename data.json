@@ -5,11 +5,38 @@
         "version": "0.0.2"
     },
     "files": {
+        "client/auth/base/api.js": {
+            "name": "client/auth/base/api.js",
+            "modules": {},
+            "classes": {
+                "BaseBroker": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "client/auth/lightbox/api.js": {
             "name": "client/auth/lightbox/api.js",
             "modules": {},
             "classes": {
-                "LightboxAPI": 1
+                "LightboxBroker": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "client/auth/lightbox/iframe_channel.js": {
+            "name": "client/auth/lightbox/iframe_channel.js",
+            "modules": {},
+            "classes": {
+                "IFrameChannel": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "client/auth/lightbox/lightbox.js": {
+            "name": "client/auth/lightbox/lightbox.js",
+            "modules": {},
+            "classes": {
+                "Lightbox": 1
             },
             "fors": {},
             "namespaces": {}
@@ -18,7 +45,7 @@
             "name": "client/auth/redirect/api.js",
             "modules": {},
             "classes": {
-                "RedirectAPI": 1
+                "RedirectBroker": 1
             },
             "fors": {},
             "namespaces": {}
@@ -27,7 +54,25 @@
             "name": "client/auth/api.js",
             "modules": {},
             "classes": {
-                "AuthenticationAPI": 1
+                "AuthAPI": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "client/lib/constants.js": {
+            "name": "client/lib/constants.js",
+            "modules": {},
+            "classes": {
+                "Constants": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "client/lib/function.js": {
+            "name": "client/lib/function.js",
+            "modules": {},
+            "classes": {
+                "Function": 1
             },
             "fors": {},
             "namespaces": {}
@@ -35,74 +80,111 @@
         "client/lib/object.js": {
             "name": "client/lib/object.js",
             "modules": {},
-            "classes": {},
+            "classes": {
+                "Object": 1
+            },
             "fors": {},
             "namespaces": {}
         },
         "client/lib/options.js": {
             "name": "client/lib/options.js",
             "modules": {},
-            "classes": {},
+            "classes": {
+                "Options": 1
+            },
             "fors": {},
             "namespaces": {}
         },
         "client/lib/url.js": {
             "name": "client/lib/url.js",
             "modules": {},
-            "classes": {},
+            "classes": {
+                "Url": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "client/lib/xhr.js": {
+            "name": "client/lib/xhr.js",
+            "modules": {},
+            "classes": {
+                "Xhr": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "client/profile/api.js": {
+            "name": "client/profile/api.js",
+            "modules": {},
+            "classes": {
+                "ProfileAPI": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "client/token/api.js": {
+            "name": "client/token/api.js",
+            "modules": {},
+            "classes": {
+                "TokenAPI": 1
+            },
             "fors": {},
             "namespaces": {}
         },
         "client/FxaRelierClient.js": {
             "name": "client/FxaRelierClient.js",
-            "modules": {},
-            "classes": {
+            "modules": {
                 "FxaRelierClient": 1
+            },
+            "classes": {
+                "FxaRelierClient (start here)": 1
             },
             "fors": {},
             "namespaces": {}
         }
     },
-    "modules": {},
+    "modules": {
+        "FxaRelierClient": {
+            "name": "FxaRelierClient",
+            "submodules": {},
+            "classes": {
+                "BaseBroker": 1,
+                "LightboxBroker": 1,
+                "IFrameChannel": 1,
+                "Lightbox": 1,
+                "RedirectBroker": 1,
+                "AuthAPI": 1,
+                "Constants": 1,
+                "Function": 1,
+                "Object": 1,
+                "Options": 1,
+                "Url": 1,
+                "Xhr": 1,
+                "ProfileAPI": 1,
+                "TokenAPI": 1,
+                "FxaRelierClient (start here)": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "client/FxaRelierClient.js",
+            "line": 19,
+            "description": "The Firefox Accounts Relier Client."
+        }
+    },
     "classes": {
-        "LightboxAPI": {
-            "name": "LightboxAPI",
-            "shortname": "LightboxAPI",
+        "BaseBroker": {
+            "name": "BaseBroker",
+            "shortname": "BaseBroker",
             "classitems": [],
             "plugins": [],
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "file": "client/auth/lightbox/api.js",
-            "line": 72,
-            "description": "Authenticate users with a lightbox",
-            "extends": "AuthenticationAPI",
-            "is_constructor": 1
-        },
-        "RedirectAPI": {
-            "name": "RedirectAPI",
-            "shortname": "RedirectAPI",
-            "classitems": [],
-            "plugins": [],
-            "extensions": [],
-            "plugin_for": [],
-            "extension_for": [],
-            "file": "client/auth/redirect/api.js",
-            "line": 13,
-            "description": "Authenticate a user with the redirect flow.",
-            "extends": "AuthenticationAPI",
-            "is_constructor": 1
-        },
-        "AuthenticationAPI": {
-            "name": "AuthenticationAPI",
-            "shortname": "AuthenticationAPI",
-            "classitems": [],
-            "plugins": [],
-            "extensions": [],
-            "plugin_for": [],
-            "extension_for": [],
-            "file": "client/auth/api.js",
-            "line": 15,
+            "module": "FxaRelierClient",
+            "file": "client/auth/base/api.js",
+            "line": 18,
+            "description": "The base class for other brokers. Subclasses must override\n`openFxa`. Provides a strategy to authenticate a user.",
             "is_constructor": 1,
             "params": [
                 {
@@ -118,32 +200,26 @@
                     "optdefault": "{}",
                     "props": [
                         {
-                            "name": "contentHost",
-                            "description": "Firefox Accounts Content Server host",
-                            "type": "String",
-                            "optional": true
-                        },
-                        {
                             "name": "oauthHost",
-                            "description": "Firefox Accounts OAuth Server host",
+                            "description": "\n  Firefox Accounts OAuth Server host",
                             "type": "String",
                             "optional": true
                         },
                         {
                             "name": "window",
-                            "description": "window override, used for unit tests",
+                            "description": "\n  window override, used for unit tests",
                             "type": "Object",
                             "optional": true
                         },
                         {
                             "name": "lightbox",
-                            "description": "lightbox override, used for unit tests",
+                            "description": "\n  lightbox override, used for unit tests",
                             "type": "Object",
                             "optional": true
                         },
                         {
                             "name": "channel",
-                            "description": "channel override, used for unit tests",
+                            "description": "\n  channel override, used for unit tests",
                             "type": "Object",
                             "optional": true
                         }
@@ -151,16 +227,19 @@
                 }
             ]
         },
-        "FxaRelierClient": {
-            "name": "FxaRelierClient",
-            "shortname": "FxaRelierClient",
+        "LightboxBroker": {
+            "name": "LightboxBroker",
+            "shortname": "LightboxBroker",
             "classitems": [],
             "plugins": [],
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "file": "client/FxaRelierClient.js",
-            "line": 41,
+            "module": "FxaRelierClient",
+            "file": "client/auth/lightbox/api.js",
+            "line": 74,
+            "description": "Authenticate users with a lightbox",
+            "extends": "BaseBroker",
             "is_constructor": 1,
             "params": [
                 {
@@ -177,51 +256,379 @@
                     "props": [
                         {
                             "name": "contentHost",
-                            "description": "Firefox Accounts Content Server host",
+                            "description": "\n  Firefox Accounts Content Server host",
                             "type": "String",
                             "optional": true
                         },
                         {
                             "name": "oauthHost",
-                            "description": "Firefox Accounts OAuth Server host",
+                            "description": "\n  Firefox Accounts OAuth Server host",
                             "type": "String",
                             "optional": true
                         },
                         {
                             "name": "window",
-                            "description": "window override, used for unit tests",
+                            "description": "\n  window override, used for unit tests",
                             "type": "Object",
                             "optional": true
                         },
                         {
                             "name": "lightbox",
-                            "description": "lightbox override, used for unit tests",
+                            "description": "\n  lightbox override, used for unit tests",
                             "type": "Object",
                             "optional": true
                         },
                         {
                             "name": "channel",
-                            "description": "channel override, used for unit tests",
+                            "description": "\n  channel override, used for unit tests",
                             "type": "Object",
                             "optional": true
                         }
                     ]
                 }
+            ]
+        },
+        "IFrameChannel": {
+            "name": "IFrameChannel",
+            "shortname": "IFrameChannel",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "FxaRelierClient",
+            "file": "client/auth/lightbox/iframe_channel.js",
+            "line": 5,
+            "description": "Communicate with an iframed content server."
+        },
+        "Lightbox": {
+            "name": "Lightbox",
+            "shortname": "Lightbox",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "FxaRelierClient",
+            "file": "client/auth/lightbox/lightbox.js",
+            "line": 7,
+            "description": "Create a lightbox."
+        },
+        "RedirectBroker": {
+            "name": "RedirectBroker",
+            "shortname": "RedirectBroker",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "FxaRelierClient",
+            "file": "client/auth/redirect/api.js",
+            "line": 13,
+            "description": "Authenticate a user with the redirect flow.",
+            "extends": "BaseBroker",
+            "is_constructor": 1
+        },
+        "AuthAPI": {
+            "name": "AuthAPI",
+            "shortname": "AuthAPI",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "FxaRelierClient",
+            "file": "client/auth/api.js",
+            "line": 58,
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "clientId",
+                    "description": "- the OAuth client ID for the relier",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "- configuration",
+                    "type": "Object",
+                    "optional": true,
+                    "optdefault": "{}",
+                    "props": [
+                        {
+                            "name": "contentHost",
+                            "description": "\n  Firefox Accounts Content Server host",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "oauthHost",
+                            "description": "\n  Firefox Accounts OAuth Server host",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "window",
+                            "description": "\n  window override, used for unit tests",
+                            "type": "Object",
+                            "optional": true
+                        },
+                        {
+                            "name": "lightbox",
+                            "description": "\n  lightbox override, used for unit tests",
+                            "type": "Object",
+                            "optional": true
+                        },
+                        {
+                            "name": "channel",
+                            "description": "\n  channel override, used for unit tests",
+                            "type": "Object",
+                            "optional": true
+                        }
+                    ]
+                }
+            ]
+        },
+        "Constants": {
+            "name": "Constants",
+            "shortname": "Constants",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "FxaRelierClient",
+            "file": "client/lib/constants.js",
+            "line": 5,
+            "description": "Constants",
+            "static": 1
+        },
+        "Function": {
+            "name": "Function",
+            "shortname": "Function",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "FxaRelierClient",
+            "file": "client/lib/function.js",
+            "line": 6,
+            "description": "Simple function helpers.",
+            "static": 1
+        },
+        "Object": {
+            "name": "Object",
+            "shortname": "Object",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "FxaRelierClient",
+            "file": "client/lib/object.js",
+            "line": 5,
+            "description": "Helper functions for working with Objects",
+            "static": 1
+        },
+        "Options": {
+            "name": "Options",
+            "shortname": "Options",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "FxaRelierClient",
+            "file": "client/lib/options.js",
+            "line": 5,
+            "description": "Helper functions for working with options",
+            "static": 1
+        },
+        "Url": {
+            "name": "Url",
+            "shortname": "Url",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "FxaRelierClient",
+            "file": "client/lib/url.js",
+            "line": 5,
+            "description": "Helpers functions to work with URLs",
+            "static": 1
+        },
+        "Xhr": {
+            "name": "Xhr",
+            "shortname": "Xhr",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "FxaRelierClient",
+            "file": "client/lib/xhr.js",
+            "line": 33,
+            "description": "Provides XHR functionality for use in either a browser or node\nenvironment.",
+            "static": 1
+        },
+        "ProfileAPI": {
+            "name": "ProfileAPI",
+            "shortname": "ProfileAPI",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "FxaRelierClient",
+            "file": "client/profile/api.js",
+            "line": 13,
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "clientId",
+                    "description": "- the OAuth client ID for the relier",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "- configuration",
+                    "type": "Object",
+                    "optional": true,
+                    "optdefault": "{}",
+                    "props": [
+                        {
+                            "name": "profileHost",
+                            "description": "\n  Firefox Accounts Profile Server host",
+                            "type": "String",
+                            "optional": true
+                        }
+                    ]
+                }
+            ]
+        },
+        "TokenAPI": {
+            "name": "TokenAPI",
+            "shortname": "TokenAPI",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "FxaRelierClient",
+            "file": "client/token/api.js",
+            "line": 12,
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "clientId",
+                    "description": "- the OAuth client ID for the relier",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "- configuration",
+                    "type": "Object",
+                    "optional": true,
+                    "optdefault": "{}",
+                    "props": [
+                        {
+                            "name": "clientSecret",
+                            "description": "\n  Client secret",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "oauthHost",
+                            "description": "\n  Firefox Accounts OAuth Server host",
+                            "type": "String",
+                            "optional": true
+                        }
+                    ]
+                }
+            ]
+        },
+        "FxaRelierClient (start here)": {
+            "name": "FxaRelierClient (start here)",
+            "shortname": "FxaRelierClient (start here)",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "FxaRelierClient",
+            "namespace": "",
+            "file": "client/FxaRelierClient.js",
+            "line": 19,
+            "description": "The entry point. Create and use an instance of the FxaRelierClient.",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "clientId",
+                    "description": "- the OAuth client ID for the relier",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "- configuration",
+                    "type": "Object",
+                    "optional": true,
+                    "optdefault": "{}",
+                    "props": [
+                        {
+                            "name": "clientSecret",
+                            "description": "\n  Client secret. Required to use the {{#crossLink \"TokenAPI\"}}Token{{/crossLink}} API.",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "contentHost",
+                            "description": "\n  Firefox Accounts Content Server host",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "oauthHost",
+                            "description": "\n  Firefox Accounts OAuth Server host",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "profileHost",
+                            "description": "\n  Firefox Accounts Profile Server host",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "window",
+                            "description": "\n  window override, used for unit tests",
+                            "type": "Object",
+                            "optional": true
+                        },
+                        {
+                            "name": "lightbox",
+                            "description": "\n  lightbox override, used for unit tests",
+                            "type": "Object",
+                            "optional": true
+                        },
+                        {
+                            "name": "channel",
+                            "description": "\n  channel override, used for unit tests",
+                            "type": "Object",
+                            "optional": true
+                        }
+                    ]
+                }
+            ],
+            "example": [
+                "\n    var fxaRelierClient = new FxaRelierClient(<client_id>);"
             ]
         }
     },
     "classitems": [
         {
-            "file": "client/auth/lightbox/api.js",
-            "line": 106,
-            "description": "Unload the lightbox",
-            "itemtype": "method",
-            "name": "unload",
-            "class": "LightboxAPI"
-        },
-        {
-            "file": "client/auth/api.js",
-            "line": 72,
+            "file": "client/auth/base/api.js",
+            "line": 76,
             "description": "Open Firefox Accounts to authenticate the user.\nMust be overridden to provide API specific functionality.",
             "itemtype": "method",
             "name": "openFxa",
@@ -234,11 +641,11 @@
             ],
             "access": "protected",
             "tagname": "",
-            "class": "AuthenticationAPI"
+            "class": "BaseBroker"
         },
         {
-            "file": "client/auth/api.js",
-            "line": 85,
+            "file": "client/auth/base/api.js",
+            "line": 89,
             "description": "Sign in an existing user",
             "itemtype": "method",
             "name": "signIn",
@@ -254,7 +661,7 @@
                             "type": "String"
                         },
                         {
-                            "name": "redirect_uri",
+                            "name": "redirectUri",
                             "description": "URI to redirect to when complete",
                             "type": "String"
                         },
@@ -265,18 +672,18 @@
                         },
                         {
                             "name": "email",
-                            "description": "Email address used to pre-fill into the account form,\n  but the user is free to change it. Set to the string literal\n  `blank` to ignore any previously signed in email. Default is\n  the last email address used to sign in.",
+                            "description": "\n  Email address used to pre-fill into the account form,\n  but the user is free to change it. Set to the string literal\n  `blank` to ignore any previously signed in email. Default is\n  the last email address used to sign in.",
                             "type": "String",
                             "optional": true
                         }
                     ]
                 }
             ],
-            "class": "AuthenticationAPI"
+            "class": "BaseBroker"
         },
         {
-            "file": "client/auth/api.js",
-            "line": 107,
+            "file": "client/auth/base/api.js",
+            "line": 108,
             "description": "Force a user to sign in as an existing user.",
             "itemtype": "method",
             "name": "forceAuth",
@@ -292,7 +699,7 @@
                             "type": "String"
                         },
                         {
-                            "name": "redirect_uri",
+                            "name": "redirectUri",
                             "description": "URI to redirect to when complete",
                             "type": "String"
                         },
@@ -308,18 +715,18 @@
                         },
                         {
                             "name": "ui",
-                            "description": "UI to present - `lightbox` or `redirect` - defaults to `redirect`",
+                            "description": "\n  UI to present - `lightbox` or `redirect` - defaults to `redirect`",
                             "type": "String",
                             "optional": true
                         }
                     ]
                 }
             ],
-            "class": "AuthenticationAPI"
+            "class": "BaseBroker"
         },
         {
-            "file": "client/auth/api.js",
-            "line": 136,
+            "file": "client/auth/base/api.js",
+            "line": 137,
             "description": "Sign up a new user",
             "itemtype": "method",
             "name": "signUp",
@@ -335,7 +742,7 @@
                             "type": "String"
                         },
                         {
-                            "name": "redirect_uri",
+                            "name": "redirectUri",
                             "description": "URI to redirect to when complete",
                             "type": "String"
                         },
@@ -346,36 +753,131 @@
                         },
                         {
                             "name": "email",
-                            "description": "Email address used to pre-fill into the account form,\n  but the user is free to change it.",
+                            "description": "\n  Email address used to pre-fill into the account form,\n  but the user is free to change it.",
                             "type": "String",
                             "optional": true
                         }
                     ]
                 }
             ],
-            "class": "AuthenticationAPI"
+            "class": "BaseBroker"
         },
         {
-            "file": "client/lib/object.js",
-            "line": 5,
-            "description": "Helper functions for working with Objects",
-            "class": "FxaRelierClient"
+            "file": "client/auth/lightbox/api.js",
+            "line": 122,
+            "description": "Unload the lightbox",
+            "itemtype": "method",
+            "name": "unload",
+            "class": "LightboxBroker"
         },
         {
-            "file": "client/lib/options.js",
-            "line": 5,
-            "description": "Helper functions for working with options",
-            "class": "FxaRelierClient"
+            "file": "client/auth/lightbox/iframe_channel.js",
+            "line": 25,
+            "description": "Protocol version number. When the protocol to communicate with the\ncontent server changes, this should be bumped.",
+            "itemtype": "property",
+            "name": "version",
+            "type": "{String}",
+            "class": "IFrameChannel"
         },
         {
-            "file": "client/lib/url.js",
-            "line": 5,
-            "description": "helpers to work with URLs",
-            "class": "FxaRelierClient"
+            "file": "client/auth/lightbox/iframe_channel.js",
+            "line": 33,
+            "description": "Start listening for messages from the iframe.",
+            "itemtype": "method",
+            "name": "attach",
+            "class": "IFrameChannel"
         },
         {
-            "file": "client/FxaRelierClient.js",
-            "line": 63,
+            "file": "client/auth/lightbox/iframe_channel.js",
+            "line": 45,
+            "description": "Stop listening for messages from the iframe.",
+            "itemtype": "method",
+            "name": "detach",
+            "class": "IFrameChannel"
+        },
+        {
+            "file": "client/auth/lightbox/iframe_channel.js",
+            "line": 53,
+            "description": "Send a message to the iframe.",
+            "itemtype": "method",
+            "name": "send",
+            "params": [
+                {
+                    "name": "command\nMessage",
+                    "description": "to send.",
+                    "type": "String"
+                },
+                {
+                    "name": "data",
+                    "description": "\nData to send.",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "class": "IFrameChannel"
+        },
+        {
+            "file": "client/auth/lightbox/lightbox.js",
+            "line": 44,
+            "description": "Load content into the lightbox",
+            "itemtype": "method",
+            "name": "load",
+            "params": [
+                {
+                    "name": "src\nURL",
+                    "description": "to load.",
+                    "type": "String"
+                }
+            ],
+            "class": "Lightbox"
+        },
+        {
+            "file": "client/auth/lightbox/lightbox.js",
+            "line": 88,
+            "description": "Get the content iframe element.",
+            "itemtype": "method",
+            "name": "getContentElement",
+            "return": {
+                "description": "",
+                "type": "DOM Element"
+            },
+            "class": "Lightbox"
+        },
+        {
+            "file": "client/auth/lightbox/lightbox.js",
+            "line": 97,
+            "description": "Get the content window in the iframe.",
+            "itemtype": "method",
+            "name": "getContentWindow",
+            "return": {
+                "description": "",
+                "type": "DOM Element"
+            },
+            "class": "Lightbox"
+        },
+        {
+            "file": "client/auth/lightbox/lightbox.js",
+            "line": 106,
+            "description": "Check if the lightbox is loaded",
+            "itemtype": "method",
+            "name": "isLoaded",
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "Lightbox"
+        },
+        {
+            "file": "client/auth/lightbox/lightbox.js",
+            "line": 115,
+            "description": "Unload the lightbox",
+            "itemtype": "method",
+            "name": "unload",
+            "class": "Lightbox"
+        },
+        {
+            "file": "client/auth/api.js",
+            "line": 84,
             "description": "Sign in an existing user.",
             "itemtype": "method",
             "name": "signIn",
@@ -391,7 +893,7 @@
                             "type": "String"
                         },
                         {
-                            "name": "redirect_uri",
+                            "name": "redirectUri",
                             "description": "URI to redirect to when complete",
                             "type": "String"
                         },
@@ -402,30 +904,24 @@
                         },
                         {
                             "name": "email",
-                            "description": "Email address used to pre-fill into the account form,\n  but the user is free to change it. Set to the string literal\n  `blank` to ignore any previously signed in email. Default is\n  the last email address used to sign in.",
-                            "type": "String",
-                            "optional": true
-                        },
-                        {
-                            "name": "force_email",
-                            "description": "Force the user to sign in with the given email",
+                            "description": "\n  Email address used to pre-fill into the account form,\n  but the user is free to change it. Set to the string literal\n  `blank` to ignore any previously signed in email. Default is\n  the last email address used to sign in.",
                             "type": "String",
                             "optional": true
                         },
                         {
                             "name": "ui",
-                            "description": "UI to present - `lightbox` or `redirect` - defaults to `redirect`",
+                            "description": "\n  UI to present - `lightbox` or `redirect` - defaults to `redirect`",
                             "type": "String",
                             "optional": true
                         }
                     ]
                 }
             ],
-            "class": "FxaRelierClient"
+            "class": "AuthAPI"
         },
         {
-            "file": "client/FxaRelierClient.js",
-            "line": 97,
+            "file": "client/auth/api.js",
+            "line": 105,
             "description": "Force a user to sign in as an existing user.",
             "itemtype": "method",
             "name": "forceAuth",
@@ -441,7 +937,7 @@
                             "type": "String"
                         },
                         {
-                            "name": "redirect_uri",
+                            "name": "redirectUri",
                             "description": "URI to redirect to when complete",
                             "type": "String"
                         },
@@ -457,18 +953,18 @@
                         },
                         {
                             "name": "ui",
-                            "description": "UI to present - `lightbox` or `redirect` - defaults to `redirect`",
+                            "description": "\n  UI to present - `lightbox` or `redirect` - defaults to `redirect`",
                             "type": "String",
                             "optional": true
                         }
                     ]
                 }
             ],
-            "class": "FxaRelierClient"
+            "class": "AuthAPI"
         },
         {
-            "file": "client/FxaRelierClient.js",
-            "line": 128,
+            "file": "client/auth/api.js",
+            "line": 125,
             "description": "Sign up a new user",
             "itemtype": "method",
             "name": "signUp",
@@ -484,7 +980,7 @@
                             "type": "String"
                         },
                         {
-                            "name": "redirect_uri",
+                            "name": "redirectUri",
                             "description": "URI to redirect to when complete",
                             "type": "String"
                         },
@@ -495,43 +991,529 @@
                         },
                         {
                             "name": "email",
-                            "description": "Email address used to pre-fill into the account form,\n  but the user is free to change it.",
+                            "description": "\n  Email address used to pre-fill into the account form,\n  but the user is free to change it.",
                             "type": "String",
                             "optional": true
                         },
                         {
                             "name": "ui",
-                            "description": "UI to present - `lightbox` or `redirect` - defaults to `redirect`",
+                            "description": "\n  UI to present - `lightbox` or `redirect` - defaults to `redirect`",
                             "type": "String",
                             "optional": true
                         }
                     ]
                 }
             ],
-            "class": "FxaRelierClient"
+            "class": "AuthAPI"
+        },
+        {
+            "file": "client/lib/constants.js",
+            "line": 15,
+            "description": "Default content server host",
+            "itemtype": "property",
+            "name": "DEFAULT_CONTENT_HOST",
+            "type": "{String}",
+            "class": "Constants"
+        },
+        {
+            "file": "client/lib/constants.js",
+            "line": 21,
+            "description": "Default oauth server host",
+            "itemtype": "property",
+            "name": "DEFAULT_OAUTH_HOST",
+            "type": "{String}",
+            "class": "Constants"
+        },
+        {
+            "file": "client/lib/constants.js",
+            "line": 27,
+            "description": "Default profile server host",
+            "itemtype": "property",
+            "name": "DEFAULT_PROFILE_HOST",
+            "type": "{String}",
+            "class": "Constants"
+        },
+        {
+            "file": "client/lib/constants.js",
+            "line": 33,
+            "description": "Sign in action",
+            "itemtype": "property",
+            "name": "SIGNIN_ACTION",
+            "type": "{String}",
+            "class": "Constants"
+        },
+        {
+            "file": "client/lib/constants.js",
+            "line": 39,
+            "description": "Sign up action",
+            "itemtype": "property",
+            "name": "SIGNUP_ACTION",
+            "type": "{String}",
+            "class": "Constants"
+        },
+        {
+            "file": "client/lib/constants.js",
+            "line": 45,
+            "description": "Force auth action",
+            "itemtype": "property",
+            "name": "FORCE_AUTH_ACTION",
+            "type": "{String}",
+            "class": "Constants"
+        },
+        {
+            "file": "client/lib/function.js",
+            "line": 24,
+            "description": "Partially apply a function by filling in any number of its arguments,\nwithout changing its dynamic this value. A close cousin of\n[Function.prototype.bind](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function/bind).",
+            "example": [
+                "\n    function add(a, b) {\n      return a + b;\n    }\n\n    var add10To = partial(add, 10);\n    var result = add10To(9);\n    // result is 19"
+            ],
+            "itemtype": "method",
+            "name": "partial",
+            "params": [
+                {
+                    "name": "method",
+                    "description": "\nMethod to call with the arguments on final evaluation.",
+                    "type": "Function"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Function"
+            },
+            "class": "Function"
+        },
+        {
+            "file": "client/lib/object.js",
+            "line": 14,
+            "description": "Extend an object with properties of one or more objects.",
+            "itemtype": "method",
+            "name": "extend",
+            "params": [
+                {
+                    "name": "target\nTarget",
+                    "description": "object",
+                    "type": "Object"
+                }
+            ],
+            "class": "Object"
+        },
+        {
+            "file": "client/lib/options.js",
+            "line": 16,
+            "description": "Check an object for a list of required options",
+            "itemtype": "method",
+            "name": "checkRequired",
+            "params": [
+                {
+                    "name": "requiredOptions",
+                    "description": "",
+                    "type": "Array of Strings"
+                },
+                {
+                    "name": "options",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "throws": {
+                "description": "if a required option is missing",
+                "type": "Error"
+            },
+            "class": "Options"
+        },
+        {
+            "file": "client/lib/url.js",
+            "line": 14,
+            "description": "Create a query parameter string from a key and value",
+            "itemtype": "method",
+            "name": "createQueryParam",
+            "params": [
+                {
+                    "name": "key",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "value",
+                    "description": "",
+                    "type": "Variant"
+                }
+            ],
+            "return": {
+                "description": "URL safe serialized query parameter",
+                "type": "String"
+            },
+            "class": "Url"
+        },
+        {
+            "file": "client/lib/url.js",
+            "line": 27,
+            "description": "Create a query string out of an object.",
+            "itemtype": "method",
+            "name": "objectToQueryString",
+            "params": [
+                {
+                    "name": "obj\nObject",
+                    "description": "to create query string from",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "URL safe query string",
+                "type": "String"
+            },
+            "class": "Url"
+        },
+        {
+            "file": "client/lib/xhr.js",
+            "line": 65,
+            "description": "Perform a GET request",
+            "itemtype": "method",
+            "name": "get",
+            "params": [
+                {
+                    "name": "path\nendpoint",
+                    "description": "URL",
+                    "type": "String"
+                },
+                {
+                    "name": "data",
+                    "description": "\ndata to send",
+                    "type": "Object || String",
+                    "optional": true
+                },
+                {
+                    "name": "options",
+                    "description": "\nOptions",
+                    "type": "Object",
+                    "optional": true,
+                    "optdefault": "{}",
+                    "props": [
+                        {
+                            "name": "contentType",
+                            "description": "\nContent type of `data`. Defaults to `application/json`",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "headers",
+                            "description": "\nHeaders to pass with request.",
+                            "type": "Object",
+                            "optional": true
+                        },
+                        {
+                            "name": "xhr",
+                            "description": "\nXMLHttpRequest compatible object to use for XHR requests",
+                            "type": "Object",
+                            "optional": true
+                        }
+                    ]
+                }
+            ],
+            "return": {
+                "description": "A promise that will be fulfilled with JSON `xhr.responseText` of the request",
+                "type": "Promise"
+            },
+            "class": "Xhr"
+        },
+        {
+            "file": "client/lib/xhr.js",
+            "line": 84,
+            "description": "Perform a POST request",
+            "itemtype": "method",
+            "name": "post",
+            "params": [
+                {
+                    "name": "path\nendpoint",
+                    "description": "URL",
+                    "type": "String"
+                },
+                {
+                    "name": "data",
+                    "description": "\ndata to send",
+                    "type": "Object || String",
+                    "optional": true
+                },
+                {
+                    "name": "options",
+                    "description": "\nOptions",
+                    "type": "Object",
+                    "optional": true,
+                    "optdefault": "{}",
+                    "props": [
+                        {
+                            "name": "contentType",
+                            "description": "\nContent type of `data`. Defaults to `application/json`",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "headers",
+                            "description": "\nHeaders to pass with request.",
+                            "type": "Object",
+                            "optional": true
+                        },
+                        {
+                            "name": "xhr",
+                            "description": "\nXMLHttpRequest compatible object to use for XHR requests",
+                            "type": "Object",
+                            "optional": true
+                        }
+                    ]
+                }
+            ],
+            "return": {
+                "description": "A promise that will be fulfilled with JSON `xhr.responseText` of the request",
+                "type": "Promise"
+            },
+            "class": "Xhr"
+        },
+        {
+            "file": "client/profile/api.js",
+            "line": 32,
+            "description": "Fetch a user's profile data.",
+            "itemtype": "method",
+            "name": "fetch",
+            "params": [
+                {
+                    "name": "token\nScoped",
+                    "description": "OAuth token that can be used to access the profile data",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "- configuration",
+                    "type": "Object",
+                    "optional": true,
+                    "optdefault": "{}",
+                    "props": [
+                        {
+                            "name": "xhr",
+                            "description": "\n  XMLHttpRequest compatible object to use to make the request.",
+                            "type": "String",
+                            "optional": true
+                        }
+                    ]
+                }
+            ],
+            "return": {
+                "description": "Response resolves to the user's profile data on success.",
+                "type": "Promise"
+            },
+            "class": "ProfileAPI"
+        },
+        {
+            "file": "client/profile/api.js",
+            "line": 63,
+            "description": "Get all the user's profile data. Must be called after `fetch`",
+            "itemtype": "method",
+            "name": "all",
+            "return": {
+                "description": "User's profile data that was fetched using `fetch`.",
+                "type": "Object"
+            },
+            "class": "ProfileAPI"
+        },
+        {
+            "file": "client/token/api.js",
+            "line": 34,
+            "description": "Trade an OAuth code for a longer lived OAuth token. See\nhttps://github.com/mozilla/fxa-oauth-server/blob/master/docs/api.md#post-v1token",
+            "itemtype": "method",
+            "name": "tradeCode",
+            "params": [
+                {
+                    "name": "code\nOAuth",
+                    "description": "code",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "- configuration",
+                    "type": "Object",
+                    "optional": true,
+                    "optdefault": "{}",
+                    "props": [
+                        {
+                            "name": "xhr",
+                            "description": "\n  XMLHttpRequest compatible object to use to make the request.",
+                            "type": "String",
+                            "optional": true
+                        }
+                    ]
+                }
+            ],
+            "return": {
+                "description": "Response resolves to an object with `access_token`, `scope`, and\n`token_type`.",
+                "type": "Promise"
+            },
+            "class": "TokenAPI"
+        },
+        {
+            "file": "client/token/api.js",
+            "line": 67,
+            "description": "Verify an OAuth token is valid. See\nhttps://github.com/mozilla/fxa-oauth-server/blob/master/docs/api.md#post-v1verify",
+            "itemtype": "method",
+            "name": "verifyToken",
+            "params": [
+                {
+                    "name": "token\nOAuth",
+                    "description": "token to verify",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "- configuration",
+                    "type": "Object",
+                    "optional": true,
+                    "optdefault": "{}",
+                    "props": [
+                        {
+                            "name": "xhr",
+                            "description": "\n  XMLHttpRequest compatible object to use to make the request.",
+                            "type": "String",
+                            "optional": true
+                        }
+                    ]
+                }
+            ],
+            "return": {
+                "description": "Response resolves to an object with `user`, `client_id`, and\n`scopes`.",
+                "type": "Promise"
+            },
+            "class": "TokenAPI"
+        },
+        {
+            "file": "client/token/api.js",
+            "line": 92,
+            "description": "After a client is done using a token, the responsible thing to do is to\ndestroy the token afterwards.\nSee https://github.com/mozilla/fxa-oauth-server/blob/master/docs/api.md#post-v1destroy",
+            "itemtype": "method",
+            "name": "destroyToken",
+            "params": [
+                {
+                    "name": "token\nOAuth",
+                    "description": "token to verify",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "- configuration",
+                    "type": "Object",
+                    "optional": true,
+                    "optdefault": "{}",
+                    "props": [
+                        {
+                            "name": "xhr",
+                            "description": "\n  XMLHttpRequest compatible object to use to make the request.",
+                            "type": "String",
+                            "optional": true
+                        }
+                    ]
+                }
+            ],
+            "return": {
+                "description": "Response resolves to an empty object.",
+                "type": "Promise"
+            },
+            "class": "TokenAPI"
         },
         {
             "file": "client/FxaRelierClient.js",
-            "line": 161,
+            "line": 48,
+            "description": "Authenticate users in the browser. Implements {{#crossLink \"AuthAPI\"}}{{/crossLink}}.",
+            "itemtype": "property",
+            "name": "auth",
+            "type": "{Object}",
+            "example": [
+                "\n    var fxaRelierClient = new FxaRelierClient('<client_id>');\n    fxaRelierClient.auth.signIn({\n      state: <state>,\n      redirectUri: <redirect_uri>,\n      scope: 'profile'\n    });"
+            ],
+            "class": "FxaRelierClient (start here)",
+            "module": "FxaRelierClient"
+        },
+        {
+            "file": "client/FxaRelierClient.js",
+            "line": 63,
+            "description": "Manage tokens on the server. Implements {{#crossLink \"TokenAPI\"}}{{/crossLink}}.",
+            "itemtype": "property",
+            "name": "token",
+            "type": "{Object}",
+            "example": [
+                "\n    var fxaRelierClient = new FxaRelierClient('<client_id>', {\n      clientSecret: <client_secret>\n    });\n    fxaRelierClient.token.tradeCode(<code>)\n      .then(function (token) {\n        // do something awesome with the token like get\n        // profile information. See profile.\n      });"
+            ],
+            "class": "FxaRelierClient (start here)",
+            "module": "FxaRelierClient"
+        },
+        {
+            "file": "client/FxaRelierClient.js",
+            "line": 80,
+            "description": "Fetch profile information on the server. Implements {{#crossLink \"ProfileAPI\"}}{{/crossLink}}.",
+            "itemtype": "property",
+            "name": "profile",
+            "type": "{Object}",
+            "example": [
+                "\n    var fxaRelierClient = new FxaRelierClient('<client_id>', {\n      clientSecret: <client_secret>\n    });\n    fxaRelierClient.token.tradeCode(<code>)\n      .then(function (token) {\n        return fxaRelierClient.fetch(token);\n      })\n      .then(function (profile) {\n        // display some profile info.\n      });"
+            ],
+            "class": "FxaRelierClient (start here)",
+            "module": "FxaRelierClient"
+        },
+        {
+            "file": "client/FxaRelierClient.js",
+            "line": 101,
             "description": "FxaRelierClient version",
             "itemtype": "property",
             "name": "version",
             "type": "{String}",
-            "class": "FxaRelierClient"
+            "class": "FxaRelierClient (start here)",
+            "module": "FxaRelierClient"
         }
     ],
     "warnings": [
         {
-            "message": "Missing item type\nHelper functions for working with Objects",
-            "line": " client/lib/object.js:5"
+            "message": "replacing incorrect tag: returns with return",
+            "line": " client/auth/lightbox/lightbox.js:88"
         },
         {
-            "message": "Missing item type\nHelper functions for working with options",
-            "line": " client/lib/options.js:5"
+            "message": "replacing incorrect tag: returns with return",
+            "line": " client/auth/lightbox/lightbox.js:97"
         },
         {
-            "message": "Missing item type\nhelpers to work with URLs",
-            "line": " client/lib/url.js:5"
+            "message": "replacing incorrect tag: returns with return",
+            "line": " client/auth/lightbox/lightbox.js:106"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " client/lib/function.js:24"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " client/lib/url.js:14"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " client/lib/url.js:27"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " client/profile/api.js:32"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " client/profile/api.js:63"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " client/token/api.js:34"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " client/token/api.js:34"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " client/token/api.js:67"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " client/token/api.js:92"
         }
     ]
 }

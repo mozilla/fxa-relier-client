@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>client/lib/url.js - fxa-relier-client</title>
+    <title>client/lib/constants.js - fxa-relier-client</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -90,7 +90,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: client/lib/url.js</h1>
+                        <h1 class="file-heading">File: client/lib/constants.js</h1>
                         
                         <div class="file">
                             <pre class="code prettyprint linenums">
@@ -99,48 +99,51 @@
                          * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
                         
                         /**
-                         * Helpers functions to work with URLs
+                         * Constants
                          *
-                         * @class Url
+                         * @class Constants
                          * @static
                          */
                         define([], function () {
                           &#x27;use strict&#x27;;
                         
-                          /**
-                           * Create a query parameter string from a key and value
-                           *
-                           * @method createQueryParam
-                           * @param {String} key
-                           * @param {Variant} value
-                           * @returns {String}
-                           * URL safe serialized query parameter
-                           */
-                          function createQueryParam(key, value) {
-                            return encodeURIComponent(key) + &#x27;=&#x27; + encodeURIComponent(value);
-                          }
-                        
-                          /**
-                           * Create a query string out of an object.
-                           * @method objectToQueryString
-                           * @param {Object} obj
-                           * Object to create query string from
-                           * @returns {String}
-                           * URL safe query string
-                           */
-                          function objectToQueryString(obj) {
-                            var queryParams = [];
-                        
-                            for (var key in obj) {
-                              queryParams.push(createQueryParam(key, obj[key]));
-                            }
-                        
-                            return &#x27;?&#x27; + queryParams.join(&#x27;&amp;&#x27;);
-                          }
-                        
                           return {
-                            createQueryParam: createQueryParam,
-                            objectToQueryString: objectToQueryString
+                            /**
+                             * Default content server host
+                             * @property DEFAULT_CONTENT_HOST
+                             * @type {String}
+                             */
+                            DEFAULT_CONTENT_HOST: &#x27;https://accounts.firefox.com&#x27;,
+                            /**
+                             * Default oauth server host
+                             * @property DEFAULT_OAUTH_HOST
+                             * @type {String}
+                             */
+                            DEFAULT_OAUTH_HOST: &#x27;https://oauth.accounts.firefox.com/v1&#x27;,
+                            /**
+                             * Default profile server host
+                             * @property DEFAULT_PROFILE_HOST
+                             * @type {String}
+                             */
+                            DEFAULT_PROFILE_HOST: &#x27;https://profile.accounts.firefox.com/v1&#x27;,
+                            /**
+                             * Sign in action
+                             * @property SIGNIN_ACTION
+                             * @type {String}
+                             */
+                            SIGNIN_ACTION: &#x27;signin&#x27;,
+                            /**
+                             * Sign up action
+                             * @property SIGNUP_ACTION
+                             * @type {String}
+                             */
+                            SIGNUP_ACTION: &#x27;signup&#x27;,
+                            /**
+                             * Force auth action
+                             * @property FORCE_AUTH_ACTION
+                             * @type {String}
+                             */
+                            FORCE_AUTH_ACTION: &#x27;force_auth&#x27;
                           };
                         });
                         

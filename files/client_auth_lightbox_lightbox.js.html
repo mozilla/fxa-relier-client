@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>client/lib/url.js - fxa-relier-client</title>
+    <title>client/auth/lightbox/lightbox.js - fxa-relier-client</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -90,7 +90,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: client/lib/url.js</h1>
+                        <h1 class="file-heading">File: client/auth/lightbox/lightbox.js</h1>
                         
                         <div class="file">
                             <pre class="code prettyprint linenums">
@@ -98,52 +98,131 @@
                          * License, v. 2.0. If a copy of the MPL was not distributed with this
                          * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
                         
+                        /*globals define*/
+                        
                         /**
-                         * Helpers functions to work with URLs
+                         * Create a lightbox.
                          *
-                         * @class Url
-                         * @static
+                         * @class Lightbox
                          */
-                        define([], function () {
+                        define([
+                        ], function () {
                           &#x27;use strict&#x27;;
                         
-                          /**
-                           * Create a query parameter string from a key and value
-                           *
-                           * @method createQueryParam
-                           * @param {String} key
-                           * @param {Variant} value
-                           * @returns {String}
-                           * URL safe serialized query parameter
-                           */
-                          function createQueryParam(key, value) {
-                            return encodeURIComponent(key) + &#x27;=&#x27; + encodeURIComponent(value);
-                          }
+                          function createElement(window, type, attributes) {
+                            var el = window.document.createElement(type);
                         
-                          /**
-                           * Create a query string out of an object.
-                           * @method objectToQueryString
-                           * @param {Object} obj
-                           * Object to create query string from
-                           * @returns {String}
-                           * URL safe query string
-                           */
-                          function objectToQueryString(obj) {
-                            var queryParams = [];
-                        
-                            for (var key in obj) {
-                              queryParams.push(createQueryParam(key, obj[key]));
+                            for (var attribute in attributes) {
+                              el.setAttribute(attribute, attributes[attribute]);
                             }
                         
-                            return &#x27;?&#x27; + queryParams.join(&#x27;&amp;&#x27;);
+                            return el;
                           }
                         
-                          return {
-                            createQueryParam: createQueryParam,
-                            objectToQueryString: objectToQueryString
-                          };
-                        });
+                          function cssPropsToString(props) {
+                            var str = &#x27;&#x27;;
                         
+                            for (var key in props) {
+                              str += key + &#x27;:&#x27; + props[key] + &#x27;;&#x27;;
+                            }
+                        
+                            return str;
+                          }
+                        
+                        
+                          function Lightbox(options) {
+                            options = options || {};
+                        
+                            this._window = options.window;
+                          }
+                        
+                          Lightbox.prototype = {
+                            /**
+                             * Load content into the lightbox
+                             * @method load
+                             * @param {String} src
+                             * URL to load.
+                             */
+                            load: function (src) {
+                              var background = this._backgroundEl = createElement(this._window, &#x27;div&#x27;, {
+                                style: cssPropsToString({
+                                  background: &#x27;rgba(0,0,0,0.5)&#x27;,
+                                  bottom: 0,
+                                  left: 0,
+                                  position: &#x27;fixed&#x27;,
+                                  right: 0,
+                                  top: 0
+                                })
+                              });
+                        
+                              var iframe = createElement(this._window, &#x27;iframe&#x27;, {
+                                id: &#x27;fxa&#x27;,
+                                src: src,
+                                width: &#x27;600&#x27;,
+                                height: &#x27;400&#x27;,
+                                allowtransparency: &#x27;true&#x27;,
+                                border: &#x27;0&#x27;,
+                                style: cssPropsToString({
+                                  background: &#x27;transparent&#x27;,
+                                  border: &#x27;none&#x27;,
+                                  display: &#x27;block&#x27;,
+                                  height: &#x27;600px&#x27;,
+                                  margin: &#x27;0 auto 0 auto&#x27;,
+                                  position: &#x27;relative&#x27;,
+                                  top: &#x27;10%&#x27;,
+                                  width: &#x27;400px&#x27;
+                                })
+                              });
+                        
+                              background.appendChild(iframe);
+                              this._window.document.body.appendChild(background);
+                        
+                              this._iframe = iframe;
+                              this._contentWindow = iframe.contentWindow;
+                            },
+                        
+                            /**
+                             * Get the content iframe element.
+                             * @method getContentElement
+                             * @returns {DOM Element}
+                             */
+                            getContentElement: function () {
+                              return this._iframe;
+                            },
+                        
+                            /**
+                             * Get the content window in the iframe.
+                             * @method getContentWindow
+                             * @returns {DOM Element}
+                             */
+                            getContentWindow: function () {
+                              return this._contentWindow;
+                            },
+                        
+                            /**
+                             * Check if the lightbox is loaded
+                             * @method isLoaded
+                             * @returns {Boolean}
+                             */
+                            isLoaded: function () {
+                              return !! this._backgroundEl;
+                            },
+                        
+                            /**
+                             * Unload the lightbox
+                             * @method unload
+                             */
+                            unload: function () {
+                              if (this._backgroundEl) {
+                                this._window.document.body.removeChild(this._backgroundEl);
+                                delete this._backgroundEl;
+                                delete this._iframe;
+                              }
+                            }
+                          };
+                        
+                          return Lightbox;
+                        });
                         
                         
                             </pre>
