@@ -1311,13 +1311,69 @@ define("components/almond/almond", function(){});
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+
+/**
+ * Simple function helpers.
+ *
+ * @class Function
+ * @static
+ */
+define('client/lib/function',[],function () {
+  
+
+  function partial(method/*, ...*/) {
+    var args = [].slice.call(arguments, 1);
+    return function () {
+      return method.apply(this, args.concat([].slice.call(arguments, 0)));
+    };
+  }
+
+
+  return {
+    /**
+     * Partially apply a function by filling in any number of its arguments,
+     * without changing its dynamic this value. A close cousin of
+     * [Function.prototype.bind](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Function/bind).
+     *
+     * @example
+     *     function add(a, b) {
+     *       return a + b;
+     *     }
+     *
+     *     var add10To = partial(add, 10);
+     *     var result = add10To(9);
+     *     // result is 19
+     *
+     * @method partial
+     * @param method {Function}
+     * Method to call with the arguments on final evaluation.
+     * @returns {Function}
+     */
+    partial: partial
+  };
+});
+
+
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 /**
  * Helper functions for working with Objects
+ *
+ * @class Object
+ * @static
  */
 define('client/lib/object',[], function () {
   
 
-  function extend(target) {
+  /**
+   * Extend an object with properties of one or more objects.
+   * @method extend
+   * @param {Object} target
+   * Target object
+   */
+  function extend(target/*, ...*/) {
     var sources = [].slice.call(arguments, 1);
 
     for (var index = 0, source; source = sources[index]; ++index) {
@@ -1344,12 +1400,24 @@ define('client/lib/object',[], function () {
 
 /**
  * Helper functions for working with options
+ *
+ * @class Options
+ * @static
  */
 
 
 define('client/lib/options',[], function () {
   
 
+  /**
+   * Check an object for a list of required options
+   *
+   * @method checkRequired
+   * @param {Array of Strings} requiredOptions
+   * @param {Object} options
+   * @throws {Error}
+   * if a required option is missing
+   */
   function checkRequired(requiredOptions, options) {
     for (var i = 0, requiredOption; requiredOption = requiredOptions[i]; ++i) {
       if (! (requiredOption in options)) {
@@ -1370,14 +1438,51 @@ define('client/lib/options',[], function () {
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+/**
+ * Constants
+ *
+ * @class Constants
+ * @static
+ */
 define('client/lib/constants',[], function () {
   
 
   return {
+    /**
+     * Default content server host
+     * @property DEFAULT_CONTENT_HOST
+     * @type {String}
+     */
     DEFAULT_CONTENT_HOST: 'https://accounts.firefox.com',
-    DEFAULT_OAUTH_HOST: 'https://oauth.accounts.firefox.com/v1/authorization',
+    /**
+     * Default oauth server host
+     * @property DEFAULT_OAUTH_HOST
+     * @type {String}
+     */
+    DEFAULT_OAUTH_HOST: 'https://oauth.accounts.firefox.com/v1',
+    /**
+     * Default profile server host
+     * @property DEFAULT_PROFILE_HOST
+     * @type {String}
+     */
+    DEFAULT_PROFILE_HOST: 'https://profile.accounts.firefox.com/v1',
+    /**
+     * Sign in action
+     * @property SIGNIN_ACTION
+     * @type {String}
+     */
     SIGNIN_ACTION: 'signin',
+    /**
+     * Sign up action
+     * @property SIGNUP_ACTION
+     * @type {String}
+     */
     SIGNUP_ACTION: 'signup',
+    /**
+     * Force auth action
+     * @property FORCE_AUTH_ACTION
+     * @type {String}
+     */
     FORCE_AUTH_ACTION: 'force_auth'
   };
 });
@@ -1389,15 +1494,35 @@ define('client/lib/constants',[], function () {
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 /**
- * helpers to work with URLs
+ * Helpers functions to work with URLs
+ *
+ * @class Url
+ * @static
  */
 define('client/lib/url',[], function () {
   
 
+  /**
+   * Create a query parameter string from a key and value
+   *
+   * @method createQueryParam
+   * @param {String} key
+   * @param {Variant} value
+   * @returns {String}
+   * URL safe serialized query parameter
+   */
   function createQueryParam(key, value) {
-    return key + '=' + encodeURIComponent(value);
+    return encodeURIComponent(key) + '=' + encodeURIComponent(value);
   }
 
+  /**
+   * Create a query string out of an object.
+   * @method objectToQueryString
+   * @param {Object} obj
+   * Object to create query string from
+   * @returns {String}
+   * URL safe query string
+   */
   function objectToQueryString(obj) {
     var queryParams = [];
 
@@ -1422,21 +1547,25 @@ define('client/lib/url',[], function () {
 
 /*globals define*/
 
-define('client/auth/api',[
+define('client/auth/base/api',[
   'p-promise',
   'client/lib/constants',
   'client/lib/options',
+  'client/lib/function',
   'client/lib/url'
-], function (p, Constants, Options, Url) {
+], function (p, Constants, Options, FunctionHelpers, Url) {
   
 
+  var partial = FunctionHelpers.partial;
+
   /**
-   * @class AuthenticationAPI
+   * The base class for other brokers. Subclasses must override
+   * `openFxa`. Provides a strategy to authenticate a user.
+   *
+   * @class BaseBroker
    * @constructor
    * @param {string} clientId - the OAuth client ID for the relier
    * @param {Object} [options={}] - configuration
-   *   @param {String} [options.contentHost]
-   *   Firefox Accounts Content Server host
    *   @param {String} [options.oauthHost]
    *   Firefox Accounts OAuth Server host
    *   @param {Object} [options.window]
@@ -1446,13 +1575,12 @@ define('client/auth/api',[
    *   @param {Object} [options.channel]
    *   channel override, used for unit tests
    */
-  function AuthenticationAPI(clientId, options) {
+  function BaseBroker(clientId, options) {
     if (! clientId) {
       throw new Error('clientId is required');
     }
 
     this._clientId = clientId;
-    this._contentHost = options.contentHost || Constants.DEFAULT_CONTENT_HOST;
     this._oauthHost = options.oauthHost || Constants.DEFAULT_OAUTH_HOST;
     this._window = options.window || window;
   }
@@ -1460,33 +1588,34 @@ define('client/auth/api',[
   function authenticate(action, config) {
     //jshint validthis: true
     var self = this;
+    config = config || {};
     return p().then(function () {
-      var requiredOptions = ['scope', 'state', 'redirect_uri'];
+      var requiredOptions = ['scope', 'state', 'redirectUri'];
       Options.checkRequired(requiredOptions, config);
 
-      var fxaUrl = getFxaUrl.call(self, action, config);
+      var fxaUrl = getOAuthUrl.call(self, action, config);
       return self.openFxa(fxaUrl);
     });
   }
 
-  function getFxaUrl(action, config) {
+  function getOAuthUrl(action, config) {
     //jshint validthis: true
     var queryParams = {
       action: action,
       client_id: this._clientId,
       state: config.state,
       scope: config.scope,
-      redirect_uri: config.redirect_uri
+      redirect_uri: config.redirectUri
     };
 
     if (config.email) {
       queryParams.email = config.email;
     }
 
-    return this._oauthHost + Url.objectToQueryString(queryParams);
+    return this._oauthHost + '/authorization' + Url.objectToQueryString(queryParams);
   }
 
-  AuthenticationAPI.prototype = {
+  BaseBroker.prototype = {
     /**
      * Open Firefox Accounts to authenticate the user.
      * Must be overridden to provide API specific functionality.
@@ -1507,7 +1636,7 @@ define('client/auth/api',[
      * @param {Object} config - configuration
      *   @param {String} config.state
      *   CSRF/State token
-     *   @param {String} config.redirect_uri
+     *   @param {String} config.redirectUri
      *   URI to redirect to when complete
      *   @param {String} config.scope
      *   OAuth scope
@@ -1517,10 +1646,7 @@ define('client/auth/api',[
      *   `blank` to ignore any previously signed in email. Default is
      *   the last email address used to sign in.
      */
-    signIn: function (config) {
-      config = config || {};
-      return authenticate.call(this, Constants.SIGNIN_ACTION, config);
-    },
+    signIn: partial(authenticate, Constants.SIGNIN_ACTION),
 
     /**
      * Force a user to sign in as an existing user.
@@ -1529,7 +1655,7 @@ define('client/auth/api',[
      * @param {Object} config - configuration
      *   @param {String} config.state
      *   CSRF/State token
-     *   @param {String} config.redirect_uri
+     *   @param {String} config.redirectUri
      *   URI to redirect to when complete
      *   @param {String} config.scope
      *   OAuth scope
@@ -1558,7 +1684,7 @@ define('client/auth/api',[
      * @param {Object} config - configuration
      *   @param {String} config.state
      *   CSRF/State token
-     *   @param {String} config.redirect_uri
+     *   @param {String} config.redirectUri
      *   URI to redirect to when complete
      *   @param {String} config.scope
      *   OAuth scope
@@ -1566,12 +1692,10 @@ define('client/auth/api',[
      *   Email address used to pre-fill into the account form,
      *   but the user is free to change it.
      */
-    signUp: function (config) {
-      return authenticate.call(this, Constants.SIGNUP_ACTION, config);
-    },
+    signUp: partial(authenticate, Constants.SIGNUP_ACTION)
   };
 
-  return AuthenticationAPI;
+  return BaseBroker;
 });
 
 
@@ -1582,6 +1706,11 @@ define('client/auth/api',[
 
 /*globals define*/
 
+/**
+ * Create a lightbox.
+ *
+ * @class Lightbox
+ */
 define('client/auth/lightbox/lightbox',[
 ], function () {
   
@@ -1614,6 +1743,12 @@ define('client/auth/lightbox/lightbox',[
   }
 
   Lightbox.prototype = {
+    /**
+     * Load content into the lightbox
+     * @method load
+     * @param {String} src
+     * URL to load.
+     */
     load: function (src) {
       var background = this._backgroundEl = createElement(this._window, 'div', {
         style: cssPropsToString({
@@ -1652,18 +1787,37 @@ define('client/auth/lightbox/lightbox',[
       this._contentWindow = iframe.contentWindow;
     },
 
+    /**
+     * Get the content iframe element.
+     * @method getContentElement
+     * @returns {DOM Element}
+     */
     getContentElement: function () {
       return this._iframe;
     },
 
+    /**
+     * Get the content window in the iframe.
+     * @method getContentWindow
+     * @returns {DOM Element}
+     */
     getContentWindow: function () {
       return this._contentWindow;
     },
 
+    /**
+     * Check if the lightbox is loaded
+     * @method isLoaded
+     * @returns {Boolean}
+     */
     isLoaded: function () {
       return !! this._backgroundEl;
     },
 
+    /**
+     * Unload the lightbox
+     * @method unload
+     */
     unload: function () {
       if (this._backgroundEl) {
         this._window.document.body.removeChild(this._backgroundEl);
@@ -1681,6 +1835,11 @@ define('client/auth/lightbox/lightbox',[
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+/**
+ * Communicate with an iframed content server.
+ *
+ * @class IFrameChannel
+ */
 define('client/auth/lightbox/iframe_channel',[
   'p-promise',
   'client/lib/object'
@@ -1696,8 +1855,18 @@ define('client/auth/lightbox/iframe_channel',[
   }
 
   IFrameChannel.prototype = {
+    /**
+     * Protocol version number. When the protocol to communicate with the
+     * content server changes, this should be bumped.
+     * @property version
+     * @type {String}
+     */
     version: '0.0.0',
 
+    /**
+     * Start listening for messages from the iframe.
+     * @method attach
+     */
     attach: function () {
       this._boundOnMessage = onMessage.bind(this);
       this._window.addEventListener('message', this._boundOnMessage, false);
@@ -1706,10 +1875,23 @@ define('client/auth/lightbox/iframe_channel',[
       return this._deferred.promise;
     },
 
+    /**
+     * Stop listening for messages from the iframe.
+     * @method detach
+     */
     detach: function () {
       this._window.removeEventListener('message', this._boundOnMessage, false);
     },
 
+    /**
+     * Send a message to the iframe.
+     *
+     * @method send
+     * @param {String} command
+     * Message to send.
+     * @param {Object} [data]
+     * Data to send.
+     */
     send: function (command, data) {
       var dataToSend = ObjectHelpers.extend({ version: this.version }, data);
       var msg = stringifyFxAEvent(command, dataToSend);
@@ -1788,10 +1970,12 @@ define('client/auth/lightbox/api',[
   'p-promise',
   'client/lib/object',
   'client/lib/options',
-  '../api',
+  'client/lib/constants',
+  '../base/api',
   './lightbox',
   './iframe_channel'
-], function (p, ObjectHelpers, Options, AuthenticationAPI, Lightbox, IFrameChannel) {
+], function (p, ObjectHelpers, Options, Constants, BaseBroker,
+    Lightbox, IFrameChannel) {
   
 
   function getLightbox() {
@@ -1852,20 +2036,34 @@ define('client/auth/lightbox/api',[
   /**
    * Authenticate users with a lightbox
    *
-   * @class LightboxAPI
-   * @extends AuthenticationAPI
+   * @class LightboxBroker
+   * @extends BaseBroker
    * @constructor
+   * @param {string} clientId - the OAuth client ID for the relier
+   * @param {Object} [options={}] - configuration
+   *   @param {String} [options.contentHost]
+   *   Firefox Accounts Content Server host
+   *   @param {String} [options.oauthHost]
+   *   Firefox Accounts OAuth Server host
+   *   @param {Object} [options.window]
+   *   window override, used for unit tests
+   *   @param {Object} [options.lightbox]
+   *   lightbox override, used for unit tests
+   *   @param {Object} [options.channel]
+   *   channel override, used for unit tests
    */
-  function LightboxAPI(clientId, options) {
-    AuthenticationAPI.call(this, clientId, options);
-
+  function LightboxBroker(clientId, options) {
     options = options || {};
+
+    BaseBroker.call(this, clientId, options);
+
     this._lightbox = options.lightbox;
     this._channel = options.channel;
+    this._contentHost = options.contentHost || Constants.DEFAULT_CONTENT_HOST;
   }
-  LightboxAPI.prototype = Object.create(AuthenticationAPI.prototype);
+  LightboxBroker.prototype = Object.create(BaseBroker.prototype);
 
-  ObjectHelpers.extend(LightboxAPI.prototype, {
+  ObjectHelpers.extend(LightboxBroker.prototype, {
     openFxa: function (fxaUrl) {
       /*jshint validthis: true*/
       var self = this;
@@ -1901,7 +2099,7 @@ define('client/auth/lightbox/api',[
     }
   });
 
-  return LightboxAPI;
+  return LightboxBroker;
 });
 
 
@@ -1910,32 +2108,32 @@ define('client/auth/lightbox/api',[
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 define('client/auth/redirect/api',[
-  '../api',
+  '../base/api',
   'client/lib/constants',
   'client/lib/options',
   'client/lib/object'
-], function (AuthenticationAPI, Constants, Options, ObjectHelpers) {
+], function (BaseBroker, Constants, Options, ObjectHelpers) {
   
 
   /**
    * Authenticate a user with the redirect flow.
    *
-   * @class RedirectAPI
-   * @extends AuthenticationAPI
+   * @class RedirectBroker
+   * @extends BaseBroker
    * @constructor
    */
-  function RedirectAPI(clientId, options) {
-    AuthenticationAPI.call(this, clientId, options);
+  function RedirectBroker(clientId, options) {
+    BaseBroker.call(this, clientId, options);
   }
 
-  RedirectAPI.prototype = Object.create(AuthenticationAPI.prototype);
-  ObjectHelpers.extend(RedirectAPI.prototype, {
+  RedirectBroker.prototype = Object.create(BaseBroker.prototype);
+  ObjectHelpers.extend(RedirectBroker.prototype, {
     openFxa: function (fxaUrl) {
       this._window.location.href = fxaUrl;
     }
   });
 
-  return RedirectAPI;
+  return RedirectBroker;
 });
 
 
@@ -1943,44 +2141,61 @@ define('client/auth/redirect/api',[
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-define('client/FxaRelierClient',[
+define('client/auth/api',[
   'p-promise',
+  'client/lib/function',
   'client/auth/lightbox/api',
   'client/auth/redirect/api'
-], function (p, LightboxUI, RedirectUI) {
+], function (p, FunctionHelpers, LightboxBroker, RedirectBroker) {
   
 
-  var UIs = {
-    'default': RedirectUI,
-    lightbox: LightboxUI,
-    redirect: RedirectUI
+  var partial = FunctionHelpers.partial;
+
+  var Brokers = {
+    'default': RedirectBroker,
+    lightbox: LightboxBroker,
+    redirect: RedirectBroker
   };
 
-  function getUI(context, ui, clientId, options) {
-    if (context._ui) {
+  function getBroker(context, ui, clientId, options) {
+    if (context._broker) {
       throw new Error('Firefox Accounts is already open');
     }
 
     if (typeof ui === 'object') {
-      // allow a UI to be passed in for testing.
-      context._ui = ui;
+      // allow a Broker to be passed in for testing.
+      context._broker = ui;
     } else {
       ui = ui || 'default';
-      var UI = UIs[ui];
+      var Broker = Brokers[ui];
 
-      if (! UI) {
+      if (! Broker) {
         throw new Error('Invalid ui: ' + ui);
       }
 
-      context._ui = new UI(clientId, options);
+      context._broker = new Broker(clientId, options);
     }
 
-    return context._ui;
+    return context._broker;
+  }
+
+  function authenticate(authType, config) {
+    //jshint validthis: true
+    var self = this;
+    return p().then(function () {
+      config = config || {};
+
+      var api = getBroker(self, config.ui, self._clientId, self._options);
+      return api[authType](config)
+        .fin(function () {
+          delete self._broker;
+        });
+    });
   }
 
 
   /**
-   * @class FxaRelierClient
+   * @class AuthAPI
    * @constructor
    * @param {string} clientId - the OAuth client ID for the relier
    * @param {Object} [options={}] - configuration
@@ -1995,107 +2210,700 @@ define('client/FxaRelierClient',[
    *   @param {Object} [options.channel]
    *   channel override, used for unit tests
    */
+  function AuthAPI(clientId, options) {
+    if (! clientId) {
+      throw new Error('clientId is required');
+    }
+
+    this._clientId = clientId;
+    this._options = options;
+  }
+
+  AuthAPI.prototype = {
+    /**
+     * Sign in an existing user.
+     *
+     * @method signIn
+     * @param {Object} config - configuration
+     *   @param {String} config.state
+     *   CSRF/State token
+     *   @param {String} config.redirectUri
+     *   URI to redirect to when complete
+     *   @param {String} config.scope
+     *   OAuth scope
+     *   @param {String} [config.email]
+     *   Email address used to pre-fill into the account form,
+     *   but the user is free to change it. Set to the string literal
+     *   `blank` to ignore any previously signed in email. Default is
+     *   the last email address used to sign in.
+     *   @param {String} [config.ui]
+     *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
+     */
+    signIn: partial(authenticate, 'signIn'),
+
+    /**
+     * Force a user to sign in as an existing user.
+     *
+     * @method forceAuth
+     * @param {Object} config - configuration
+     *   @param {String} config.state
+     *   CSRF/State token
+     *   @param {String} config.redirectUri
+     *   URI to redirect to when complete
+     *   @param {String} config.scope
+     *   OAuth scope
+     *   @param {String} config.email
+     *   Email address the user must sign in with. The user
+     *   is unable to modify the email address and is unable
+     *   to sign up if the address is not registered.
+     *   @param {String} [config.ui]
+     *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
+     */
+    forceAuth: partial(authenticate, 'forceAuth'),
+
+    /**
+     * Sign up a new user
+     *
+     * @method signUp
+     * @param {Object} config - configuration
+     *   @param {String} config.state
+     *   CSRF/State token
+     *   @param {String} config.redirectUri
+     *   URI to redirect to when complete
+     *   @param {String} config.scope
+     *   OAuth scope
+     *   @param {String} [config.email]
+     *   Email address used to pre-fill into the account form,
+     *   but the user is free to change it.
+     *   @param {String} [config.ui]
+     *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
+     */
+    signUp: partial(authenticate, 'signUp')
+  };
+
+  return AuthAPI;
+});
+
+
+
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+;(function (root, factory) {
+  // more info:
+  // https://raw.githubusercontent.com/umdjs/umd/master/returnExports.js
+  
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define('components/micrajax/micrajax',[], factory);
+  } else if (typeof exports === 'object') {
+    // Node. Does not work with strict CommonJS, but
+    // only CommonJS-like environments that support module.exports,
+    // like Node.
+    module.exports = factory();
+  } else {
+    // Browser globals (root is window)
+    root.Micrajax = factory();
+  }
+}(this, function () {
+
+  
+
+  var DEFAULT_CONTENT_TYPE = 'application/x-www-form-urlencoded';
+
+  function curry(fToBind) {
+    var aArgs = [].slice.call(arguments, 1);
+    var fBound = function () {
+      return fToBind.apply(null, aArgs.concat([].slice.call(arguments)));
+    };
+
+    return fBound;
+  }
+
+  function getXHRObject(options) {
+    // From http://blogs.msdn.com/b/ie/archive/2011/08/31/browsing-without-plug-ins.aspx
+    // Best Practice: Use Native XHR, if available
+    if (options.xhr) {
+      return options.xhr;
+    } else if (window.XMLHttpRequest) {
+      // If IE7+, Gecko, WebKit: Use native object
+      return new window.XMLHttpRequest();
+    } else if (window.ActiveXObject) {
+      // ...if not, try the ActiveX control
+      return new window.ActiveXObject('Microsoft.XMLHTTP');
+    }
+  }
+
+  function noOp() {}
+
+  function onReadyStateChange(xhrObject, callback) {
+    try {
+      if (xhrObject.readyState === 4) {
+        xhrObject.onreadystatechange = noOp;
+
+        callback(xhrObject.responseText, xhrObject.status, xhrObject.statusText);
+      }
+    } catch(e) {}
+  }
+
+  function toQueryParamsString(data) {
+    var queryParams = [];
+
+    for (var key in data) {
+      var value = data[key];
+
+      if (typeof value !== 'undefined') {
+        var queryParam = encodeURIComponent(key) +
+                         '=' +
+                         encodeURIComponent(value);
+        queryParams.push(queryParam);
+      }
+    }
+
+    return queryParams.join('&');
+  }
+
+
+  function setRequestHeaders(definedHeaders, xhrObject) {
+    var headers = {
+      'X-Requested-With': 'XMLHttpRequest',
+      'Accept': 'application/json;text/plain'
+    };
+
+    for (var definedHeader in definedHeaders) {
+      headers[definedHeader] = definedHeaders[definedHeader];
+    }
+
+    for (var key in headers) {
+      xhrObject.setRequestHeader(key, headers[key]);
+    }
+  }
+
+  function getURL(url, type, data) {
+    var requestString = toQueryParamsString(data);
+
+    if (type === 'GET' && requestString) {
+      url += '?' + requestString;
+    }
+
+    return url;
+  }
+
+  function getData(contentType, type, data) {
+    var sendData;
+
+    if (type !== 'GET' && data) {
+      switch (contentType) {
+        case 'application/json':
+          if (typeof data === 'string') {
+            sendData = data;
+          } else {
+            sendData = JSON.stringify(data);
+          }
+          break;
+        case 'application/x-www-form-urlencoded':
+          sendData = toQueryParamsString(data);
+          break;
+        default:
+          // do nothing
+          break;
+      }
+    }
+
+    return sendData || null;
+  }
+
+  function getHeaders(contentType, specifiedHeaders) {
+    var headers = {
+      'Content-type': contentType
+    };
+
+    for (var k in specifiedHeaders) {
+      headers[k] = specifiedHeaders[k];
+    }
+
+    return headers;
+  }
+
+  function sendRequest(options, callback, data) {
+    options = options || {};
+
+    var xhrObject = getXHRObject(options);
+
+    if (! xhrObject) {
+      throw new Error('could not get XHR object');
+    }
+
+    xhrObject.onreadystatechange = curry(onReadyStateChange, xhrObject, callback|| noOp);
+
+    var type = (options.type || 'GET').toUpperCase();
+    var contentType = options.contentType || DEFAULT_CONTENT_TYPE;
+    var url = getURL(options.url, type, options.data);
+
+    data = getData(contentType, type, options.data);
+
+    xhrObject.open(type, url, true);
+
+    var headers = getHeaders(contentType, options.headers);
+    setRequestHeaders(headers, xhrObject);
+
+    xhrObject.send(data);
+
+    return xhrObject;
+  }
+
+  var Micrajax = {
+    ajax: function (options) {
+      options = options || {};
+      var error = options.error || noOp;
+      var success = options.success || noOp;
+      var mockXHR = { readyState: 0 };
+
+      var xhrObject = sendRequest(options, function (responseText, status, statusText) {
+        mockXHR.status = status;
+        mockXHR.responseText = responseText;
+        if (! mockXHR.statusText) {
+          mockXHR.statusText = status !== 0 ? statusText : 'error';
+        }
+        mockXHR.readyState = 4;
+
+        if (status >= 200 && status < 300 || status === 304) {
+          var respData = responseText;
+
+          try {
+            // The text response could be text/plain, just ignore the JSON
+            // parse error in this case.
+            respData = JSON.parse(responseText);
+          } catch(e) {}
+
+          success(respData, responseText, mockXHR);
+        } else {
+          error(mockXHR, status, responseText);
+        }
+      });
+
+      mockXHR.abort = function () {
+        mockXHR.statusText = 'aborted';
+        xhrObject.abort();
+      };
+
+      return mockXHR;
+    }
+  };
+
+  return Micrajax;
+}));
+
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+define('client/lib/xhr',[
+  'p-promise',
+  'components/micrajax/micrajax',
+  './function'
+], function (p, micrajax, FunctionHelpers) {
+  
+
+  var partial = FunctionHelpers.partial;
+
+  var NodeXMLHttpRequest;
+  try {
+    // If embedded in node, use the xhr2 module
+    if (typeof require !== 'undefined') {
+      NodeXMLHttpRequest = require('xhr2');
+    }
+  } catch (e) {
+    NodeXMLHttpRequest = null;
+  }
+
+  function getXHRObject(xhr) {
+    if (xhr) {
+      return xhr;
+    } else if (NodeXMLHttpRequest) {
+      return new NodeXMLHttpRequest();
+    }
+    // fallback to the system default
+  }
+
+  /**
+   * Provides XHR functionality for use in either a browser or node
+   * environment.
+   *
+   * @class Xhr
+   * @static
+   */
+
+  function request(method, path, data, options) {
+    options = options || {};
+
+    var deferred = p.defer();
+
+    micrajax.ajax({
+      type: method,
+      url: path,
+      data: data,
+      contentType: options.contentType || 'application/json',
+      headers: options.headers,
+      xhr: getXHRObject(options.xhr),
+      success: function (data, responseText, jqXHR) {
+        deferred.resolve(data);
+      },
+      error: function (jqXHR, status, responseText) {
+        deferred.reject(responseText);
+      }
+    });
+
+    return deferred.promise;
+  }
+
+  var XHR = {
+    /**
+     * Perform a GET request
+     * @method get
+     * @param {String} path
+     * endpoint URL
+     * @param {Object || String} [data]
+     * data to send
+     * @param {Object} [options={}]
+     * Options
+     * @param {String} [options.contentType]
+     * Content type of `data`. Defaults to `application/json`
+     * @param {Object} [options.headers]
+     * Headers to pass with request.
+     * @param {Object} [options.xhr]
+     * XMLHttpRequest compatible object to use for XHR requests
+     * @return {Promise} A promise that will be fulfilled with JSON `xhr.responseText` of the request
+     */
+    get: partial(request, 'GET'),
+
+    /**
+     * Perform a POST request
+     * @method post
+     * @param {String} path
+     * endpoint URL
+     * @param {Object || String} [data]
+     * data to send
+     * @param {Object} [options={}]
+     * Options
+     * @param {String} [options.contentType]
+     * Content type of `data`. Defaults to `application/json`
+     * @param {Object} [options.headers]
+     * Headers to pass with request.
+     * @param {Object} [options.xhr]
+     * XMLHttpRequest compatible object to use for XHR requests
+     * @return {Promise} A promise that will be fulfilled with JSON `xhr.responseText` of the request
+     */
+    post: partial(request, 'POST')
+  };
+
+  return XHR;
+});
+
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+define('client/token/api',[
+  'p-promise',
+  'client/lib/constants',
+  'client/lib/xhr'
+], function (p, Constants, Xhr) {
+  
+
+  /**
+   * @class TokenAPI
+   * @constructor
+   * @param {string} clientId - the OAuth client ID for the relier
+   * @param {Object} [options={}] - configuration
+   *   @param {String} [options.clientSecret]
+   *   Client secret
+   *   @param {String} [options.oauthHost]
+   *   Firefox Accounts OAuth Server host
+   */
+  function TokenAPI(clientId, options) {
+    if (! clientId) {
+      throw new Error('clientId is required');
+    }
+    this._clientId = clientId;
+
+    options = options || {};
+    this._clientSecret = options.clientSecret;
+    this._oauthHost = options.oauthHost || Constants.DEFAULT_OAUTH_HOST;
+  }
+
+  TokenAPI.prototype = {
+    /**
+     * Trade an OAuth code for a longer lived OAuth token. See
+     * https://github.com/mozilla/fxa-oauth-server/blob/master/docs/api.md#post-v1token
+     *
+     * @method tradeCode
+     * @param {String} code
+     * OAuth code
+     * @returns {String}
+     * OAuth token
+     * @param {Object} [options={}] - configuration
+     *   @param {String} [options.xhr]
+     *   XMLHttpRequest compatible object to use to make the request.
+     * @returns {Promise}
+     * Response resolves to an object with `access_token`, `scope`, and
+     * `token_type`.
+     */
+    tradeCode: function (code, options) {
+      if (! this._clientSecret) {
+        return p.reject(new Error('clientSecret is required'));
+      }
+
+      if (! code) {
+        return p.reject(new Error('code is required'));
+      }
+
+      var endpoint = this._oauthHost + '/token';
+      return Xhr.post(endpoint, {
+          client_id: this._clientId,
+          client_secret: this._clientSecret,
+          code: code
+        }, options);
+    },
+
+    /**
+     * Verify an OAuth token is valid. See
+     * https://github.com/mozilla/fxa-oauth-server/blob/master/docs/api.md#post-v1verify
+     *
+     * @method verifyToken
+     * @param {String} token
+     * OAuth token to verify
+     * @param {Object} [options={}] - configuration
+     *   @param {String} [options.xhr]
+     *   XMLHttpRequest compatible object to use to make the request.
+     * @returns {Promise}
+     * Response resolves to an object with `user`, `client_id`, and
+     * `scopes`.
+     */
+    verifyToken: function (token, options) {
+      if (! token) {
+        return p.reject(new Error('token is required'));
+      }
+
+      var endpoint = this._oauthHost + '/verify';
+      return Xhr.post(endpoint, {
+          token: token
+        }, options);
+    },
+
+    /**
+     * After a client is done using a token, the responsible thing to do is to
+     * destroy the token afterwards.
+     * See https://github.com/mozilla/fxa-oauth-server/blob/master/docs/api.md#post-v1destroy
+     *
+     * @method destroyToken
+     * @param {String} token
+     * OAuth token to verify
+     * @param {Object} [options={}] - configuration
+     *   @param {String} [options.xhr]
+     *   XMLHttpRequest compatible object to use to make the request.
+     * @returns {Promise}
+     * Response resolves to an empty object.
+     */
+    destroyToken: function (token, options) {
+      if (! this._clientSecret) {
+        return p.reject(new Error('clientSecret is required'));
+      }
+
+      if (! token) {
+        return p.reject(new Error('token is required'));
+      }
+
+      var endpoint = this._oauthHost + '/destroy';
+      return Xhr.post(endpoint, {
+        client_secret: this._clientSecret,
+        token: token
+      }, options);
+    }
+  };
+
+  return TokenAPI;
+});
+
+
+
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+define('client/profile/api',[
+  'p-promise',
+  'client/lib/constants',
+  'client/lib/xhr',
+  'client/lib/object'
+], function (p, Constants, Xhr, ObjectHelpers) {
+  
+
+  /**
+   * @class ProfileAPI
+   * @constructor
+   * @param {string} clientId - the OAuth client ID for the relier
+   * @param {Object} [options={}] - configuration
+   *   @param {String} [options.profileHost]
+   *   Firefox Accounts Profile Server host
+   */
+  function ProfileAPI(clientId, options) {
+    if (! clientId) {
+      throw new Error('clientId is required');
+    }
+    this._clientId = clientId;
+
+    options = options || {};
+    this._profileHost = options.profileHost || Constants.DEFAULT_PROFILE_HOST;
+  }
+
+  ProfileAPI.prototype = {
+    /**
+     * Fetch a user's profile data.
+     *
+     * @method fetch
+     * @param {String} token
+     * Scoped OAuth token that can be used to access the profile data
+     * @param {Object} [options={}] - configuration
+     *   @param {String} [options.xhr]
+     *   XMLHttpRequest compatible object to use to make the request.
+     * @returns {Promise}
+     * Response resolves to the user's profile data on success.
+     */
+    fetch: function (token, options) {
+      if (! token) {
+        throw new Error('token is required');
+      }
+
+      var xhrOptions = ObjectHelpers.extend({
+        headers: {
+          Authorization: 'Bearer ' + token
+        }
+      }, options);
+
+      var self = this;
+      return Xhr.get(self._profileHost + '/profile', {}, xhrOptions)
+        .then(function (profileData) {
+          self._profileData = profileData;
+          return profileData;
+        });
+    },
+
+    /**
+     * Get all the user's profile data. Must be called after `fetch`
+     *
+     * @method all
+     * @returns {Object}
+     * User's profile data that was fetched using `fetch`.
+     */
+    all: function () {
+      return this._profileData;
+    }
+  };
+
+  return ProfileAPI;
+});
+
+
+
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+/**
+ * The Firefox Accounts Relier Client.
+ *
+ * @module FxaRelierClient
+ */
+
+
+define('client/FxaRelierClient',[
+  'client/auth/api',
+  'client/token/api',
+  'client/profile/api'
+], function (AuthAPI, TokenAPI, ProfileAPI) {
+  
+
+  /**
+   * The entry point. Create and use an instance of the FxaRelierClient.
+   *
+   * @class FxaRelierClient (start here)
+   * @constructor
+   * @param {string} clientId - the OAuth client ID for the relier
+   * @param {Object} [options={}] - configuration
+   *   @param {String} [options.clientSecret]
+   *   Client secret. Required to use the {{#crossLink "TokenAPI"}}Token{{/crossLink}} API.
+   *   @param {String} [options.contentHost]
+   *   Firefox Accounts Content Server host
+   *   @param {String} [options.oauthHost]
+   *   Firefox Accounts OAuth Server host
+   *   @param {String} [options.profileHost]
+   *   Firefox Accounts Profile Server host
+   *   @param {Object} [options.window]
+   *   window override, used for unit tests
+   *   @param {Object} [options.lightbox]
+   *   lightbox override, used for unit tests
+   *   @param {Object} [options.channel]
+   *   channel override, used for unit tests
+   * @example
+   *     var fxaRelierClient = new FxaRelierClient(<client_id>);
+   */
   function FxaRelierClient(clientId, options) {
     if (! clientId) {
       throw new Error('clientId is required');
     }
 
-    this.auth = {
-      /**
-       * Sign in an existing user.
-       *
-       * @method signIn
-       * @param {Object} config - configuration
-       *   @param {String} config.state
-       *   CSRF/State token
-       *   @param {String} config.redirect_uri
-       *   URI to redirect to when complete
-       *   @param {String} config.scope
-       *   OAuth scope
-       *   @param {String} [config.email]
-       *   Email address used to pre-fill into the account form,
-       *   but the user is free to change it. Set to the string literal
-       *   `blank` to ignore any previously signed in email. Default is
-       *   the last email address used to sign in.
-       *   @param {String} [config.force_email]
-       *   Force the user to sign in with the given email
-       *   @param {String} [config.ui]
-       *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
-       */
-      signIn: function (config) {
-        var self = this;
-        return p().then(function () {
-          config = config || {};
+    /**
+     * Authenticate users in the browser. Implements {{#crossLink "AuthAPI"}}{{/crossLink}}.
+     * @property auth
+     * @type {Object}
+     *
+     * @example
+     *     var fxaRelierClient = new FxaRelierClient('<client_id>');
+     *     fxaRelierClient.auth.signIn({
+     *       state: <state>,
+     *       redirectUri: <redirect_uri>,
+     *       scope: 'profile'
+     *     });
+     */
+    this.auth = new AuthAPI(clientId, options);
 
-          var api = getUI(self, config.ui, clientId, options);
-          return api.signIn(config)
-            .fin(function () {
-              delete self._ui;
-            });
-        });
-      },
+    /**
+     * Manage tokens on the server. Implements {{#crossLink "TokenAPI"}}{{/crossLink}}.
+     * @property token
+     * @type {Object}
+     *
+     * @example
+     *     var fxaRelierClient = new FxaRelierClient('<client_id>', {
+     *       clientSecret: <client_secret>
+     *     });
+     *     fxaRelierClient.token.tradeCode(<code>)
+     *       .then(function (token) {
+     *         // do something awesome with the token like get
+     *         // profile information. See profile.
+     *       });
+     */
+    this.token = new TokenAPI(clientId, options);
 
-      /**
-       * Force a user to sign in as an existing user.
-       *
-       * @method forceAuth
-       * @param {Object} config - configuration
-       *   @param {String} config.state
-       *   CSRF/State token
-       *   @param {String} config.redirect_uri
-       *   URI to redirect to when complete
-       *   @param {String} config.scope
-       *   OAuth scope
-       *   @param {String} config.email
-       *   Email address the user must sign in with. The user
-       *   is unable to modify the email address and is unable
-       *   to sign up if the address is not registered.
-       *   @param {String} [config.ui]
-       *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
-       */
-      forceAuth: function (config) {
-        var self = this;
-        return p().then(function () {
-          config = config || {};
-
-          var api = getUI(self, config.ui, clientId, options);
-          return api.forceAuth(config)
-            .fin(function () {
-              delete self._ui;
-            });
-        });
-      },
-
-      /**
-       * Sign up a new user
-       *
-       * @method signUp
-       * @param {Object} config - configuration
-       *   @param {String} config.state
-       *   CSRF/State token
-       *   @param {String} config.redirect_uri
-       *   URI to redirect to when complete
-       *   @param {String} config.scope
-       *   OAuth scope
-       *   @param {String} [config.email]
-       *   Email address used to pre-fill into the account form,
-       *   but the user is free to change it.
-       *   @param {String} [config.ui]
-       *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
-       */
-      signUp: function (config) {
-        var self = this;
-        return p().then(function () {
-          config = config || {};
-
-          var api = getUI(self, config.ui, clientId, options);
-          return api.signUp(config)
-            .fin(function () {
-              delete self._ui;
-            });
-        });
-      }
-    };
+    /**
+     * Fetch profile information on the server. Implements {{#crossLink "ProfileAPI"}}{{/crossLink}}.
+     * @property profile
+     * @type {Object}
+     *
+     * @example
+     *     var fxaRelierClient = new FxaRelierClient('<client_id>', {
+     *       clientSecret: <client_secret>
+     *     });
+     *     fxaRelierClient.token.tradeCode(<code>)
+     *       .then(function (token) {
+     *         return fxaRelierClient.fetch(token);
+     *       })
+     *       .then(function (profile) {
+     *         // display some profile info.
+     *       });
+     */
+    this.profile = new ProfileAPI(clientId, options);
   }
 
   FxaRelierClient.prototype = {
@@ -2105,7 +2913,9 @@ define('client/FxaRelierClient',[
      * @property version
      * @type {String}
      */
-    version: '0.0.0'
+    version: '0.0.0',
+
+    auth: null
   };
 
   return FxaRelierClient;
