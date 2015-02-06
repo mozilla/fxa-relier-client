@@ -17,7 +17,7 @@
                 <h1><img src="../assets/css/logo.png" title="fxa-relier-client"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.3</em>
+            <em>API Docs for: 0.0.4</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -100,11 +100,6 @@
                         
                         /*globals define*/
                         
-                        /**
-                         * Create a lightbox.
-                         *
-                         * @class Lightbox
-                         */
                         define([
                         ], function () {
                           &#x27;use strict&#x27;;
@@ -130,6 +125,15 @@
                           }
                         
                         
+                          /**
+                           * Create a lightbox.
+                           *
+                           * @class Lightbox
+                           * @constructor
+                           * @param {options={}} options
+                           * @param {String} options.window
+                           * The window object
+                           */
                           function Lightbox(options) {
                             options = options || {};
                         
@@ -142,16 +146,30 @@
                              * @method load
                              * @param {String} src
                              * URL to load.
+                             * @param {options={}} options
+                             * @param {Number} [options.zIndex]
+                             * z-index to set on the background.
+                             * @default 100
+                             * @param {String} [options.background]
+                             * Lightbox background CSS.
+                             * @default rgba(0,0,0,0.5)
                              */
-                            load: function (src) {
+                            load: function (src, options) {
+                              options = options || {};
+                        
+                              var backgroundStyle = options.background || &#x27;rgba(0,0,0,0.5)&#x27;;
+                              var zIndexStyle = options.zIndex || 100;
+                        
                               var background = this._backgroundEl = createElement(this._window, &#x27;div&#x27;, {
+                                id: &#x27;fxa-background&#x27;,
                                 style: cssPropsToString({
-                                  background: &#x27;rgba(0,0,0,0.5)&#x27;,
+                                  background: backgroundStyle,
                                   bottom: 0,
                                   left: 0,
                                   position: &#x27;fixed&#x27;,
                                   right: 0,
-                                  top: 0
+                                  top: 0,
+                                  &#x27;z-index&#x27;: zIndexStyle
                                 })
                               });
                         

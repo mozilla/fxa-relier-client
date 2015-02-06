@@ -17,7 +17,7 @@
                 <h1><img src="../assets/css/logo.png" title="fxa-relier-client"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.3</em>
+            <em>API Docs for: 0.0.4</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -195,6 +195,12 @@
                              *   the last email address used to sign in.
                              *   @param {String} [config.ui]
                              *   UI to present - &#x60;lightbox&#x60; or &#x60;redirect&#x60; - defaults to &#x60;redirect&#x60;
+                             *   @param {Number} [options.zIndex]
+                             *   only used when &#x60;config.ui=lightbox&#x60;. The zIndex of the lightbox background.
+                             *   @default 100
+                             *   @param {String} [options.background]
+                             *   only used when &#x60;config.ui=lightbox&#x60;. The &#x60;background&#x60; CSS value
+                             *   @default rgba(0,0,0,0.5)
                              */
                             signIn: partial(authenticate, &#x27;signIn&#x27;),
                         
@@ -215,6 +221,12 @@
                              *   to sign up if the address is not registered.
                              *   @param {String} [config.ui]
                              *   UI to present - &#x60;lightbox&#x60; or &#x60;redirect&#x60; - defaults to &#x60;redirect&#x60;
+                             *   @param {Number} [options.zIndex]
+                             *   only used when &#x60;config.ui=lightbox&#x60;. The zIndex of the lightbox background.
+                             *   @default 100
+                             *   @param {String} [options.background]
+                             *   only used when &#x60;config.ui=lightbox&#x60;. The &#x60;background&#x60; CSS value
+                             *   @default rgba(0,0,0,0.5)
                              */
                             forceAuth: partial(authenticate, &#x27;forceAuth&#x27;),
                         
@@ -234,6 +246,12 @@
                              *   but the user is free to change it.
                              *   @param {String} [config.ui]
                              *   UI to present - &#x60;lightbox&#x60; or &#x60;redirect&#x60; - defaults to &#x60;redirect&#x60;
+                             *   @param {Number} [options.zIndex]
+                             *   only used when &#x60;config.ui=lightbox&#x60;. The zIndex of the lightbox background.
+                             *   @default 100
+                             *   @param {String} [options.background]
+                             *   only used when &#x60;config.ui=lightbox&#x60;. The &#x60;background&#x60; CSS value
+                             *   @default rgba(0,0,0,0.5)
                              */
                             signUp: partial(authenticate, &#x27;signUp&#x27;)
                           };

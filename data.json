@@ -2,7 +2,7 @@
     "project": {
         "name": "fxa-relier-client",
         "description": "fxa-relier-client =================",
-        "version": "0.0.3"
+        "version": "0.0.4"
     },
     "files": {
         "client/auth/base/api.js": {
@@ -311,8 +311,21 @@
             "extension_for": [],
             "module": "FxaRelierClient",
             "file": "client/auth/lightbox/lightbox.js",
-            "line": 7,
-            "description": "Create a lightbox."
+            "line": 32,
+            "description": "Create a lightbox.",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "}",
+                    "description": "options",
+                    "type": "Options="
+                },
+                {
+                    "name": "options.window\nThe",
+                    "description": "window object",
+                    "type": "String"
+                }
+            ]
         },
         "RedirectBroker": {
             "name": "RedirectBroker",
@@ -637,6 +650,11 @@
                     "name": "fxaUrl",
                     "description": "- URL to open for authentication",
                     "type": "String"
+                },
+                {
+                    "name": "}",
+                    "description": "options",
+                    "type": "Options="
                 }
             ],
             "access": "protected",
@@ -645,7 +663,7 @@
         },
         {
             "file": "client/auth/base/api.js",
-            "line": 89,
+            "line": 90,
             "description": "Sign in an existing user",
             "itemtype": "method",
             "name": "signIn",
@@ -683,7 +701,7 @@
         },
         {
             "file": "client/auth/base/api.js",
-            "line": 108,
+            "line": 109,
             "description": "Force a user to sign in as an existing user.",
             "itemtype": "method",
             "name": "forceAuth",
@@ -726,7 +744,7 @@
         },
         {
             "file": "client/auth/base/api.js",
-            "line": 137,
+            "line": 138,
             "description": "Sign up a new user",
             "itemtype": "method",
             "name": "signUp",
@@ -818,7 +836,7 @@
         },
         {
             "file": "client/auth/lightbox/lightbox.js",
-            "line": 44,
+            "line": 48,
             "description": "Load content into the lightbox",
             "itemtype": "method",
             "name": "load",
@@ -827,13 +845,31 @@
                     "name": "src\nURL",
                     "description": "to load.",
                     "type": "String"
+                },
+                {
+                    "name": "}",
+                    "description": "options",
+                    "type": "Options="
+                },
+                {
+                    "name": "options.zIndex",
+                    "description": "\nz-index to set on the background.",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "options.background",
+                    "description": "\nLightbox background CSS.",
+                    "type": "String",
+                    "optional": true
                 }
             ],
+            "default": "rgba(0,0,0,0.5)",
             "class": "Lightbox"
         },
         {
             "file": "client/auth/lightbox/lightbox.js",
-            "line": 88,
+            "line": 106,
             "description": "Get the content iframe element.",
             "itemtype": "method",
             "name": "getContentElement",
@@ -845,7 +881,7 @@
         },
         {
             "file": "client/auth/lightbox/lightbox.js",
-            "line": 97,
+            "line": 115,
             "description": "Get the content window in the iframe.",
             "itemtype": "method",
             "name": "getContentWindow",
@@ -857,7 +893,7 @@
         },
         {
             "file": "client/auth/lightbox/lightbox.js",
-            "line": 106,
+            "line": 124,
             "description": "Check if the lightbox is loaded",
             "itemtype": "method",
             "name": "isLoaded",
@@ -869,7 +905,7 @@
         },
         {
             "file": "client/auth/lightbox/lightbox.js",
-            "line": 115,
+            "line": 133,
             "description": "Unload the lightbox",
             "itemtype": "method",
             "name": "unload",
@@ -915,13 +951,26 @@
                             "optional": true
                         }
                     ]
+                },
+                {
+                    "name": "options.zIndex",
+                    "description": "\n  only used when `config.ui=lightbox`. The zIndex of the lightbox background.",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "options.background",
+                    "description": "\n  only used when `config.ui=lightbox`. The `background` CSS value",
+                    "type": "String",
+                    "optional": true
                 }
             ],
+            "default": "rgba(0,0,0,0.5)",
             "class": "AuthAPI"
         },
         {
             "file": "client/auth/api.js",
-            "line": 105,
+            "line": 111,
             "description": "Force a user to sign in as an existing user.",
             "itemtype": "method",
             "name": "forceAuth",
@@ -958,13 +1007,26 @@
                             "optional": true
                         }
                     ]
+                },
+                {
+                    "name": "options.zIndex",
+                    "description": "\n  only used when `config.ui=lightbox`. The zIndex of the lightbox background.",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "options.background",
+                    "description": "\n  only used when `config.ui=lightbox`. The `background` CSS value",
+                    "type": "String",
+                    "optional": true
                 }
             ],
+            "default": "rgba(0,0,0,0.5)",
             "class": "AuthAPI"
         },
         {
             "file": "client/auth/api.js",
-            "line": 125,
+            "line": 137,
             "description": "Sign up a new user",
             "itemtype": "method",
             "name": "signUp",
@@ -1002,8 +1064,21 @@
                             "optional": true
                         }
                     ]
+                },
+                {
+                    "name": "options.zIndex",
+                    "description": "\n  only used when `config.ui=lightbox`. The zIndex of the lightbox background.",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "options.background",
+                    "description": "\n  only used when `config.ui=lightbox`. The `background` CSS value",
+                    "type": "String",
+                    "optional": true
                 }
             ],
+            "default": "rgba(0,0,0,0.5)",
             "class": "AuthAPI"
         },
         {
@@ -1469,15 +1544,15 @@
     "warnings": [
         {
             "message": "replacing incorrect tag: returns with return",
-            "line": " client/auth/lightbox/lightbox.js:88"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " client/auth/lightbox/lightbox.js:97"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
             "line": " client/auth/lightbox/lightbox.js:106"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " client/auth/lightbox/lightbox.js:115"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " client/auth/lightbox/lightbox.js:124"
         },
         {
             "message": "replacing incorrect tag: returns with return",

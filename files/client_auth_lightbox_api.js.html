@@ -17,7 +17,7 @@
                 <h1><img src="../assets/css/logo.png" title="fxa-relier-client"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.3</em>
+            <em>API Docs for: 0.0.4</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -126,7 +126,7 @@
                             return self._lightbox;
                           }
                         
-                          function openLightbox(fxaUrl) {
+                          function openLightbox(fxaUrl, options) {
                             /*jshint validthis: true*/
                             var self = this;
                             return p().then(function() {
@@ -136,7 +136,7 @@
                         
                               var lightbox = getLightbox.call(self);
                         
-                              lightbox.load(fxaUrl);
+                              lightbox.load(fxaUrl, options);
                         
                               return lightbox;
                             });
@@ -198,11 +198,11 @@
                           LightboxBroker.prototype = Object.create(BaseBroker.prototype);
                         
                           ObjectHelpers.extend(LightboxBroker.prototype, {
-                            openFxa: function (fxaUrl) {
+                            openFxa: function (fxaUrl, options) {
                               /*jshint validthis: true*/
                               var self = this;
                         
-                              return openLightbox.call(self, fxaUrl)
+                              return openLightbox.call(self, fxaUrl, options)
                                 .then(function (lightbox) {
                                   return waitForAuthentication.call(self, lightbox);
                                 })
