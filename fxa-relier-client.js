@@ -1594,7 +1594,7 @@ define('client/auth/base/api',[
       Options.checkRequired(requiredOptions, config);
 
       var fxaUrl = getOAuthUrl.call(self, action, config);
-      return self.openFxa(fxaUrl);
+      return self.openFxa(fxaUrl, config);
     });
   }
 
@@ -1622,10 +1622,11 @@ define('client/auth/base/api',[
      *
      * @method openFxa
      * @param {String} fxaUrl - URL to open for authentication
+     * @param {options={}} options
      *
      * @protected
      */
-    openFxa: function (fxaUrl) {
+    openFxa: function (fxaUrl, options) {
       throw new Error('openFxa must be overridden');
     },
 
@@ -1706,11 +1707,6 @@ define('client/auth/base/api',[
 
 /*globals define*/
 
-/**
- * Create a lightbox.
- *
- * @class Lightbox
- */
 define('client/auth/lightbox/lightbox',[
 ], function () {
   
@@ -1736,6 +1732,15 @@ define('client/auth/lightbox/lightbox',[
   }
 
 
+  /**
+   * Create a lightbox.
+   *
+   * @class Lightbox
+   * @constructor
+   * @param {options={}} options
+   * @param {String} options.window
+   * The window object
+   */
   function Lightbox(options) {
     options = options || {};
 
@@ -1748,16 +1753,30 @@ define('client/auth/lightbox/lightbox',[
      * @method load
      * @param {String} src
      * URL to load.
+     * @param {options={}} options
+     * @param {Number} [options.zIndex]
+     * z-index to set on the background.
+     * @default 100
+     * @param {String} [options.background]
+     * Lightbox background CSS.
+     * @default rgba(0,0,0,0.5)
      */
-    load: function (src) {
+    load: function (src, options) {
+      options = options || {};
+
+      var backgroundStyle = options.background || 'rgba(0,0,0,0.5)';
+      var zIndexStyle = options.zIndex || 100;
+
       var background = this._backgroundEl = createElement(this._window, 'div', {
+        id: 'fxa-background',
         style: cssPropsToString({
-          background: 'rgba(0,0,0,0.5)',
+          background: backgroundStyle,
           bottom: 0,
           left: 0,
           position: 'fixed',
           right: 0,
-          top: 0
+          top: 0,
+          'z-index': zIndexStyle
         })
       });
 
@@ -1992,7 +2011,7 @@ define('client/auth/lightbox/api',[
     return self._lightbox;
   }
 
-  function openLightbox(fxaUrl) {
+  function openLightbox(fxaUrl, options) {
     /*jshint validthis: true*/
     var self = this;
     return p().then(function() {
@@ -2002,7 +2021,7 @@ define('client/auth/lightbox/api',[
 
       var lightbox = getLightbox.call(self);
 
-      lightbox.load(fxaUrl);
+      lightbox.load(fxaUrl, options);
 
       return lightbox;
     });
@@ -2064,11 +2083,11 @@ define('client/auth/lightbox/api',[
   LightboxBroker.prototype = Object.create(BaseBroker.prototype);
 
   ObjectHelpers.extend(LightboxBroker.prototype, {
-    openFxa: function (fxaUrl) {
+    openFxa: function (fxaUrl, options) {
       /*jshint validthis: true*/
       var self = this;
 
-      return openLightbox.call(self, fxaUrl)
+      return openLightbox.call(self, fxaUrl, options)
         .then(function (lightbox) {
           return waitForAuthentication.call(self, lightbox);
         })
@@ -2238,6 +2257,12 @@ define('client/auth/api',[
      *   the last email address used to sign in.
      *   @param {String} [config.ui]
      *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
+     *   @param {Number} [options.zIndex]
+     *   only used when `config.ui=lightbox`. The zIndex of the lightbox background.
+     *   @default 100
+     *   @param {String} [options.background]
+     *   only used when `config.ui=lightbox`. The `background` CSS value
+     *   @default rgba(0,0,0,0.5)
      */
     signIn: partial(authenticate, 'signIn'),
 
@@ -2258,6 +2283,12 @@ define('client/auth/api',[
      *   to sign up if the address is not registered.
      *   @param {String} [config.ui]
      *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
+     *   @param {Number} [options.zIndex]
+     *   only used when `config.ui=lightbox`. The zIndex of the lightbox background.
+     *   @default 100
+     *   @param {String} [options.background]
+     *   only used when `config.ui=lightbox`. The `background` CSS value
+     *   @default rgba(0,0,0,0.5)
      */
     forceAuth: partial(authenticate, 'forceAuth'),
 
@@ -2277,6 +2308,12 @@ define('client/auth/api',[
      *   but the user is free to change it.
      *   @param {String} [config.ui]
      *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
+     *   @param {Number} [options.zIndex]
+     *   only used when `config.ui=lightbox`. The zIndex of the lightbox background.
+     *   @default 100
+     *   @param {String} [options.background]
+     *   only used when `config.ui=lightbox`. The `background` CSS value
+     *   @default rgba(0,0,0,0.5)
      */
     signUp: partial(authenticate, 'signUp')
   };
