@@ -30,7 +30,7 @@ define([
     return self._lightbox;
   }
 
-  function openLightbox(fxaUrl) {
+  function openLightbox(fxaUrl, options) {
     /*jshint validthis: true*/
     var self = this;
     return p().then(function() {
@@ -40,7 +40,7 @@ define([
 
       var lightbox = getLightbox.call(self);
 
-      lightbox.load(fxaUrl);
+      lightbox.load(fxaUrl, options);
 
       return lightbox;
     });
@@ -102,11 +102,11 @@ define([
   LightboxBroker.prototype = Object.create(BaseBroker.prototype);
 
   ObjectHelpers.extend(LightboxBroker.prototype, {
-    openFxa: function (fxaUrl) {
+    openFxa: function (fxaUrl, options) {
       /*jshint validthis: true*/
       var self = this;
 
-      return openLightbox.call(self, fxaUrl)
+      return openLightbox.call(self, fxaUrl, options)
         .then(function (lightbox) {
           return waitForAuthentication.call(self, lightbox);
         })
