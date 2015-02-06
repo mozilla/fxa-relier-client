@@ -148,6 +148,26 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
           assert.equal(err.message, 'oauth_error');
         });
       });
+
+      bdd.it('should pass along `zIndex` and `background`', function () {
+        sinon.spy(lightbox, 'load');
+        sinon.stub(channel, 'attach', function () {
+          return p();
+        });
+
+        return lightboxAPI.signIn({
+          state: 'state',
+          scope: 'scope',
+          redirectUri: 'redirectUri',
+          zIndex: 200,
+          background: '#000'
+        })
+        .then(function () {
+          var options = lightbox.load.args[0][1];
+          assert.equal(options.zIndex, 200);
+          assert.equal(options.background, "#000");
+        });
+      });
     });
 
     bdd.describe('forceAuth', function () {

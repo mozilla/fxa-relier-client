@@ -4,11 +4,6 @@
 
 /*globals define*/
 
-/**
- * Create a lightbox.
- *
- * @class Lightbox
- */
 define([
 ], function () {
   'use strict';
@@ -34,6 +29,15 @@ define([
   }
 
 
+  /**
+   * Create a lightbox.
+   *
+   * @class Lightbox
+   * @constructor
+   * @param {options={}} options
+   * @param {String} options.window
+   * The window object
+   */
   function Lightbox(options) {
     options = options || {};
 
@@ -46,16 +50,30 @@ define([
      * @method load
      * @param {String} src
      * URL to load.
+     * @param {options={}} options
+     * @param {Number} [options.zIndex]
+     * z-index to set on the background.
+     * @default 100
+     * @param {String} [options.background]
+     * Lightbox background CSS.
+     * @default rgba(0,0,0,0.5)
      */
-    load: function (src) {
+    load: function (src, options) {
+      options = options || {};
+
+      var backgroundStyle = options.background || 'rgba(0,0,0,0.5)';
+      var zIndexStyle = options.zIndex || 100;
+
       var background = this._backgroundEl = createElement(this._window, 'div', {
+        id: 'fxa-background',
         style: cssPropsToString({
-          background: 'rgba(0,0,0,0.5)',
+          background: backgroundStyle,
           bottom: 0,
           left: 0,
           position: 'fixed',
           right: 0,
-          top: 0
+          top: 0,
+          'z-index': zIndexStyle
         })
       });
 

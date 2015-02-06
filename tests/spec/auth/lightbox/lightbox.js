@@ -42,12 +42,33 @@ define([
         lightbox.load(CONTENT_URL);
 
         assert.equal(child.type, 'div');
+        // ensure some default styles are set
+        var style = child.getAttribute('style');
+        assert.include(style, 'z-index:100');
+        assert.include(style, 'background:rgba(0,0,0,0.5)');
 
         var src = lightbox.getContentElement().getAttribute('src');
         assert.equal(src, CONTENT_URL);
 
         var contentWindow = lightbox.getContentWindow();
         assert.isTrue(contentWindow instanceof WindowMock);
+      });
+
+      bdd.it('relier can set `zIndex` and `background`', function () {
+        var child;
+        windowMock.document.body.appendChild = function (_child) {
+          child = _child;
+        };
+
+        lightbox.load(CONTENT_URL, {
+          zIndex: 150,
+          background: '#000'
+        });
+
+        // ensure some overridden styles are set
+        var style = child.getAttribute('style');
+        assert.include(style, 'z-index:150');
+        assert.include(style, 'background:#000')
       });
     });
   });

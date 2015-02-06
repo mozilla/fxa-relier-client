@@ -51,7 +51,7 @@ define([
       Options.checkRequired(requiredOptions, config);
 
       var fxaUrl = getOAuthUrl.call(self, action, config);
-      return self.openFxa(fxaUrl);
+      return self.openFxa(fxaUrl, config);
     });
   }
 
@@ -79,10 +79,11 @@ define([
      *
      * @method openFxa
      * @param {String} fxaUrl - URL to open for authentication
+     * @param {options={}} options
      *
      * @protected
      */
-    openFxa: function (fxaUrl) {
+    openFxa: function (fxaUrl, options) {
       throw new Error('openFxa must be overridden');
     },
 
