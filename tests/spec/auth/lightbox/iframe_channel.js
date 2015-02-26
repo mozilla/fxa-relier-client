@@ -48,7 +48,8 @@ define([
 
         contentWindowMock.addEventListener('message', assert.fail);
 
-        windowMock.postMessage('ping', '*', 'unexpected.domain');
+        windowMock.postMessage(
+            IFrameChannel.stringifyFxAEvent('ping'), '*', 'unexpected.domain');
       });
 
       bdd.it('should respond to pings from FXA_HOST', function () {
@@ -62,13 +63,15 @@ define([
           assert.ok(parsed.data.version);
         }));
 
-        windowMock.postMessage('ping', '*', FXA_HOST);
+        windowMock.postMessage(
+              IFrameChannel.stringifyFxAEvent('ping'), '*', FXA_HOST);
       });
 
       bdd.it('should reject the promise on error', function () {
         var promise = iframeChannel.attach();
 
-        windowMock.postMessage(IFrameChannel.stringifyFxAEvent('error', { reason: 'client error' }), '*', FXA_HOST);
+        windowMock.postMessage(
+            IFrameChannel.stringifyFxAEvent('error', { reason: 'client error' }), '*', FXA_HOST);
 
         return promise.then(assert.fail, function (err) {
           assert.equal(err.reason, 'client error');
@@ -78,7 +81,8 @@ define([
       bdd.it('should reject the promise on oauth_cancel', function () {
         var promise = iframeChannel.attach();
 
-        windowMock.postMessage(IFrameChannel.stringifyFxAEvent('oauth_cancel'), '*', FXA_HOST);
+        windowMock.postMessage(
+              IFrameChannel.stringifyFxAEvent('oauth_cancel'), '*', FXA_HOST);
 
         return promise.then(assert.fail, function (err) {
           assert.equal(err.reason, 'cancel');
@@ -88,7 +92,8 @@ define([
       bdd.it('should fulfill the promise on oauth_complete', function () {
         var promise = iframeChannel.attach();
 
-        windowMock.postMessage(IFrameChannel.stringifyFxAEvent('oauth_complete', { code: 'code' }), '*', FXA_HOST);
+        windowMock.postMessage(
+            IFrameChannel.stringifyFxAEvent('oauth_complete', { code: 'code' }), '*', FXA_HOST);
 
         return promise.then(function (data) {
           assert.equal(data.code, 'code');
