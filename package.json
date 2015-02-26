@@ -1,7 +1,7 @@
 {
   "name": "fxa-relier-client",
   "version": "0.0.5",
-  "description": "fxa-relier-client =================",
+  "description": "Firefox Accounts relier JavaScript library",
   "main": "node/index.js",
   "repository": {
     "type": "git",
