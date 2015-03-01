@@ -1960,15 +1960,14 @@ define('client/auth/lightbox/iframe_channel',[
   }
 
   function parseFxAEvent(msg) {
-    var components = msg.split('!!!');
-    return {
-      command: components[0],
-      data: JSON.parse(components[1] || '{}')
-    };
+    return JSON.parse(msg);
   }
 
   function stringifyFxAEvent(command, data) {
-    return command + '!!!' + JSON.stringify(data || '');
+    return JSON.stringify({
+      command: command,
+      data: data || {}
+    });
   }
 
   IFrameChannel.stringifyFxAEvent = stringifyFxAEvent;
