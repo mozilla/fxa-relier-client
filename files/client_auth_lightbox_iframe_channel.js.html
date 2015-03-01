@@ -17,7 +17,7 @@
                 <h1><img src="../assets/css/logo.png" title="fxa-relier-client"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.4</em>
+            <em>API Docs for: 0.0.5</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -204,15 +204,14 @@
                           }
                         
                           function parseFxAEvent(msg) {
-                            var components = msg.split(&#x27;!!!&#x27;);
-                            return {
-                              command: components[0],
-                              data: JSON.parse(components[1] || &#x27;{}&#x27;)
-                            };
+                            return JSON.parse(msg);
                           }
                         
                           function stringifyFxAEvent(command, data) {
-                            return command + &#x27;!!!&#x27; + JSON.stringify(data || &#x27;&#x27;);
+                            return JSON.stringify({
+                              command: command,
+                              data: data || {}
+                            });
                           }
                         
                           IFrameChannel.stringifyFxAEvent = stringifyFxAEvent;
