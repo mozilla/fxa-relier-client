@@ -116,6 +116,7 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
           assert.include(loadUrl, 'scope=scope');
           assert.include(loadUrl, 'redirect_uri=redirectUri');
           assert.include(loadUrl, 'email=blank');
+          assert.include(loadUrl, 'context=iframe');
         });
       });
 
