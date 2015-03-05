@@ -9,21 +9,21 @@ module.exports = function (grunt) {
     options: {
       commit: true,
       push: true,
-      remote: 'git@github.com:mozilla/fxa-relier-client.git'
+      remote: 'git@github.com:shane-tomlinson/fxa-relier-client.git'
     },
     release: {
       options: {
-        branch: 'release',
+        branch: 'iframe-context',
         dir: 'build',
         tag: '<%= pkg.version %>'
       }
-    },
+    }/*,
     docs: {
       options: {
         branch: 'gh-pages',
         dir: 'docs',
         tag: 'docs-<%= pkg.version %>'
       }
-    }
+    }*/
   });
 };
