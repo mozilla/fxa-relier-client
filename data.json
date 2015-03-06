@@ -2,7 +2,7 @@
     "project": {
         "name": "fxa-relier-client",
         "description": "Firefox Accounts relier JavaScript library",
-        "version": "0.0.5"
+        "version": "0.0.7"
     },
     "files": {
         "client/auth/base/api.js": {
@@ -641,7 +641,22 @@
     "classitems": [
         {
             "file": "client/auth/base/api.js",
-            "line": 76,
+            "line": 81,
+            "description": "Set the `context` field to be passed to the content server. If not\nset, no context will be sent. Should be called by sub-classes if\na context is needed.",
+            "itemtype": "method",
+            "name": "setContext",
+            "params": [
+                {
+                    "name": "context",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "BaseBroker"
+        },
+        {
+            "file": "client/auth/base/api.js",
+            "line": 93,
             "description": "Open Firefox Accounts to authenticate the user.\nMust be overridden to provide API specific functionality.",
             "itemtype": "method",
             "name": "openFxa",
@@ -663,7 +678,7 @@
         },
         {
             "file": "client/auth/base/api.js",
-            "line": 90,
+            "line": 107,
             "description": "Sign in an existing user",
             "itemtype": "method",
             "name": "signIn",
@@ -701,7 +716,7 @@
         },
         {
             "file": "client/auth/base/api.js",
-            "line": 109,
+            "line": 126,
             "description": "Force a user to sign in as an existing user.",
             "itemtype": "method",
             "name": "forceAuth",
@@ -744,7 +759,7 @@
         },
         {
             "file": "client/auth/base/api.js",
-            "line": 138,
+            "line": 155,
             "description": "Sign up a new user",
             "itemtype": "method",
             "name": "signUp",
@@ -782,7 +797,7 @@
         },
         {
             "file": "client/auth/lightbox/api.js",
-            "line": 122,
+            "line": 123,
             "description": "Unload the lightbox",
             "itemtype": "method",
             "name": "unload",

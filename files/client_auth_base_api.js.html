@@ -17,7 +17,7 @@
                 <h1><img src="../assets/css/logo.png" title="fxa-relier-client"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.5</em>
+            <em>API Docs for: 0.0.7</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -165,10 +165,27 @@
                               queryParams.email = config.email;
                             }
                         
+                            if (this._context) {
+                              queryParams.context = this._context;
+                            }
+                        
                             return this._oauthHost + &#x27;/authorization&#x27; + Url.objectToQueryString(queryParams);
                           }
                         
                           BaseBroker.prototype = {
+                            _context: null,
+                            /**
+                             * Set the &#x60;context&#x60; field to be passed to the content server. If not
+                             * set, no context will be sent. Should be called by sub-classes if
+                             * a context is needed.
+                             *
+                             * @method setContext
+                             * @param {String} context
+                             */
+                            setContext: function (context) {
+                              this._context = context;
+                            },
+                        
                             /**
                              * Open Firefox Accounts to authenticate the user.
                              * Must be overridden to provide API specific functionality.
