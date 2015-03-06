@@ -69,10 +69,27 @@ define([
       queryParams.email = config.email;
     }
 
+    if (this._context) {
+      queryParams.context = this._context;
+    }
+
     return this._oauthHost + '/authorization' + Url.objectToQueryString(queryParams);
   }
 
   BaseBroker.prototype = {
+    _context: null,
+    /**
+     * Set the `context` field to be passed to the content server. If not
+     * set, no context will be sent. Should be called by sub-classes if
+     * a context is needed.
+     *
+     * @method setContext
+     * @param {String} context
+     */
+    setContext: function (context) {
+      this._context = context;
+    },
+
     /**
      * Open Firefox Accounts to authenticate the user.
      * Must be overridden to provide API specific functionality.

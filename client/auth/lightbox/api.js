@@ -98,6 +98,7 @@ define([
     this._lightbox = options.lightbox;
     this._channel = options.channel;
     this._contentHost = options.contentHost || Constants.DEFAULT_CONTENT_HOST;
+    this.setContext('iframe');
   }
   LightboxBroker.prototype = Object.create(BaseBroker.prototype);
 
