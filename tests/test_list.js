@@ -11,5 +11,6 @@ define([
   './spec/auth/lightbox/lightbox',
   './spec/token/api',
   './spec/profile/api',
+  './spec/notifications/api',
   './spec/lib/xhr'
 ], function () {});
