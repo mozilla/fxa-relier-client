@@ -58,12 +58,15 @@ define([
   function getOAuthUrl(action, config) {
     //jshint validthis: true
     var queryParams = {
-      action: action,
       client_id: this._clientId,
       state: config.state,
       scope: config.scope,
       redirect_uri: config.redirectUri
     };
+
+    if (action) {
+      queryParams.action = action;
+    }
 
     if (config.email) {
       queryParams.email = config.email;
@@ -167,7 +170,24 @@ define([
      *   Email address used to pre-fill into the account form,
      *   but the user is free to change it.
      */
-    signUp: partial(authenticate, Constants.SIGNUP_ACTION)
+    signUp: partial(authenticate, Constants.SIGNUP_ACTION),
+
+    /**
+     * Best choice auth strategy, has no action set
+     *
+     * @method bestChoice
+     * @param {Object} config - configuration
+     *   @param {String} config.state
+     *   CSRF/State token
+     *   @param {String} config.redirectUri
+     *   URI to redirect to when complete
+     *   @param {String} config.scope
+     *   OAuth scope
+     *   @param {String} [config.email]
+     *   Email address used to pre-fill into the account form,
+     *   but the user is free to change it.
+     */
+    bestChoice: partial(authenticate, Constants.BEST_CHOICE_ACTION)
   };
 
   return BaseBroker;

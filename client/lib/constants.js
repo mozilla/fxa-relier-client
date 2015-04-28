@@ -47,7 +47,13 @@ define([], function () {
      * @property FORCE_AUTH_ACTION
      * @type {String}
      */
-    FORCE_AUTH_ACTION: 'force_auth'
+    FORCE_AUTH_ACTION: 'force_auth',
+    /**
+     * Best choice action
+     * @property BEST_CHOICE_ACTION
+     * @type {String}
+     */
+    BEST_CHOICE_ACTION: null
   };
 });
 
