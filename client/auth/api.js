@@ -157,7 +157,34 @@ define([
      *   only used when `config.ui=lightbox`. The `background` CSS value
      *   @default rgba(0,0,0,0.5)
      */
-    signUp: partial(authenticate, 'signUp')
+    signUp: partial(authenticate, 'signUp'),
+
+    /**
+     * Best choice auth strategy, has no action set.
+     * This strategy creates an oauth url to the "/oauth" endpoint on the content server.
+     * The oauth url has no action and the content server choose the auth flow.
+     *
+     * @method bestChoice
+     * @param {Object} config - configuration
+     *   @param {String} config.state
+     *   CSRF/State token
+     *   @param {String} config.redirectUri
+     *   URI to redirect to when complete
+     *   @param {String} config.scope
+     *   OAuth scope
+     *   @param {String} [config.email]
+     *   Email address used to pre-fill into the account form,
+     *   but the user is free to change it.
+     *   @param {String} [config.ui]
+     *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
+     *   @param {Number} [options.zIndex]
+     *   only used when `config.ui=lightbox`. The zIndex of the lightbox background.
+     *   @default 100
+     *   @param {String} [options.background]
+     *   only used when `config.ui=lightbox`. The `background` CSS value
+     *   @default rgba(0,0,0,0.5)
+     */
+    bestChoice: partial(authenticate, 'bestChoice')
   };
 
   return AuthAPI;

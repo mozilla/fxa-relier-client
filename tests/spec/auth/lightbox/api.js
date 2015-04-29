@@ -271,6 +271,78 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
         });
       });
     });
+
+    bdd.describe('bestChoice', function () {
+      testCommonMissingOptions('bestChoice');
+
+      bdd.it('should reject if a lightbox is already open', function () {
+        lightboxAPI.bestChoice({
+          state: 'state',
+          scope: 'scope',
+          redirectUri: 'redirectUri'
+        });
+
+        return lightboxAPI.bestChoice({
+          state: 'state',
+          scope: 'scope',
+          redirectUri: 'redirectUri'
+        })
+        .then(assert.fail, function (err) {
+          assert.equal(err.message, 'lightbox already open');
+        });
+      });
+
+      bdd.it('should open the lightbox to the correct page with the expected query parameters', function () {
+        sinon.spy(lightbox, 'load');
+        sinon.stub(channel, 'attach', function () {
+          return p();
+        });
+
+        return lightboxAPI.bestChoice({
+          state: 'state',
+          scope: 'scope',
+          redirectUri: 'redirectUri'
+        })
+        .then(function () {
+          assert.isFalse(/action=signup/.test(lightbox.load.args[0]));
+          assert.isFalse(/action=signin/.test(lightbox.load.args[0]));
+          assert.isTrue(/state=state/.test(lightbox.load.args[0]));
+          assert.isTrue(/scope=scope/.test(lightbox.load.args[0]));
+          assert.isTrue(/redirect_uri=redirectUri/.test(lightbox.load.args[0]));
+        });
+      });
+
+      bdd.it('should return the result returned by the channel', function () {
+        sinon.stub(channel, 'attach', function () {
+          return p('oauth_result');
+        });
+
+        return lightboxAPI.bestChoice({
+          state: 'state',
+          scope: 'scope',
+          redirectUri: 'redirectUri'
+        })
+        .then(function (result) {
+          assert.equal(result, 'oauth_result');
+        });
+      });
+
+      bdd.it('should return any errors returned by the channel', function () {
+        sinon.stub(channel, 'attach', function () {
+          return p.reject(new Error('oauth_error'));
+        });
+
+        return lightboxAPI.bestChoice({
+          state: 'state',
+          scope: 'scope',
+          redirectUri: 'redirectUri'
+        })
+        .then(assert.fail, function (err) {
+          assert.equal(err.message, 'oauth_error');
+        });
+      });
+    });
+    
   });
 });
 

@@ -140,6 +140,36 @@ function (bdd, assert, RedirectBroker, WindowMock, sinon, p) {
         });
       });
     });
+
+    bdd.describe('bestChoice', function () {
+      bdd.it('should reject if `scope` is not specified', function () {
+        return testMissingOption('bestChoice', 'scope');
+      });
+
+      bdd.it('should reject if `redirectUri` is not specified', function () {
+        return testMissingOption('bestChoice', 'redirectUri');
+      });
+
+      bdd.it('should reject if `state` is not specified', function () {
+        return testMissingOption('bestChoice', 'state');
+      });
+
+      bdd.it('should redirect with no action and other expected query parameters', function () {
+        return redirectAPI.bestChoice({
+          state: 'state',
+          scope: 'scope',
+          redirectUri: 'redirectUri'
+        })
+        .then(function () {
+          var redirectedTo = windowMock.location.href;
+          assert.notInclude(redirectedTo, 'action=signUp');
+          assert.notInclude(redirectedTo, 'action=signIn');
+          assert.include(redirectedTo, 'state=state');
+          assert.include(redirectedTo, 'scope=scope');
+          assert.include(redirectedTo, 'redirect_uri=redirectUri');
+        });
+      });
+    });
   });
 });
 
