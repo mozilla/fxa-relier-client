@@ -5,28 +5,10 @@
 /*globals define*/
 
 define([
-], function () {
+  'client/lib/dom'
+  'client/lib/iframe'
+], function (dom, IFrame) {
   'use strict';
-
-  function createElement(window, type, attributes) {
-    var el = window.document.createElement(type);
-
-    for (var attribute in attributes) {
-      el.setAttribute(attribute, attributes[attribute]);
-    }
-
-    return el;
-  }
-
-  function cssPropsToString(props) {
-    var str = '';
-
-    for (var key in props) {
-      str += key + ':' + props[key] + ';';
-    }
-
-    return str;
-  }
 
 
   /**
@@ -64,9 +46,9 @@ define([
       var backgroundStyle = options.background || 'rgba(0,0,0,0.5)';
       var zIndexStyle = options.zIndex || 100;
 
-      var background = this._backgroundEl = createElement(this._window, 'div', {
+      var background = this._backgroundEl = dom.createElement(this._window, 'div', {
         id: 'fxa-background',
-        style: cssPropsToString({
+        style: dom.cssPropsToString({
           background: backgroundStyle,
           bottom: 0,
           left: 0,
@@ -77,30 +59,12 @@ define([
         })
       });
 
-      var iframe = createElement(this._window, 'iframe', {
-        id: 'fxa',
-        src: src,
-        width: '600',
-        height: '400',
-        allowtransparency: 'true',
-        border: '0',
-        style: cssPropsToString({
-          background: 'transparent',
-          border: 'none',
-          display: 'block',
-          height: '600px',
-          margin: '0 auto 0 auto',
-          position: 'relative',
-          top: '10%',
-          width: '400px'
-        })
+      this._iframe = new IFrame({
+        window: this._window
       });
+      this._iframe.load(src, background);
 
-      background.appendChild(iframe);
       this._window.document.body.appendChild(background);
-
-      this._iframe = iframe;
-      this._contentWindow = iframe.contentWindow;
     },
 
     /**
@@ -109,7 +73,7 @@ define([
      * @returns {DOM Element}
      */
     getContentElement: function () {
-      return this._iframe;
+      return this._iframe.getContentElement();
     },
 
     /**
@@ -118,7 +82,7 @@ define([
      * @returns {DOM Element}
      */
     getContentWindow: function () {
-      return this._contentWindow;
+      return this._iframe.getContentWindow();
     },
 
     /**
@@ -138,6 +102,8 @@ define([
       if (this._backgroundEl) {
         this._window.document.body.removeChild(this._backgroundEl);
         delete this._backgroundEl;
+
+        this._iframe.unload();
         delete this._iframe;
       }
     }

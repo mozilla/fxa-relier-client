@@ -10,43 +10,13 @@ define([
   'client/lib/options',
   'client/lib/constants',
   '../base/api',
-  'client/lib/lightbox',
-  '../iframe_channel'
+  './iframe_channel'
 ], function (p, ObjectHelpers, Options, Constants, BaseBroker,
-    Lightbox, IFrameChannel) {
+    IFrameChannel) {
   'use strict';
 
-  function getLightbox() {
-    //jshint validthis: true
-    var self = this;
-    if (self._lightbox) {
-      return self._lightbox;
-    }
-
-    self._lightbox = new Lightbox({
-      window: self._window
-    });
-
-    return self._lightbox;
-  }
-
-  function openLightbox(fxaUrl, options) {
-    /*jshint validthis: true*/
-    var self = this;
-    return p().then(function() {
-      if (self._lightbox && self._lightbox.isLoaded()) {
-        throw new Error('lightbox already open');
-      }
-
-      var lightbox = getLightbox.call(self);
-
-      lightbox.load(fxaUrl, options);
-
-      return lightbox;
-    });
-  }
-
-  function getChannel(lightbox) {
+  function openIFrame
+  function getChannel(iframe) {
     //jshint validthis: true
     var self = this;
     if (self._channel) {
@@ -55,26 +25,26 @@ define([
 
     self._channel = new IFrameChannel({
       iframeHost: self._contentHost,
-      contentWindow: lightbox.getContentWindow(),
+      contentWindow: iframe.getContentWindow(),
       window: self._window
     });
 
     return self._channel;
   }
 
-  function waitForAuthentication(lightbox) {
+  function waitForAuthentication(iframe) {
     /*jshint validthis: true*/
     var self = this;
     return p().then(function () {
-      var channel = getChannel.call(self, lightbox);
+      var channel = getChannel.call(self, iframe);
       return channel.attach();
     });
   }
 
   /**
-   * Authenticate users with a lightbox
+   * Authenticate users with a iframe
    *
-   * @class LightboxBroker
+   * @class IFrameBroker
    * @extends BaseBroker
    * @constructor
    * @param {string} clientId - the OAuth client ID for the relier
@@ -85,59 +55,58 @@ define([
    *   Firefox Accounts OAuth Server host
    *   @param {Object} [options.window]
    *   window override, used for unit tests
-   *   @param {Object} [options.lightbox]
-   *   lightbox override, used for unit tests
    *   @param {Object} [options.channel]
    *   channel override, used for unit tests
    */
-  function LightboxBroker(clientId, options) {
+  function IFrameBroker(clientId, options) {
     options = options || {};
 
     BaseBroker.call(this, clientId, options);
 
-    this._lightbox = options.lightbox;
     this._channel = options.channel;
     this._contentHost = options.contentHost || Constants.DEFAULT_CONTENT_HOST;
+    this._target = options.target;
     this.setContext('iframe');
   }
-  LightboxBroker.prototype = Object.create(BaseBroker.prototype);
+  IFrameBroker.prototype = Object.create(BaseBroker.prototype);
 
-  ObjectHelpers.extend(LightboxBroker.prototype, {
+  ObjectHelpers.extend(IFrameBroker.prototype, {
     openFxa: function (fxaUrl, options) {
       /*jshint validthis: true*/
       var self = this;
 
-      return openLightbox.call(self, fxaUrl, options)
-        .then(function (lightbox) {
-          return waitForAuthentication.call(self, lightbox);
+      return openIFrame.call(self, fxaUrl, options)
+        .then(function (iframe) {
+          return waitForAuthentication.call(self, iframe);
         })
         .then(function (result) {
-          self.unload();
+          self.stopListening();
           return result;
         }, function (err) {
-          self.unload();
+          self.stopListening();
           throw err;
         });
     },
 
     /**
-     * Unload the lightbox
-     *
+     * Stop listening for messages from the iframe
+     * @method stopListening
+     */
+    stopListening: function () {
+      var self = this;
+      return p().then(function () {
+        self._channel.detach();
+      });
+    },
+
+    /**
+     * Unload the iframe from the DOM, stop listening for messages.
      * @method unload
      */
     unload: function () {
-      var self = this;
-      return p().then(function () {
-        if (! self._lightbox) {
-          throw new Error('lightbox not open');
-        }
-
-        self._lightbox.unload();
-        self._channel.detach();
-      });
     }
   });
 
-  return LightboxBroker;
+  return IFrameBroker;
 });
 
