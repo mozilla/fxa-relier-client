@@ -17,7 +17,7 @@
                 <h1><img src="../assets/css/logo.png" title="fxa-relier-client"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.7</em>
+            <em>API Docs for: 0.0.8</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -160,6 +160,10 @@
                         
                                             <ul class="index-list methods extends">
                                                     <li class="index-item method inherited">
+                                                        <a href="#method_bestChoice">bestChoice</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method inherited">
                                                         <a href="#method_forceAuth">forceAuth</a>
                         
                                                     </li>
@@ -189,6 +193,105 @@
                                     <div id="methods" class="api-class-tabpanel">
                                         <h2 class="off-left">Methods</h2>
                         
+                                            <div id="method_bestChoice" class="method item inherited">
+                                                <h3 class="name"><code>bestChoice</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>config</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>Inherited from
+                                                            <a href="../classes/BaseBroker.html#method_bestChoice">BaseBroker</a>:
+                                                    <a href="../files/client_auth_base_api.js.html#l175"><code>client&#x2F;auth&#x2F;base&#x2F;api.js:175</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Best choice auth strategy, has no action set</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">config</code>
+                                                                    <span class="type">Object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>configuration</li>
+                                            </ul>
+                                            
+                                                                </div>
+                                            
+                                                                    <ul class="params-list">
+                                                                        <li class="param">
+                                                                                <code class="param-name">state</code>
+                                                                                <span class="type">String</span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>CSRF/State token</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                        <li class="param">
+                                                                                <code class="param-name">redirectUri</code>
+                                                                                <span class="type">String</span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>URI to redirect to when complete</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                        <li class="param">
+                                                                                <code class="param-name">scope</code>
+                                                                                <span class="type">String</span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>OAuth scope</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                        <li class="param">
+                                                                                <code class="param-name optional">[email]</code>
+                                                                                <span class="type">String</span>
+                                                                                <span class="flag optional" title="This parameter is optional.">optional</span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>  Email address used to pre-fill into the account form,
+                                              but the user is free to change it.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                    </ul>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
                                             <div id="method_forceAuth" class="method item inherited">
                                                 <h3 class="name"><code>forceAuth</code></h3>
                                             
@@ -210,7 +313,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/BaseBroker.html#method_forceAuth">BaseBroker</a>:
-                                                    <a href="../files/client_auth_base_api.js.html#l126"><code>client&#x2F;auth&#x2F;base&#x2F;api.js:126</code></a>
+                                                    <a href="../files/client_auth_base_api.js.html#l129"><code>client&#x2F;auth&#x2F;base&#x2F;api.js:129</code></a>
                                                     </p>
                                             
                                             
@@ -324,7 +427,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/BaseBroker.html#method_openFxa">BaseBroker</a>:
-                                                    <a href="../files/client_auth_base_api.js.html#l93"><code>client&#x2F;auth&#x2F;base&#x2F;api.js:93</code></a>
+                                                    <a href="../files/client_auth_base_api.js.html#l96"><code>client&#x2F;auth&#x2F;base&#x2F;api.js:96</code></a>
                                                     </p>
                                             
                                             
@@ -391,7 +494,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/BaseBroker.html#method_setContext">BaseBroker</a>:
-                                                    <a href="../files/client_auth_base_api.js.html#l81"><code>client&#x2F;auth&#x2F;base&#x2F;api.js:81</code></a>
+                                                    <a href="../files/client_auth_base_api.js.html#l84"><code>client&#x2F;auth&#x2F;base&#x2F;api.js:84</code></a>
                                                     </p>
                                             
                                             
@@ -445,7 +548,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/BaseBroker.html#method_signIn">BaseBroker</a>:
-                                                    <a href="../files/client_auth_base_api.js.html#l107"><code>client&#x2F;auth&#x2F;base&#x2F;api.js:107</code></a>
+                                                    <a href="../files/client_auth_base_api.js.html#l110"><code>client&#x2F;auth&#x2F;base&#x2F;api.js:110</code></a>
                                                     </p>
                                             
                                             
@@ -546,7 +649,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/BaseBroker.html#method_signUp">BaseBroker</a>:
-                                                    <a href="../files/client_auth_base_api.js.html#l155"><code>client&#x2F;auth&#x2F;base&#x2F;api.js:155</code></a>
+                                                    <a href="../files/client_auth_base_api.js.html#l158"><code>client&#x2F;auth&#x2F;base&#x2F;api.js:158</code></a>
                                                     </p>
                                             
                                             

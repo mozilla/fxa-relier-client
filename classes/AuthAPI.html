@@ -17,7 +17,7 @@
                 <h1><img src="../assets/css/logo.png" title="fxa-relier-client"></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.0.7</em>
+            <em>API Docs for: 0.0.8</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -255,6 +255,10 @@
                         
                                             <ul class="index-list methods">
                                                     <li class="index-item method">
+                                                        <a href="#method_bestChoice">bestChoice</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
                                                         <a href="#method_forceAuth">forceAuth</a>
                         
                                                     </li>
@@ -276,6 +280,148 @@
                                     <div id="methods" class="api-class-tabpanel">
                                         <h2 class="off-left">Methods</h2>
                         
+                                            <div id="method_bestChoice" class="method item">
+                                                <h3 class="name"><code>bestChoice</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>config</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code class="optional">[options.zIndex]</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code class="optional">[options.background]</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/client_auth_api.js.html#l162"><code>client&#x2F;auth&#x2F;api.js:162</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Best choice auth strategy, has no action set.
+                                            This strategy creates an oauth url to the &quot;/oauth&quot; endpoint on the content server.
+                                            The oauth url has no action and the content server choose the auth flow.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">config</code>
+                                                                    <span class="type">Object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>configuration</li>
+                                            </ul>
+                                            
+                                                                </div>
+                                            
+                                                                    <ul class="params-list">
+                                                                        <li class="param">
+                                                                                <code class="param-name">state</code>
+                                                                                <span class="type">String</span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>CSRF/State token</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                        <li class="param">
+                                                                                <code class="param-name">redirectUri</code>
+                                                                                <span class="type">String</span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>URI to redirect to when complete</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                        <li class="param">
+                                                                                <code class="param-name">scope</code>
+                                                                                <span class="type">String</span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>OAuth scope</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                        <li class="param">
+                                                                                <code class="param-name optional">[email]</code>
+                                                                                <span class="type">String</span>
+                                                                                <span class="flag optional" title="This parameter is optional.">optional</span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>  Email address used to pre-fill into the account form,
+                                              but the user is free to change it.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                        <li class="param">
+                                                                                <code class="param-name optional">[ui]</code>
+                                                                                <span class="type">String</span>
+                                                                                <span class="flag optional" title="This parameter is optional.">optional</span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>  UI to present - <code>lightbox</code> or <code>redirect</code> - defaults to <code>redirect</code></p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                    </ul>
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name optional">[options.zIndex]</code>
+                                                                    <span class="type">Number</span>
+                                                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>  only used when <code>config.ui=lightbox</code>. The zIndex of the lightbox background.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name optional">[options.background]</code>
+                                                                    <span class="type">String</span>
+                                                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>  only used when <code>config.ui=lightbox</code>. The <code>background</code> CSS value</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
                                             <div id="method_forceAuth" class="method item">
                                                 <h3 class="name"><code>forceAuth</code></h3>
                                             

@@ -2,7 +2,7 @@
     "project": {
         "name": "fxa-relier-client",
         "description": "Firefox Accounts relier JavaScript library",
-        "version": "0.0.7"
+        "version": "0.0.8"
     },
     "files": {
         "client/auth/base/api.js": {
@@ -641,7 +641,7 @@
     "classitems": [
         {
             "file": "client/auth/base/api.js",
-            "line": 81,
+            "line": 84,
             "description": "Set the `context` field to be passed to the content server. If not\nset, no context will be sent. Should be called by sub-classes if\na context is needed.",
             "itemtype": "method",
             "name": "setContext",
@@ -656,7 +656,7 @@
         },
         {
             "file": "client/auth/base/api.js",
-            "line": 93,
+            "line": 96,
             "description": "Open Firefox Accounts to authenticate the user.\nMust be overridden to provide API specific functionality.",
             "itemtype": "method",
             "name": "openFxa",
@@ -678,7 +678,7 @@
         },
         {
             "file": "client/auth/base/api.js",
-            "line": 107,
+            "line": 110,
             "description": "Sign in an existing user",
             "itemtype": "method",
             "name": "signIn",
@@ -716,7 +716,7 @@
         },
         {
             "file": "client/auth/base/api.js",
-            "line": 126,
+            "line": 129,
             "description": "Force a user to sign in as an existing user.",
             "itemtype": "method",
             "name": "forceAuth",
@@ -759,10 +759,48 @@
         },
         {
             "file": "client/auth/base/api.js",
-            "line": 155,
+            "line": 158,
             "description": "Sign up a new user",
             "itemtype": "method",
             "name": "signUp",
+            "params": [
+                {
+                    "name": "config",
+                    "description": "- configuration",
+                    "type": "Object",
+                    "props": [
+                        {
+                            "name": "state",
+                            "description": "CSRF/State token",
+                            "type": "String"
+                        },
+                        {
+                            "name": "redirectUri",
+                            "description": "URI to redirect to when complete",
+                            "type": "String"
+                        },
+                        {
+                            "name": "scope",
+                            "description": "OAuth scope",
+                            "type": "String"
+                        },
+                        {
+                            "name": "email",
+                            "description": "\n  Email address used to pre-fill into the account form,\n  but the user is free to change it.",
+                            "type": "String",
+                            "optional": true
+                        }
+                    ]
+                }
+            ],
+            "class": "BaseBroker"
+        },
+        {
+            "file": "client/auth/base/api.js",
+            "line": 175,
+            "description": "Best choice auth strategy, has no action set",
+            "itemtype": "method",
+            "name": "bestChoice",
             "params": [
                 {
                     "name": "config",
@@ -1097,6 +1135,63 @@
             "class": "AuthAPI"
         },
         {
+            "file": "client/auth/api.js",
+            "line": 162,
+            "description": "Best choice auth strategy, has no action set.\nThis strategy creates an oauth url to the \"/oauth\" endpoint on the content server.\nThe oauth url has no action and the content server choose the auth flow.",
+            "itemtype": "method",
+            "name": "bestChoice",
+            "params": [
+                {
+                    "name": "config",
+                    "description": "- configuration",
+                    "type": "Object",
+                    "props": [
+                        {
+                            "name": "state",
+                            "description": "CSRF/State token",
+                            "type": "String"
+                        },
+                        {
+                            "name": "redirectUri",
+                            "description": "URI to redirect to when complete",
+                            "type": "String"
+                        },
+                        {
+                            "name": "scope",
+                            "description": "OAuth scope",
+                            "type": "String"
+                        },
+                        {
+                            "name": "email",
+                            "description": "\n  Email address used to pre-fill into the account form,\n  but the user is free to change it.",
+                            "type": "String",
+                            "optional": true
+                        },
+                        {
+                            "name": "ui",
+                            "description": "\n  UI to present - `lightbox` or `redirect` - defaults to `redirect`",
+                            "type": "String",
+                            "optional": true
+                        }
+                    ]
+                },
+                {
+                    "name": "options.zIndex",
+                    "description": "\n  only used when `config.ui=lightbox`. The zIndex of the lightbox background.",
+                    "type": "Number",
+                    "optional": true
+                },
+                {
+                    "name": "options.background",
+                    "description": "\n  only used when `config.ui=lightbox`. The `background` CSS value",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "default": "rgba(0,0,0,0.5)",
+            "class": "AuthAPI"
+        },
+        {
             "file": "client/lib/constants.js",
             "line": 15,
             "description": "Default content server host",
@@ -1147,6 +1242,15 @@
             "description": "Force auth action",
             "itemtype": "property",
             "name": "FORCE_AUTH_ACTION",
+            "type": "{String}",
+            "class": "Constants"
+        },
+        {
+            "file": "client/lib/constants.js",
+            "line": 51,
+            "description": "Best choice action",
+            "itemtype": "property",
+            "name": "BEST_CHOICE_ACTION",
             "type": "{String}",
             "class": "Constants"
         },
