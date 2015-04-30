@@ -1483,7 +1483,13 @@ define('client/lib/constants',[], function () {
      * @property FORCE_AUTH_ACTION
      * @type {String}
      */
-    FORCE_AUTH_ACTION: 'force_auth'
+    FORCE_AUTH_ACTION: 'force_auth',
+    /**
+     * Best choice action
+     * @property BEST_CHOICE_ACTION
+     * @type {String}
+     */
+    BEST_CHOICE_ACTION: null
   };
 });
 
@@ -1601,12 +1607,15 @@ define('client/auth/base/api',[
   function getOAuthUrl(action, config) {
     //jshint validthis: true
     var queryParams = {
-      action: action,
       client_id: this._clientId,
       state: config.state,
       scope: config.scope,
       redirect_uri: config.redirectUri
     };
+
+    if (action) {
+      queryParams.action = action;
+    }
 
     if (config.email) {
       queryParams.email = config.email;
@@ -1710,7 +1719,24 @@ define('client/auth/base/api',[
      *   Email address used to pre-fill into the account form,
      *   but the user is free to change it.
      */
-    signUp: partial(authenticate, Constants.SIGNUP_ACTION)
+    signUp: partial(authenticate, Constants.SIGNUP_ACTION),
+
+    /**
+     * Best choice auth strategy, has no action set
+     *
+     * @method bestChoice
+     * @param {Object} config - configuration
+     *   @param {String} config.state
+     *   CSRF/State token
+     *   @param {String} config.redirectUri
+     *   URI to redirect to when complete
+     *   @param {String} config.scope
+     *   OAuth scope
+     *   @param {String} [config.email]
+     *   Email address used to pre-fill into the account form,
+     *   but the user is free to change it.
+     */
+    bestChoice: partial(authenticate, Constants.BEST_CHOICE_ACTION)
   };
 
   return BaseBroker;
@@ -2332,7 +2358,34 @@ define('client/auth/api',[
      *   only used when `config.ui=lightbox`. The `background` CSS value
      *   @default rgba(0,0,0,0.5)
      */
-    signUp: partial(authenticate, 'signUp')
+    signUp: partial(authenticate, 'signUp'),
+
+    /**
+     * Best choice auth strategy, has no action set.
+     * This strategy creates an oauth url to the "/oauth" endpoint on the content server.
+     * The oauth url has no action and the content server choose the auth flow.
+     *
+     * @method bestChoice
+     * @param {Object} config - configuration
+     *   @param {String} config.state
+     *   CSRF/State token
+     *   @param {String} config.redirectUri
+     *   URI to redirect to when complete
+     *   @param {String} config.scope
+     *   OAuth scope
+     *   @param {String} [config.email]
+     *   Email address used to pre-fill into the account form,
+     *   but the user is free to change it.
+     *   @param {String} [config.ui]
+     *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
+     *   @param {Number} [options.zIndex]
+     *   only used when `config.ui=lightbox`. The zIndex of the lightbox background.
+     *   @default 100
+     *   @param {String} [options.background]
+     *   only used when `config.ui=lightbox`. The `background` CSS value
+     *   @default rgba(0,0,0,0.5)
+     */
+    bestChoice: partial(authenticate, 'bestChoice')
   };
 
   return AuthAPI;
