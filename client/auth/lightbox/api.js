@@ -17,7 +17,6 @@ define([
   'use strict';
 
   function getLightbox() {
-    //jshint validthis: true
     var self = this;
     if (self._lightbox) {
       return self._lightbox;
@@ -31,7 +30,6 @@ define([
   }
 
   function openLightbox(fxaUrl, options) {
-    /*jshint validthis: true*/
     var self = this;
     return p().then(function() {
       if (self._lightbox && self._lightbox.isLoaded()) {
@@ -47,7 +45,6 @@ define([
   }
 
   function getChannel(lightbox) {
-    //jshint validthis: true
     var self = this;
     if (self._channel) {
       return self._channel;
@@ -63,7 +60,6 @@ define([
   }
 
   function waitForAuthentication(lightbox) {
-    /*jshint validthis: true*/
     var self = this;
     return p().then(function () {
       var channel = getChannel.call(self, lightbox);
@@ -104,7 +100,6 @@ define([
 
   ObjectHelpers.extend(LightboxBroker.prototype, {
     openFxa: function (fxaUrl, options) {
-      /*jshint validthis: true*/
       var self = this;
 
       return openLightbox.call(self, fxaUrl, options)

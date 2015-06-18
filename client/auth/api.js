@@ -41,7 +41,6 @@ define([
   }
 
   function authenticate(authType, config) {
-    //jshint validthis: true
     var self = this;
     return p().then(function () {
       config = config || {};

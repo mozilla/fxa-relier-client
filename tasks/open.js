@@ -3,8 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 module.exports = function (grunt) {
-  'use strict';
-
   grunt.config('open', {
     dev: {
       path: 'docs/index.html'

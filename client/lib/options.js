@@ -23,7 +23,7 @@ define([], function () {
    * if a required option is missing
    */
   function checkRequired(requiredOptions, options) {
-    for (var i = 0, requiredOption; requiredOption = requiredOptions[i]; ++i) {
+    for (var i = 0, requiredOption; requiredOption = requiredOptions[i]; ++i) { //eslint-disable-line no-cond-assign
       if (! (requiredOption in options)) {
         throw new Error(requiredOption + ' is required');
       }

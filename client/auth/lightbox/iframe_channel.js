@@ -74,14 +74,13 @@ define([
       this.detach();
       this._deferred.reject(data);
     },
-    /*jshint camelcase:false*/
     ping: function (command, data) {
       // ping is used to get the RP's origin. If the RP's origin is not
       // whitelisted, it cannot be iframed.
       this.send(command, data);
     },
     ignore: function (command, data) {
-      console.log('ignoring command: %s', command);
+      console.log('ignoring command: %s', command); //eslint-disable-line no-console
     },
     oauth_cancel: function (command, data) {
       this.detach();
@@ -94,7 +93,6 @@ define([
   };
 
   function onMessage(event) {
-    /*jshint validthis: true*/
     if (event.origin !== this._iframeHost) {
       return;
     }

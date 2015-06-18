@@ -1,0 +1,6 @@
+{
+  "extends": "fxa/client",
+  "rules": {
+  	"strict": [2, "never"]
+  }
+}

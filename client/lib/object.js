@@ -20,7 +20,7 @@ define([], function () {
   function extend(target/*, ...*/) {
     var sources = [].slice.call(arguments, 1);
 
-    for (var index = 0, source; source = sources[index]; ++index) {
+    for (var index = 0, source; source = sources[index]; ++index) { //eslint-disable-line no-cond-assign
       for (var key in source) {
         target[key] = source[key];
       }
@@ -33,7 +33,3 @@ define([], function () {
     extend: extend
   };
 });
-
-
-
-
