@@ -51,7 +51,7 @@ Tasks can be run from the command line by typing `grunt <task>`.
 | `clean` | remove any built production resources. |
 | `dev` | watch for changes to source files, run unit tests on changes. |
 | `doc` | generate API docs from [YUIDoc](http://yui.github.io/yuidoc/) tags embedded in source. |
-| `lint` | run [JSHint](http://jshint.com/docs/), [JSONLint](http://jsonlint.com/), and [JSCS](https://www.npmjs.com/package/jscs) (code style checker) on client side and testing JavaScript. |
+| `lint` | run [ESLint](http://eslint.org/), [JSONLint](http://jsonlint.com/), and [JSCS](https://www.npmjs.com/package/jscs) (code style checker) on client side and testing JavaScript. |
 | `test` | run local Intern tests. |
 | `release` | create a new release. creates a `release` branch with current code, creates a new tag, updates the CHANGELOG.md, pushes updates to GitHub. |
 

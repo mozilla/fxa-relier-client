@@ -43,7 +43,6 @@ define([
   }
 
   function authenticate(action, config) {
-    //jshint validthis: true
     var self = this;
     config = config || {};
     return p().then(function () {
@@ -56,7 +55,6 @@ define([
   }
 
   function getOAuthUrl(action, config) {
-    //jshint validthis: true
     var queryParams = {
       client_id: this._clientId,
       state: config.state,

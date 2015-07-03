@@ -3,15 +3,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 module.exports = function (grunt) {
-  'use strict';
-
-  grunt.config('jshint', {
+  grunt.config('eslint', {
     config: {
-      options: {jshintrc: '.jshintrc'},
+      options: {eslintrc: '.eslintrc'},
       src: ['Gruntfile.js', 'tasks/*.js', 'config/**/*.js', 'node/**/*.js']
     },
     app: {
-      options: {jshintrc: 'client/.jshintrc'},
+      options: {eslintrc: 'client/.eslintrc'},
       src: ['client/**/*.js']
     }
   });

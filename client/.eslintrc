@@ -1,0 +1,8 @@
+{
+  "env": {
+    "node": false
+  },
+  "rules": {
+  	"strict": [2, "function"]
+  }
+}
