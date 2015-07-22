@@ -1,4 +1,4 @@
-# fxa-relier-client
+# fxa-relier-client [![Build Status](https://travis-ci.org/mozilla/fxa-relier-client.svg)](https://travis-ci.org/mozilla/fxa-relier-client)
 
 Client JS library for FxA reliers
 
