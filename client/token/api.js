@@ -35,6 +35,9 @@ define([
      * Trade an OAuth code for a longer lived OAuth token. See
      * https://github.com/mozilla/fxa-oauth-server/blob/master/docs/api.md#post-v1token
      *
+     * This is most likely a server-side request. The trade code endpoint will not
+     * work in the browser due to CORS restrictions.
+     *
      * @method tradeCode
      * @param {String} code
      * OAuth code
