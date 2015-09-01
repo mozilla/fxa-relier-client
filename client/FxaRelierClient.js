@@ -98,14 +98,6 @@ define([
   }
 
   FxaRelierClient.prototype = {
-    /**
-     * FxaRelierClient version
-     *
-     * @property version
-     * @type {String}
-     */
-    version: '0.0.0',
-
     auth: null
   };
 
