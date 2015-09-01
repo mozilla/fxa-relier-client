@@ -97,7 +97,7 @@ define([
      *
      * @method openFxa
      * @param {String} fxaUrl - URL to open for authentication
-     * @param {options={}} options
+     * @param [options={}] options
      *
      * @protected
      */
