@@ -65,14 +65,13 @@ define([
     /**
      * Perform a GET request
      * @method get
-     * @param {String} path
-     * endpoint URL
+     * @param {String} path endpoint URL
      * @param {Object || String} [data]
      * data to send
      * @param {Object} [options={}]
      * Options
-     * @param {String} [options.contentType]
-     * Content type of `data`. Defaults to `application/json`
+     * @param {String} [options.contentType="application/json"]
+     * Content type of `data`.
      * @param {Object} [options.headers]
      * Headers to pass with request.
      * @param {Object} [options.xhr]
@@ -84,14 +83,13 @@ define([
     /**
      * Perform a POST request
      * @method post
-     * @param {String} path
-     * endpoint URL
+     * @param {String} path endpoint URL
      * @param {Object || String} [data]
      * data to send
      * @param {Object} [options={}]
      * Options
-     * @param {String} [options.contentType]
-     * Content type of `data`. Defaults to `application/json`
+     * @param {String} [options.contentType="application/json"]
+     * Content type of `data`.
      * @param {Object} [options.headers]
      * Headers to pass with request.
      * @param {Object} [options.xhr]

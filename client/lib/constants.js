@@ -15,42 +15,49 @@ define([], function () {
     /**
      * Default content server host
      * @property DEFAULT_CONTENT_HOST
+     * @default https://accounts.firefox.com
      * @type {String}
      */
     DEFAULT_CONTENT_HOST: 'https://accounts.firefox.com',
     /**
      * Default oauth server host
      * @property DEFAULT_OAUTH_HOST
+     * @default https://oauth.accounts.firefox.com/v1
      * @type {String}
      */
     DEFAULT_OAUTH_HOST: 'https://oauth.accounts.firefox.com/v1',
     /**
      * Default profile server host
      * @property DEFAULT_PROFILE_HOST
+     * @default https://profile.accounts.firefox.com/v1
      * @type {String}
      */
     DEFAULT_PROFILE_HOST: 'https://profile.accounts.firefox.com/v1',
     /**
      * Sign in action
      * @property SIGNIN_ACTION
+     * @default  "signin"
      * @type {String}
      */
     SIGNIN_ACTION: 'signin',
     /**
      * Sign up action
      * @property SIGNUP_ACTION
+     * @default  "signup"
      * @type {String}
      */
     SIGNUP_ACTION: 'signup',
     /**
      * Force auth action
      * @property FORCE_AUTH_ACTION
+     * @default  "force_auth"
      * @type {String}
      */
     FORCE_AUTH_ACTION: 'force_auth',
     /**
      * Best choice action
      * @property BEST_CHOICE_ACTION
+     * @default null
      * @type {String}
      */
     BEST_CHOICE_ACTION: null

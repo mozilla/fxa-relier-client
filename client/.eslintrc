@@ -3,6 +3,6 @@
     "node": false
   },
   "rules": {
-  	"strict": [2, "function"]
+    "strict": [2, "function"]
   }
 }

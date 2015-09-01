@@ -139,8 +139,8 @@ define([
      *   Email address the user must sign in with. The user
      *   is unable to modify the email address and is unable
      *   to sign up if the address is not registered.
-     *   @param {String} [config.ui]
-     *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
+     *   @param {String} [config.ui="redirect"]
+     *   UI to present - `lightbox` or `redirect`.
      */
     forceAuth: function (config) {
       var self = this;
