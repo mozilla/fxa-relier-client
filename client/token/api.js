@@ -12,8 +12,8 @@ define([
   /**
    * @class TokenAPI
    * @constructor
-   * @param {string} clientId - the OAuth client ID for the relier
-   * @param {Object} [options={}] - configuration
+   * @param {string} clientId the OAuth client ID for the relier
+   * @param {Object} [options={}] configuration
    *   @param {String} [options.clientSecret]
    *   Client secret
    *   @param {String} [options.oauthHost]
@@ -39,11 +39,10 @@ define([
      * work in the browser due to CORS restrictions.
      *
      * @method tradeCode
-     * @param {String} code
-     * OAuth code
+     * @param {String} code OAuth code
      * @returns {String}
      * OAuth token
-     * @param {Object} [options={}] - configuration
+     * @param {Object} [options={}] configuration
      *   @param {String} [options.xhr]
      *   XMLHttpRequest compatible object to use to make the request.
      * @returns {Promise}
@@ -72,9 +71,8 @@ define([
      * https://github.com/mozilla/fxa-oauth-server/blob/master/docs/api.md#post-v1verify
      *
      * @method verifyToken
-     * @param {String} token
-     * OAuth token to verify
-     * @param {Object} [options={}] - configuration
+     * @param {String} token OAuth token to verify
+     * @param {Object} [options={}] configuration
      *   @param {String} [options.xhr]
      *   XMLHttpRequest compatible object to use to make the request.
      * @returns {Promise}
@@ -98,8 +96,7 @@ define([
      * See https://github.com/mozilla/fxa-oauth-server/blob/master/docs/api.md#post-v1destroy
      *
      * @method destroyToken
-     * @param {String} token
-     * OAuth token to verify
+     * @param {String} token OAuth token to verify
      * @param {Object} [options={}] - configuration
      *   @param {String} [options.xhr]
      *   XMLHttpRequest compatible object to use to make the request.

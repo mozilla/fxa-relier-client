@@ -33,8 +33,7 @@ define([
      * Fetch a user's profile data.
      *
      * @method fetch
-     * @param {String} token
-     * Scoped OAuth token that can be used to access the profile data
+     * @param {String} token Scoped OAuth token that can be used to access the profile data
      * @param {Object} [options={}] - configuration
      *   @param {String} [options.xhr]
      *   XMLHttpRequest compatible object to use to make the request.

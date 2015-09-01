@@ -54,8 +54,7 @@ define([
      * Send a message to the iframe.
      *
      * @method send
-     * @param {String} command
-     * Message to send.
+     * @param {String} command Message to send.
      * @param {Object} [data]
      * Data to send.
      */

@@ -14,8 +14,7 @@ define([], function () {
   /**
    * Extend an object with properties of one or more objects.
    * @method extend
-   * @param {Object} target
-   * Target object
+   * @param {Object} target Target object
    */
   function extend(target/*, ...*/) {
     var sources = [].slice.call(arguments, 1);

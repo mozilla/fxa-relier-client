@@ -27,8 +27,7 @@ define([], function () {
   /**
    * Create a query string out of an object.
    * @method objectToQueryString
-   * @param {Object} obj
-   * Object to create query string from
+   * @param {Object} obj Object to create query string from
    * @returns {String}
    * URL safe query string
    */

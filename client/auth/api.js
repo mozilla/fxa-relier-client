@@ -96,14 +96,12 @@ define([
      *   but the user is free to change it. Set to the string literal
      *   `blank` to ignore any previously signed in email. Default is
      *   the last email address used to sign in.
-     *   @param {String} [config.ui]
-     *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
-     *   @param {Number} [options.zIndex]
+     *   @param {String} [config.ui="redirect"]
+     *   UI to present - `lightbox` or `redirect`
+     *   @param {Number} [config.zIndex=100]
      *   only used when `config.ui=lightbox`. The zIndex of the lightbox background.
-     *   @default 100
-     *   @param {String} [options.background]
+     *   @param {String} [config.background=rgba(0,0,0,0.5)]
      *   only used when `config.ui=lightbox`. The `background` CSS value
-     *   @default rgba(0,0,0,0.5)
      */
     signIn: partial(authenticate, 'signIn'),
 
@@ -122,14 +120,12 @@ define([
      *   Email address the user must sign in with. The user
      *   is unable to modify the email address and is unable
      *   to sign up if the address is not registered.
-     *   @param {String} [config.ui]
-     *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
-     *   @param {Number} [options.zIndex]
+     *   @param {String} [config.ui="redirect"]
+     *   UI to present - `lightbox` or `redirect`
+     *   @param {Number} [config.zIndex=100]
      *   only used when `config.ui=lightbox`. The zIndex of the lightbox background.
-     *   @default 100
-     *   @param {String} [options.background]
+     *   @param {String} [config.background=rgba(0,0,0,0.5)]
      *   only used when `config.ui=lightbox`. The `background` CSS value
-     *   @default rgba(0,0,0,0.5)
      */
     forceAuth: partial(authenticate, 'forceAuth'),
 
@@ -147,14 +143,12 @@ define([
      *   @param {String} [config.email]
      *   Email address used to pre-fill into the account form,
      *   but the user is free to change it.
-     *   @param {String} [config.ui]
-     *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
-     *   @param {Number} [options.zIndex]
+     *   @param {String} [config.ui="redirect"]
+     *   UI to present - `lightbox` or `redirect`
+     *   @param {Number} [config.zIndex=100]
      *   only used when `config.ui=lightbox`. The zIndex of the lightbox background.
-     *   @default 100
-     *   @param {String} [options.background]
+     *   @param {String} [config.background=rgba(0,0,0,0.5)]
      *   only used when `config.ui=lightbox`. The `background` CSS value
-     *   @default rgba(0,0,0,0.5)
      */
     signUp: partial(authenticate, 'signUp'),
 
@@ -174,14 +168,12 @@ define([
      *   @param {String} [config.email]
      *   Email address used to pre-fill into the account form,
      *   but the user is free to change it.
-     *   @param {String} [config.ui]
-     *   UI to present - `lightbox` or `redirect` - defaults to `redirect`
-     *   @param {Number} [options.zIndex]
+     *   @param {String} [config.ui="redirect"]
+     *   UI to present - `lightbox` or `redirect`
+     *   @param {Number} [config.zIndex=100]
      *   only used when `config.ui=lightbox`. The zIndex of the lightbox background.
-     *   @default 100
-     *   @param {String} [options.background]
+     *   @param {String} [config.background=rgba(0,0,0,0.5)]
      *   only used when `config.ui=lightbox`. The `background` CSS value
-     *   @default rgba(0,0,0,0.5)
      */
     bestChoice: partial(authenticate, 'bestChoice')
   };

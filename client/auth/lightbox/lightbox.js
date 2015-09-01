@@ -35,7 +35,7 @@ define([
    * @class Lightbox
    * @constructor
    * @param {Object} [options={}] options
-   * @param {String} [options.window]
+   *   @param {String} [options.window]
    * The window object
    */
   function Lightbox(options) {
@@ -48,15 +48,12 @@ define([
     /**
      * Load content into the lightbox
      * @method load
-     * @param {String} src
-     * URL to load.
+     * @param {String} src URL to load.
      * @param {Object} [options={}] options
-     * @param {Number} [options.zIndex]
-     * z-index to set on the background.
-     * @default 100
-     * @param {String} [options.background]
-     * Lightbox background CSS.
-     * @default rgba(0,0,0,0.5)
+     *   @param {Number} [options.zIndex=100]
+     *   z-index to set on the background.
+     *   @param {String} [options.background=rgba(0,0,0,0.5)]
+     *   Lightbox background CSS.
      */
     load: function (src, options) {
       options = options || {};
