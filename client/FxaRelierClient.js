@@ -88,7 +88,7 @@ define([
      *     });
      *     fxaRelierClient.token.tradeCode(<code>)
      *       .then(function (token) {
-     *         return fxaRelierClient.fetch(token);
+     *         return fxaRelierClient.profile.fetch(token);
      *       })
      *       .then(function (profile) {
      *         // display some profile info.
