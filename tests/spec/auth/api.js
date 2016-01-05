@@ -11,9 +11,11 @@ define([
   'client/FxaRelierClient',
   'client/auth/lightbox/api',
   'tests/mocks/window',
-  'p-promise'
-], function (bdd, assert, sinon, FxaRelierClient, LightboxBroker, WindowMock, p) {
+  'promise'
+], function (bdd, assert, sinon, FxaRelierClient, LightboxBroker, WindowMock, promise) {
   'use strict';
+
+  var Promise = promise.Promise;
 
   bdd.describe('AuthAPI', function () {
     bdd.describe('signIn', function () {
@@ -40,7 +42,7 @@ define([
 
       bdd.it('creates and loads a UI', function () {
         sinon.stub(ui, 'signIn', function () {
-          return p();
+          return Promise.resolve();
         });
 
         return client.auth.signIn(config);
@@ -65,7 +67,7 @@ define([
 
       bdd.it('does not throw if re-opening FxA after first transaction completes', function () {
         sinon.stub(ui, 'signIn', function () {
-          return p();
+          return Promise.resolve();
         });
 
         return client.auth.signIn(config)
@@ -107,7 +109,7 @@ define([
 
       bdd.it('creates and loads a UI', function () {
         sinon.stub(ui, 'forceAuth', function () {
-          return p();
+          return Promise.resolve();
         });
 
         return client.auth.forceAuth(configWithEmail);
@@ -128,7 +130,7 @@ define([
 
       bdd.it('does not throw if re-opening FxA after first transaction completes', function () {
         sinon.stub(ui, 'forceAuth', function () {
-          return p();
+          return Promise.resolve();
         });
 
         return client.auth.forceAuth(configWithEmail)
@@ -163,7 +165,7 @@ define([
 
       bdd.it('creates and loads a UI', function () {
         sinon.stub(ui, 'signUp', function () {
-          return p();
+          return Promise.resolve();
         });
 
         return client.auth.signUp(config);
@@ -184,7 +186,7 @@ define([
 
       bdd.it('does not throw if re-opening FxA after first transaction completes', function () {
         sinon.stub(ui, 'signUp', function () {
-          return p();
+          return Promise.resolve();
         });
 
         return client.auth.signUp(config)
@@ -219,7 +221,7 @@ define([
 
       bdd.it('creates and loads a UI', function () {
         sinon.stub(ui, 'bestChoice', function () {
-          return p();
+          return Promise.resolve();
         });
 
         return client.auth.bestChoice(config)
@@ -241,7 +243,7 @@ define([
 
       bdd.it('does not throw if re-opening FxA after first transaction completes', function () {
         sinon.stub(ui, 'bestChoice', function () {
-          return p();
+          return Promise.resolve();
         });
 
         return client.auth.bestChoice(config)

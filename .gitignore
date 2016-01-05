@@ -3,4 +3,5 @@
 /components
 /docs
 sauce_connect.log*
-.DS_Store
+.tmp
+*.log

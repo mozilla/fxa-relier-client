@@ -5,15 +5,16 @@
 /*globals define*/
 
 define([
-  'p-promise',
+  'promise',
   'client/lib/constants',
   'client/lib/options',
   'client/lib/function',
   'client/lib/url'
-], function (p, Constants, Options, FunctionHelpers, Url) {
+], function (promise, Constants, Options, FunctionHelpers, Url) {
   'use strict';
 
   var partial = FunctionHelpers.partial;
+  var Promise = promise.Promise;
 
   /**
    * The base class for other brokers. Subclasses must override
@@ -45,7 +46,7 @@ define([
   function authenticate(action, config) {
     var self = this;
     config = config || {};
-    return p().then(function () {
+    return Promise.resolve().then(function () {
       var requiredOptions = ['scope', 'state', 'redirectUri'];
       Options.checkRequired(requiredOptions, config);
 
@@ -56,10 +57,10 @@ define([
 
   function getOAuthUrl(action, config) {
     var queryParams = {
-      client_id: this._clientId,
+      client_id: this._clientId, //eslint-disable-line camelcase
       state: config.state,
       scope: config.scope,
-      redirect_uri: config.redirectUri
+      redirect_uri: config.redirectUri //eslint-disable-line camelcase
     };
 
     if (action) {
@@ -144,7 +145,7 @@ define([
      */
     forceAuth: function (config) {
       var self = this;
-      return p().then(function () {
+      return Promise.resolve().then(function () {
         config = config || {};
         var requiredOptions = ['email'];
         Options.checkRequired(requiredOptions, config);
