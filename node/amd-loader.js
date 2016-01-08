@@ -19,7 +19,12 @@ module.exports = function amdload(absoluteFilename, baseUrl, map) {
   var amdrequire = function amdrequire(filepath) {
     // Return real node modules if we have them mapped
     if (filepath in map) {
-      return require(map[filepath]);
+      // es6-promise tries to export using define from requirejs,
+      // ditch global.define while calling `require`, then put it back.
+      delete global.define;
+      var source = require(map[filepath]);
+      global.define = oldDefine;
+      return source;
     }
 
     // by default, cwd is the baseUrl unless the filepath
