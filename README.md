@@ -1,5 +1,7 @@
 # fxa-relier-client [![Build Status](https://travis-ci.org/mozilla/fxa-relier-client.svg)](https://travis-ci.org/mozilla/fxa-relier-client)
 
+## DEPRECATED - do not use this library for new projects (:no_entry:)
+
 Client JS library for FxA reliers
 
 ## Integration Prerequisites
