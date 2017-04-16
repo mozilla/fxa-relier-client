@@ -12,8 +12,9 @@
 define([
   'client/auth/api',
   'client/token/api',
-  'client/profile/api'
-], function (AuthAPI, TokenAPI, ProfileAPI) {
+  'client/profile/api',
+  'client/notifications/api'
+], function (AuthAPI, TokenAPI, ProfileAPI, NotificationsAPI) {
   'use strict';
 
   /**
@@ -95,6 +96,25 @@ define([
      *       });
      */
     this.profile = new ProfileAPI(clientId, options);
+
+    /**
+     * Fetch notification events from the server. Implements {{#crossLink "NotificationsAPI"}}{{/crossLink}}.
+     * @property notifications
+     * @type {Object}
+     *
+     * @example
+     *     var fxaRelierClient = new FxaRelierClient('<client_id>', {
+     *       clientSecret: <client_secret>
+     *     });
+     *     fxaRelierClient.token.tradeCode(<code>)
+     *       .then(function (token) {
+     *         return fxaRelierClient.notifications.events(token);
+     *       })
+     *       .then(function (events) {
+     *         // do something to handle the events.
+     *       });
+     */
+    this.notifications = new NotificationsAPI(options);
   }
 
   FxaRelierClient.prototype = {

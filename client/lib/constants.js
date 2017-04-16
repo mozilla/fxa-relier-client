@@ -34,6 +34,12 @@ define([], function () {
      */
     DEFAULT_PROFILE_HOST: 'https://profile.accounts.firefox.com/v1',
     /**
+     * Default notifications server url
+     * @property DEFAULT_NOTIFICATIONS_SERVER
+     * @type {String}
+     */
+    DEFAULT_NOTIFICATIONS_SERVER: 'https://notifications.accounts.firefox.com/v1',
+    /**
      * Sign in action
      * @property SIGNIN_ACTION
      * @default  "signin"
