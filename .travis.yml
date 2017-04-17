@@ -31,4 +31,6 @@ branches:
     - release
     - /^.*-docs$/
 
-script: grunt travis
+script:
+  - grunt travis
+  - npm run test-extras

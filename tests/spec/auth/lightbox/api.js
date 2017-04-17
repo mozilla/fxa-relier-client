@@ -11,11 +11,13 @@ define([
   'client/auth/lightbox/iframe_channel',
   'tests/mocks/window',
   'tests/addons/sinon',
-  'p-promise'
+  'promise'
 ],
 function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
-      WindowMock, sinon, p) {
+      WindowMock, sinon, promise) {
   'use strict';
+
+  var Promise = promise.Promise;
 
   bdd.describe('auth/lightbox/api', function () {
 
@@ -100,7 +102,7 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
       bdd.it('should open the lightbox to the correct page with the expected query parameters', function () {
         sinon.spy(lightbox, 'load');
         sinon.stub(channel, 'attach', function () {
-          return p();
+          return Promise.resolve();
         });
 
         return lightboxAPI.signIn({
@@ -122,7 +124,7 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
 
       bdd.it('should return the result returned by the channel', function () {
         sinon.stub(channel, 'attach', function () {
-          return p('oauth_result');
+          return Promise.resolve('oauth_result');
         });
 
         return lightboxAPI.signIn({
@@ -137,7 +139,7 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
 
       bdd.it('should return any errors returned by the channel', function () {
         sinon.stub(channel, 'attach', function () {
-          return p.reject(new Error('oauth_error'));
+          return Promise.reject(new Error('oauth_error'));
         });
 
         return lightboxAPI.signIn({
@@ -153,7 +155,7 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
       bdd.it('should pass along `zIndex` and `background`', function () {
         sinon.spy(lightbox, 'load');
         sinon.stub(channel, 'attach', function () {
-          return p();
+          return Promise.resolve();
         });
 
         return lightboxAPI.signIn({
@@ -181,7 +183,7 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
       bdd.it('should open the lightbox to with action=force_auth with the expected query parameters', function () {
         sinon.spy(lightbox, 'load');
         sinon.stub(channel, 'attach', function () {
-          return p();
+          return Promise.resolve();
         });
 
         return lightboxAPI.forceAuth({
@@ -225,7 +227,7 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
       bdd.it('should open the lightbox to the correct page with the expected query parameters', function () {
         sinon.spy(lightbox, 'load');
         sinon.stub(channel, 'attach', function () {
-          return p();
+          return Promise.resolve();
         });
 
         return lightboxAPI.signUp({
@@ -243,7 +245,7 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
 
       bdd.it('should return the result returned by the channel', function () {
         sinon.stub(channel, 'attach', function () {
-          return p('oauth_result');
+          return Promise.resolve('oauth_result');
         });
 
         return lightboxAPI.signUp({
@@ -258,7 +260,7 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
 
       bdd.it('should return any errors returned by the channel', function () {
         sinon.stub(channel, 'attach', function () {
-          return p.reject(new Error('oauth_error'));
+          return Promise.reject(new Error('oauth_error'));
         });
 
         return lightboxAPI.signUp({
@@ -295,7 +297,7 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
       bdd.it('should open the lightbox to the correct page with the expected query parameters', function () {
         sinon.spy(lightbox, 'load');
         sinon.stub(channel, 'attach', function () {
-          return p();
+          return Promise.resolve();
         });
 
         return lightboxAPI.bestChoice({
@@ -314,7 +316,7 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
 
       bdd.it('should return the result returned by the channel', function () {
         sinon.stub(channel, 'attach', function () {
-          return p('oauth_result');
+          return Promise.resolve('oauth_result');
         });
 
         return lightboxAPI.bestChoice({
@@ -329,7 +331,7 @@ function (bdd, assert, LightboxBroker, Lightbox, IframeChannel,
 
       bdd.it('should return any errors returned by the channel', function () {
         sinon.stub(channel, 'attach', function () {
-          return p.reject(new Error('oauth_error'));
+          return Promise.reject(new Error('oauth_error'));
         });
 
         return lightboxAPI.bestChoice({

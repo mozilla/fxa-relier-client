@@ -8,10 +8,12 @@
  * @class IFrameChannel
  */
 define([
-  'p-promise',
+  'promise',
   'client/lib/object'
-], function (p, ObjectHelpers) {
+], function (promise, ObjectHelpers) {
   'use strict';
+
+  var Promise = promise.Promise;
 
   function IFrameChannel(options) {
     options = options || {};
@@ -38,7 +40,14 @@ define([
       this._boundOnMessage = onMessage.bind(this);
       this._window.addEventListener('message', this._boundOnMessage, false);
 
-      this._deferred = p.defer();
+      var defer = {};
+      defer.promise = new Promise(function(resolve, reject) {
+        defer.resolve = resolve;
+        defer.reject = reject;
+      });
+
+      this._deferred = defer;
+
       return this._deferred.promise;
     },
 
@@ -81,11 +90,11 @@ define([
     ignore: function (command, data) {
       console.log('ignoring command: %s', command); //eslint-disable-line no-console
     },
-    oauth_cancel: function (command, data) {
+    oauth_cancel: function (command, data) { //eslint-disable-line camelcase
       this.detach();
       return this._deferred.reject({ reason: 'cancel' });
     },
-    oauth_complete: function (command, data) {
+    oauth_complete: function (command, data) { //eslint-disable-line camelcase
       this.detach();
       this._deferred.resolve(data);
     }

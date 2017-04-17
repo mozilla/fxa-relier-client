@@ -3,11 +3,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 define([
-  'p-promise',
   'client/lib/constants',
   'client/lib/xhr',
   'client/lib/object'
-], function (p, Constants, Xhr, ObjectHelpers) {
+], function (Constants, Xhr, ObjectHelpers) {
   'use strict';
 
   /**

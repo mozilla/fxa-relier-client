@@ -3,14 +3,15 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 define([
-  'p-promise',
+  'promise',
   'client/lib/function',
   'client/auth/lightbox/api',
   'client/auth/redirect/api'
-], function (p, FunctionHelpers, LightboxBroker, RedirectBroker) {
+], function (promise, FunctionHelpers, LightboxBroker, RedirectBroker) {
   'use strict';
 
   var partial = FunctionHelpers.partial;
+  var Promise = promise.Promise;
 
   var Brokers = {
     'default': RedirectBroker,
@@ -42,14 +43,16 @@ define([
 
   function authenticate(authType, config) {
     var self = this;
-    return p().then(function () {
+    return Promise.resolve().then(function () {
       config = config || {};
+
+      var done = function done () {
+        delete self._broker;
+      };
 
       var api = getBroker(self, config.ui, self._clientId, self._options);
       return api[authType](config)
-        .fin(function () {
-          delete self._broker;
-        });
+        .then(done, done);
     });
   }
 

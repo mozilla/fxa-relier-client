@@ -3,13 +3,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 define([
-  'p-promise',
+  'promise',
   'components/micrajax/micrajax',
   './function'
-], function (p, micrajax, FunctionHelpers) {
+], function (promise, micrajax, FunctionHelpers) {
   'use strict';
 
   var partial = FunctionHelpers.partial;
+  var Promise = promise.Promise;
 
   var NodeXMLHttpRequest;
   try {
@@ -41,24 +42,22 @@ define([
   function request(method, path, data, options) {
     options = options || {};
 
-    var deferred = p.defer();
-
-    micrajax.ajax({
-      type: method,
-      url: path,
-      data: data,
-      contentType: options.contentType || 'application/json',
-      headers: options.headers,
-      xhr: getXHRObject(options.xhr),
-      success: function (data, responseText, jqXHR) {
-        deferred.resolve(data);
-      },
-      error: function (jqXHR, status, responseText) {
-        deferred.reject(responseText);
-      }
+    return new Promise(function(resolve, reject) {
+      micrajax.ajax({
+        type: method,
+        url: path,
+        data: data,
+        contentType: options.contentType || 'application/json',
+        headers: options.headers,
+        xhr: getXHRObject(options.xhr),
+        success: function (data, responseText, jqXHR) {
+          resolve(data);
+        },
+        error: function (jqXHR, status, responseText) {
+          reject(responseText);
+        }
+      });
     });
-
-    return deferred.promise;
   }
 
   var XHR = {
