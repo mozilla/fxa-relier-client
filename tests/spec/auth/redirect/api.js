@@ -8,10 +8,8 @@ define([
   'intern/chai!assert',
   'client/auth/redirect/api',
   'tests/mocks/window',
-  'tests/addons/sinon',
-  'p-promise'
 ],
-function (bdd, assert, RedirectBroker, WindowMock, sinon, p) {
+function (bdd, assert, RedirectBroker, WindowMock) {
   'use strict';
 
   bdd.describe('auth/redirect/api', function () {

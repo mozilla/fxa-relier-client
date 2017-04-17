@@ -3,10 +3,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 define([
-  'p-promise',
+  'promise',
   'client/lib/constants',
   'client/lib/xhr'
-], function (p, Constants, Xhr) {
+], function (Promise, Constants, Xhr) {
   'use strict';
 
   /**
@@ -51,17 +51,17 @@ define([
      */
     tradeCode: function (code, options) {
       if (! this._clientSecret) {
-        return p.reject(new Error('clientSecret is required'));
+        return Promise.reject(new Error('clientSecret is required'));
       }
 
       if (! code) {
-        return p.reject(new Error('code is required'));
+        return Promise.reject(new Error('code is required'));
       }
 
       var endpoint = this._oauthHost + '/token';
       return Xhr.post(endpoint, {
-          client_id: this._clientId,
-          client_secret: this._clientSecret,
+          client_id: this._clientId, //eslint-disable-line camelcase
+          client_secret: this._clientSecret, //eslint-disable-line camelcase
           code: code
         }, options);
     },
@@ -81,7 +81,7 @@ define([
      */
     verifyToken: function (token, options) {
       if (! token) {
-        return p.reject(new Error('token is required'));
+        return Promise.reject(new Error('token is required'));
       }
 
       var endpoint = this._oauthHost + '/verify';
@@ -105,16 +105,16 @@ define([
      */
     destroyToken: function (token, options) {
       if (! this._clientSecret) {
-        return p.reject(new Error('clientSecret is required'));
+        return Promise.reject(new Error('clientSecret is required'));
       }
 
       if (! token) {
-        return p.reject(new Error('token is required'));
+        return Promise.reject(new Error('token is required'));
       }
 
       var endpoint = this._oauthHost + '/destroy';
       return Xhr.post(endpoint, {
-        client_secret: this._clientSecret,
+        client_secret: this._clientSecret, //eslint-disable-line camelcase
         token: token
       }, options);
     }

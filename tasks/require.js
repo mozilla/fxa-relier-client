@@ -13,7 +13,7 @@ module.exports = function (grunt) {
         endFile: 'config/end.frag'
       },
       paths: {
-        'p-promise': 'components/p-promise/p'
+        'promise': 'components/es6-promise/promise'
       }
     },
     prod: {

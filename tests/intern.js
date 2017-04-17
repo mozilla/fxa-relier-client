@@ -13,7 +13,7 @@ define(['intern/lib/args'], function (args) {
       packages: [ { name: 'fxa-relier-client', location: 'client' } ],
       map: {
         '*': {
-          'p-promise': 'components/p-promise/p'
+          'promise': 'components/es6-promise/promise'
         }
       }
     },

@@ -3,7 +3,7 @@ var path = require('path');
 var amd = require('./amd-loader');
 
 var map = {
-  'p-promise': 'p-promise'
+  'promise': 'es6-promise'
 };
 
 var baseUrl = path.join(__dirname, '..');

@@ -11,7 +11,7 @@ module.exports = function (grunt) {
         suites: ['tests/test_list']
       }
     },
-    native_node: {
+    native_node: { //eslint-disable-line camelcase
       options: {
         config: 'tests/intern_native_node',
         reporters: ['console'],

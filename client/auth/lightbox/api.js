@@ -5,16 +5,18 @@
 /*globals define*/
 
 define([
-  'p-promise',
+  'promise',
   'client/lib/object',
   'client/lib/options',
   'client/lib/constants',
   '../base/api',
   './lightbox',
   './iframe_channel'
-], function (p, ObjectHelpers, Options, Constants, BaseBroker,
+], function (promise, ObjectHelpers, Options, Constants, BaseBroker,
     Lightbox, IFrameChannel) {
   'use strict';
+
+  var Promise = promise.Promise;
 
   function getLightbox() {
     var self = this;
@@ -31,7 +33,7 @@ define([
 
   function openLightbox(fxaUrl, options) {
     var self = this;
-    return p().then(function() {
+    return Promise.resolve().then(function() {
       if (self._lightbox && self._lightbox.isLoaded()) {
         throw new Error('lightbox already open');
       }
@@ -61,7 +63,7 @@ define([
 
   function waitForAuthentication(lightbox) {
     var self = this;
-    return p().then(function () {
+    return Promise.resolve().then(function () {
       var channel = getChannel.call(self, lightbox);
       return channel.attach();
     });
@@ -122,7 +124,7 @@ define([
      */
     unload: function () {
       var self = this;
-      return p().then(function () {
+      return Promise.resolve().then(function () {
         if (! self._lightbox) {
           throw new Error('lightbox not open');
         }

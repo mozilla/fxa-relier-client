@@ -21,8 +21,9 @@
     "tests"
   ],
   "dependencies": {
-    "p-promise": "https://github.com/rkatic/p.git#3c1fe61c9ba47aa3c09a55eb3025bd29a238d1ea",
-    "micrajax": "0.0.5"
+    "p-promise": "0.5.0",
+    "micrajax": "0.0.5",
+    "es6-promise": "3.0.2"
   },
   "devDependencies": {
     "almond": "0.3.0",

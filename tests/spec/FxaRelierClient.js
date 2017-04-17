@@ -10,15 +10,16 @@ define([
   'tests/addons/sinon',
   'client/FxaRelierClient',
   'tests/mocks/window',
-  'p-promise'
-], function (bdd, assert, sinon, FxaRelierClient, WindowMock, p) {
+  'promise'
+], function (bdd, assert, sinon, FxaRelierClient, WindowMock, promise) {
   'use strict';
+
+  var Promise = promise.Promise;
 
   bdd.describe('FxaRelierClient', function () {
     bdd.describe('constructor', function () {
       bdd.it('throws if `clientId` is missing', function () {
-        return p()
-          .then(function () {
+        return Promise.resolve().then(function () {
             return new FxaRelierClient(null, {
               window: new WindowMock()
             });
